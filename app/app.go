@@ -107,6 +107,9 @@ import (
 	g4alchainmodule "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain"
 	g4alchainmodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain/keeper"
 	g4alchainmoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain/types"
+	gamemodule "github.com/G4AL-Entertainment/g4al-chain/x/game"
+	gamemodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/game/keeper"
+	gamemoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/game/types"
 	permissionmodule "github.com/G4AL-Entertainment/g4al-chain/x/permission"
 	permissionmodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/permission/keeper"
 	permissionmoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
@@ -170,6 +173,7 @@ var (
 		vesting.AppModuleBasic{},
 		g4alchainmodule.AppModuleBasic{},
 		permissionmodule.AppModuleBasic{},
+		gamemodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -246,6 +250,8 @@ type App struct {
 	G4alchainKeeper g4alchainmodulekeeper.Keeper
 
 	PermissionKeeper permissionmodulekeeper.Keeper
+	ScopedGameKeeper capabilitykeeper.ScopedKeeper
+	GameKeeper       gamemodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -292,6 +298,7 @@ func New(
 		icacontrollertypes.StoreKey,
 		g4alchainmoduletypes.StoreKey,
 		permissionmoduletypes.StoreKey,
+		gamemoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -527,6 +534,22 @@ func New(
 	)
 	permissionModule := permissionmodule.NewAppModule(appCodec, app.PermissionKeeper, app.AccountKeeper, app.BankKeeper)
 
+	scopedGameKeeper := app.CapabilityKeeper.ScopeToModule(gamemoduletypes.ModuleName)
+	app.ScopedGameKeeper = scopedGameKeeper
+	app.GameKeeper = *gamemodulekeeper.NewKeeper(
+		appCodec,
+		keys[gamemoduletypes.StoreKey],
+		keys[gamemoduletypes.MemStoreKey],
+		app.GetSubspace(gamemoduletypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedGameKeeper,
+		app.AccountKeeper,
+		app.PermissionKeeper,
+	)
+	gameModule := gamemodule.NewAppModule(appCodec, app.GameKeeper, app.AccountKeeper, app.BankKeeper)
+
+	gameIBCModule := gamemodule.NewIBCModule(app.GameKeeper)
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Sealing prevents other modules from creating scoped sub-keepers
@@ -536,6 +559,7 @@ func New(
 	ibcRouter := ibcporttypes.NewRouter()
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
+	ibcRouter.AddRoute(gamemoduletypes.ModuleName, gameIBCModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
@@ -574,6 +598,7 @@ func New(
 		icaModule,
 		g4alchainModule,
 		permissionModule,
+		gameModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -605,6 +630,7 @@ func New(
 		vestingtypes.ModuleName,
 		g4alchainmoduletypes.ModuleName,
 		permissionmoduletypes.ModuleName,
+		gamemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -631,6 +657,7 @@ func New(
 		vestingtypes.ModuleName,
 		g4alchainmoduletypes.ModuleName,
 		permissionmoduletypes.ModuleName,
+		gamemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -662,6 +689,7 @@ func New(
 		vestingtypes.ModuleName,
 		g4alchainmoduletypes.ModuleName,
 		permissionmoduletypes.ModuleName,
+		gamemoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -693,6 +721,7 @@ func New(
 		transferModule,
 		g4alchainModule,
 		permissionModule,
+		gameModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -893,6 +922,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(g4alchainmoduletypes.ModuleName)
 	paramsKeeper.Subspace(permissionmoduletypes.ModuleName)
+	paramsKeeper.Subspace(gamemoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

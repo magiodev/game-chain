@@ -1,0 +1,15 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.game;
+
+import "gogoproto/gogo.proto";
+import "g4alchain/game/params.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/game/types";
+
+// GenesisState defines the game module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  string port_id = 2;
+  // this line is used by starport scaffolding # genesis/proto/state
+}
