@@ -47,10 +47,17 @@ func (k msgServer) UpdateAdministrator(goCtx context.Context, msg *types.MsgUpda
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("wrappedError: invalid administrator address (%s)", msg.Creator))
 	}
 
+	// Check if the value exists
+	admin, isFound := k.GetAdministrator(ctx, msg.Address)
+	if !isFound {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "to delete index not set")
+	}
+	// Checks if the msg creator is the same as the toDelete admin owner
+
 	var administrator = types.Administrator{
-		//Creator:   msg.Creator,
-		//Address:   msg.Address,
-		//CreatedAt: msg.CreatedAt,
+		Creator:   admin.Creator,
+		Address:   admin.Address,
+		CreatedAt: admin.CreatedAt,
 		UpdatedAt: int32(ctx.BlockHeight()),
 		Blocked:   msg.Blocked,
 	}
