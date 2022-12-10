@@ -33,6 +33,36 @@ export interface MsgDeleteAdministrator {
 export interface MsgDeleteAdministratorResponse {
 }
 
+export interface MsgCreateDeveloper {
+  creator: string;
+  address: string;
+  createdAt: number;
+  updatedAt: number;
+  blocked: boolean;
+}
+
+export interface MsgCreateDeveloperResponse {
+}
+
+export interface MsgUpdateDeveloper {
+  creator: string;
+  address: string;
+  createdAt: number;
+  updatedAt: number;
+  blocked: boolean;
+}
+
+export interface MsgUpdateDeveloperResponse {
+}
+
+export interface MsgDeleteDeveloper {
+  creator: string;
+  address: string;
+}
+
+export interface MsgDeleteDeveloperResponse {
+}
+
 function createBaseMsgCreateAdministrator(): MsgCreateAdministrator {
   return { creator: "", address: "", createdAt: 0, updatedAt: 0, blocked: false };
 }
@@ -378,12 +408,360 @@ export const MsgDeleteAdministratorResponse = {
   },
 };
 
+function createBaseMsgCreateDeveloper(): MsgCreateDeveloper {
+  return { creator: "", address: "", createdAt: 0, updatedAt: 0, blocked: false };
+}
+
+export const MsgCreateDeveloper = {
+  encode(message: MsgCreateDeveloper, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
+    }
+    if (message.createdAt !== 0) {
+      writer.uint32(24).int32(message.createdAt);
+    }
+    if (message.updatedAt !== 0) {
+      writer.uint32(32).int32(message.updatedAt);
+    }
+    if (message.blocked === true) {
+      writer.uint32(40).bool(message.blocked);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCreateDeveloper {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCreateDeveloper();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.address = reader.string();
+          break;
+        case 3:
+          message.createdAt = reader.int32();
+          break;
+        case 4:
+          message.updatedAt = reader.int32();
+          break;
+        case 5:
+          message.blocked = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgCreateDeveloper {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+      createdAt: isSet(object.createdAt) ? Number(object.createdAt) : 0,
+      updatedAt: isSet(object.updatedAt) ? Number(object.updatedAt) : 0,
+      blocked: isSet(object.blocked) ? Boolean(object.blocked) : false,
+    };
+  },
+
+  toJSON(message: MsgCreateDeveloper): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.address !== undefined && (obj.address = message.address);
+    message.createdAt !== undefined && (obj.createdAt = Math.round(message.createdAt));
+    message.updatedAt !== undefined && (obj.updatedAt = Math.round(message.updatedAt));
+    message.blocked !== undefined && (obj.blocked = message.blocked);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCreateDeveloper>, I>>(object: I): MsgCreateDeveloper {
+    const message = createBaseMsgCreateDeveloper();
+    message.creator = object.creator ?? "";
+    message.address = object.address ?? "";
+    message.createdAt = object.createdAt ?? 0;
+    message.updatedAt = object.updatedAt ?? 0;
+    message.blocked = object.blocked ?? false;
+    return message;
+  },
+};
+
+function createBaseMsgCreateDeveloperResponse(): MsgCreateDeveloperResponse {
+  return {};
+}
+
+export const MsgCreateDeveloperResponse = {
+  encode(_: MsgCreateDeveloperResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgCreateDeveloperResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgCreateDeveloperResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgCreateDeveloperResponse {
+    return {};
+  },
+
+  toJSON(_: MsgCreateDeveloperResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgCreateDeveloperResponse>, I>>(_: I): MsgCreateDeveloperResponse {
+    const message = createBaseMsgCreateDeveloperResponse();
+    return message;
+  },
+};
+
+function createBaseMsgUpdateDeveloper(): MsgUpdateDeveloper {
+  return { creator: "", address: "", createdAt: 0, updatedAt: 0, blocked: false };
+}
+
+export const MsgUpdateDeveloper = {
+  encode(message: MsgUpdateDeveloper, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
+    }
+    if (message.createdAt !== 0) {
+      writer.uint32(24).int32(message.createdAt);
+    }
+    if (message.updatedAt !== 0) {
+      writer.uint32(32).int32(message.updatedAt);
+    }
+    if (message.blocked === true) {
+      writer.uint32(40).bool(message.blocked);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgUpdateDeveloper {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgUpdateDeveloper();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.address = reader.string();
+          break;
+        case 3:
+          message.createdAt = reader.int32();
+          break;
+        case 4:
+          message.updatedAt = reader.int32();
+          break;
+        case 5:
+          message.blocked = reader.bool();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgUpdateDeveloper {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+      createdAt: isSet(object.createdAt) ? Number(object.createdAt) : 0,
+      updatedAt: isSet(object.updatedAt) ? Number(object.updatedAt) : 0,
+      blocked: isSet(object.blocked) ? Boolean(object.blocked) : false,
+    };
+  },
+
+  toJSON(message: MsgUpdateDeveloper): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.address !== undefined && (obj.address = message.address);
+    message.createdAt !== undefined && (obj.createdAt = Math.round(message.createdAt));
+    message.updatedAt !== undefined && (obj.updatedAt = Math.round(message.updatedAt));
+    message.blocked !== undefined && (obj.blocked = message.blocked);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgUpdateDeveloper>, I>>(object: I): MsgUpdateDeveloper {
+    const message = createBaseMsgUpdateDeveloper();
+    message.creator = object.creator ?? "";
+    message.address = object.address ?? "";
+    message.createdAt = object.createdAt ?? 0;
+    message.updatedAt = object.updatedAt ?? 0;
+    message.blocked = object.blocked ?? false;
+    return message;
+  },
+};
+
+function createBaseMsgUpdateDeveloperResponse(): MsgUpdateDeveloperResponse {
+  return {};
+}
+
+export const MsgUpdateDeveloperResponse = {
+  encode(_: MsgUpdateDeveloperResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgUpdateDeveloperResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgUpdateDeveloperResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgUpdateDeveloperResponse {
+    return {};
+  },
+
+  toJSON(_: MsgUpdateDeveloperResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgUpdateDeveloperResponse>, I>>(_: I): MsgUpdateDeveloperResponse {
+    const message = createBaseMsgUpdateDeveloperResponse();
+    return message;
+  },
+};
+
+function createBaseMsgDeleteDeveloper(): MsgDeleteDeveloper {
+  return { creator: "", address: "" };
+}
+
+export const MsgDeleteDeveloper = {
+  encode(message: MsgDeleteDeveloper, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.address !== "") {
+      writer.uint32(18).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteDeveloper {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgDeleteDeveloper();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgDeleteDeveloper {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      address: isSet(object.address) ? String(object.address) : "",
+    };
+  },
+
+  toJSON(message: MsgDeleteDeveloper): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgDeleteDeveloper>, I>>(object: I): MsgDeleteDeveloper {
+    const message = createBaseMsgDeleteDeveloper();
+    message.creator = object.creator ?? "";
+    message.address = object.address ?? "";
+    return message;
+  },
+};
+
+function createBaseMsgDeleteDeveloperResponse(): MsgDeleteDeveloperResponse {
+  return {};
+}
+
+export const MsgDeleteDeveloperResponse = {
+  encode(_: MsgDeleteDeveloperResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteDeveloperResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgDeleteDeveloperResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgDeleteDeveloperResponse {
+    return {};
+  },
+
+  toJSON(_: MsgDeleteDeveloperResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgDeleteDeveloperResponse>, I>>(_: I): MsgDeleteDeveloperResponse {
+    const message = createBaseMsgDeleteDeveloperResponse();
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateAdministrator(request: MsgCreateAdministrator): Promise<MsgCreateAdministratorResponse>;
   UpdateAdministrator(request: MsgUpdateAdministrator): Promise<MsgUpdateAdministratorResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   DeleteAdministrator(request: MsgDeleteAdministrator): Promise<MsgDeleteAdministratorResponse>;
+  CreateDeveloper(request: MsgCreateDeveloper): Promise<MsgCreateDeveloperResponse>;
+  UpdateDeveloper(request: MsgUpdateDeveloper): Promise<MsgUpdateDeveloperResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  DeleteDeveloper(request: MsgDeleteDeveloper): Promise<MsgDeleteDeveloperResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -393,6 +771,9 @@ export class MsgClientImpl implements Msg {
     this.CreateAdministrator = this.CreateAdministrator.bind(this);
     this.UpdateAdministrator = this.UpdateAdministrator.bind(this);
     this.DeleteAdministrator = this.DeleteAdministrator.bind(this);
+    this.CreateDeveloper = this.CreateDeveloper.bind(this);
+    this.UpdateDeveloper = this.UpdateDeveloper.bind(this);
+    this.DeleteDeveloper = this.DeleteDeveloper.bind(this);
   }
   CreateAdministrator(request: MsgCreateAdministrator): Promise<MsgCreateAdministratorResponse> {
     const data = MsgCreateAdministrator.encode(request).finish();
@@ -410,6 +791,24 @@ export class MsgClientImpl implements Msg {
     const data = MsgDeleteAdministrator.encode(request).finish();
     const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "DeleteAdministrator", data);
     return promise.then((data) => MsgDeleteAdministratorResponse.decode(new _m0.Reader(data)));
+  }
+
+  CreateDeveloper(request: MsgCreateDeveloper): Promise<MsgCreateDeveloperResponse> {
+    const data = MsgCreateDeveloper.encode(request).finish();
+    const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "CreateDeveloper", data);
+    return promise.then((data) => MsgCreateDeveloperResponse.decode(new _m0.Reader(data)));
+  }
+
+  UpdateDeveloper(request: MsgUpdateDeveloper): Promise<MsgUpdateDeveloperResponse> {
+    const data = MsgUpdateDeveloper.encode(request).finish();
+    const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "UpdateDeveloper", data);
+    return promise.then((data) => MsgUpdateDeveloperResponse.decode(new _m0.Reader(data)));
+  }
+
+  DeleteDeveloper(request: MsgDeleteDeveloper): Promise<MsgDeleteDeveloperResponse> {
+    const data = MsgDeleteDeveloper.encode(request).finish();
+    const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "DeleteDeveloper", data);
+    return promise.then((data) => MsgDeleteDeveloperResponse.decode(new _m0.Reader(data)));
   }
 }
 

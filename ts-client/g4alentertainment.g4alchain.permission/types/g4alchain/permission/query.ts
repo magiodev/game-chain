@@ -2,6 +2,7 @@
 import _m0 from "protobufjs/minimal";
 import { PageRequest, PageResponse } from "../../cosmos/base/query/v1beta1/pagination";
 import { Administrator } from "./administrator";
+import { Developer } from "./developer";
 import { Params } from "./params";
 
 export const protobufPackage = "g4alentertainment.g4alchain.permission";
@@ -30,6 +31,23 @@ export interface QueryAllAdministratorRequest {
 
 export interface QueryAllAdministratorResponse {
   administrator: Administrator[];
+  pagination: PageResponse | undefined;
+}
+
+export interface QueryGetDeveloperRequest {
+  address: string;
+}
+
+export interface QueryGetDeveloperResponse {
+  developer: Developer | undefined;
+}
+
+export interface QueryAllDeveloperRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllDeveloperResponse {
+  developer: Developer[];
   pagination: PageResponse | undefined;
 }
 
@@ -339,6 +357,218 @@ export const QueryAllAdministratorResponse = {
   },
 };
 
+function createBaseQueryGetDeveloperRequest(): QueryGetDeveloperRequest {
+  return { address: "" };
+}
+
+export const QueryGetDeveloperRequest = {
+  encode(message: QueryGetDeveloperRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.address !== "") {
+      writer.uint32(10).string(message.address);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetDeveloperRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetDeveloperRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.address = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDeveloperRequest {
+    return { address: isSet(object.address) ? String(object.address) : "" };
+  },
+
+  toJSON(message: QueryGetDeveloperRequest): unknown {
+    const obj: any = {};
+    message.address !== undefined && (obj.address = message.address);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetDeveloperRequest>, I>>(object: I): QueryGetDeveloperRequest {
+    const message = createBaseQueryGetDeveloperRequest();
+    message.address = object.address ?? "";
+    return message;
+  },
+};
+
+function createBaseQueryGetDeveloperResponse(): QueryGetDeveloperResponse {
+  return { developer: undefined };
+}
+
+export const QueryGetDeveloperResponse = {
+  encode(message: QueryGetDeveloperResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.developer !== undefined) {
+      Developer.encode(message.developer, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryGetDeveloperResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetDeveloperResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.developer = Developer.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetDeveloperResponse {
+    return { developer: isSet(object.developer) ? Developer.fromJSON(object.developer) : undefined };
+  },
+
+  toJSON(message: QueryGetDeveloperResponse): unknown {
+    const obj: any = {};
+    message.developer !== undefined
+      && (obj.developer = message.developer ? Developer.toJSON(message.developer) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryGetDeveloperResponse>, I>>(object: I): QueryGetDeveloperResponse {
+    const message = createBaseQueryGetDeveloperResponse();
+    message.developer = (object.developer !== undefined && object.developer !== null)
+      ? Developer.fromPartial(object.developer)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllDeveloperRequest(): QueryAllDeveloperRequest {
+  return { pagination: undefined };
+}
+
+export const QueryAllDeveloperRequest = {
+  encode(message: QueryAllDeveloperRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllDeveloperRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDeveloperRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDeveloperRequest {
+    return { pagination: isSet(object.pagination) ? PageRequest.fromJSON(object.pagination) : undefined };
+  },
+
+  toJSON(message: QueryAllDeveloperRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageRequest.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllDeveloperRequest>, I>>(object: I): QueryAllDeveloperRequest {
+    const message = createBaseQueryAllDeveloperRequest();
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageRequest.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseQueryAllDeveloperResponse(): QueryAllDeveloperResponse {
+  return { developer: [], pagination: undefined };
+}
+
+export const QueryAllDeveloperResponse = {
+  encode(message: QueryAllDeveloperResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.developer) {
+      Developer.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): QueryAllDeveloperResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryAllDeveloperResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.developer.push(Developer.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllDeveloperResponse {
+    return {
+      developer: Array.isArray(object?.developer) ? object.developer.map((e: any) => Developer.fromJSON(e)) : [],
+      pagination: isSet(object.pagination) ? PageResponse.fromJSON(object.pagination) : undefined,
+    };
+  },
+
+  toJSON(message: QueryAllDeveloperResponse): unknown {
+    const obj: any = {};
+    if (message.developer) {
+      obj.developer = message.developer.map((e) => e ? Developer.toJSON(e) : undefined);
+    } else {
+      obj.developer = [];
+    }
+    message.pagination !== undefined
+      && (obj.pagination = message.pagination ? PageResponse.toJSON(message.pagination) : undefined);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<QueryAllDeveloperResponse>, I>>(object: I): QueryAllDeveloperResponse {
+    const message = createBaseQueryAllDeveloperResponse();
+    message.developer = object.developer?.map((e) => Developer.fromPartial(e)) || [];
+    message.pagination = (object.pagination !== undefined && object.pagination !== null)
+      ? PageResponse.fromPartial(object.pagination)
+      : undefined;
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -347,6 +577,10 @@ export interface Query {
   Administrator(request: QueryGetAdministratorRequest): Promise<QueryGetAdministratorResponse>;
   /** Queries a list of Administrator items. */
   AdministratorAll(request: QueryAllAdministratorRequest): Promise<QueryAllAdministratorResponse>;
+  /** Queries a Developer by index. */
+  Developer(request: QueryGetDeveloperRequest): Promise<QueryGetDeveloperResponse>;
+  /** Queries a list of Developer items. */
+  DeveloperAll(request: QueryAllDeveloperRequest): Promise<QueryAllDeveloperResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -356,6 +590,8 @@ export class QueryClientImpl implements Query {
     this.Params = this.Params.bind(this);
     this.Administrator = this.Administrator.bind(this);
     this.AdministratorAll = this.AdministratorAll.bind(this);
+    this.Developer = this.Developer.bind(this);
+    this.DeveloperAll = this.DeveloperAll.bind(this);
   }
   Params(request: QueryParamsRequest): Promise<QueryParamsResponse> {
     const data = QueryParamsRequest.encode(request).finish();
@@ -373,6 +609,18 @@ export class QueryClientImpl implements Query {
     const data = QueryAllAdministratorRequest.encode(request).finish();
     const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Query", "AdministratorAll", data);
     return promise.then((data) => QueryAllAdministratorResponse.decode(new _m0.Reader(data)));
+  }
+
+  Developer(request: QueryGetDeveloperRequest): Promise<QueryGetDeveloperResponse> {
+    const data = QueryGetDeveloperRequest.encode(request).finish();
+    const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Query", "Developer", data);
+    return promise.then((data) => QueryGetDeveloperResponse.decode(new _m0.Reader(data)));
+  }
+
+  DeveloperAll(request: QueryAllDeveloperRequest): Promise<QueryAllDeveloperResponse> {
+    const data = QueryAllDeveloperRequest.encode(request).finish();
+    const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Query", "DeveloperAll", data);
+    return promise.then((data) => QueryAllDeveloperResponse.decode(new _m0.Reader(data)));
   }
 }
 

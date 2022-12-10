@@ -21,11 +21,29 @@ export interface PermissionAdministrator {
   creator?: string;
 }
 
+export interface PermissionDeveloper {
+  address?: string;
+
+  /** @format int32 */
+  createdAt?: number;
+
+  /** @format int32 */
+  updatedAt?: number;
+  blocked?: boolean;
+  creator?: string;
+}
+
 export type PermissionMsgCreateAdministratorResponse = object;
+
+export type PermissionMsgCreateDeveloperResponse = object;
 
 export type PermissionMsgDeleteAdministratorResponse = object;
 
+export type PermissionMsgDeleteDeveloperResponse = object;
+
 export type PermissionMsgUpdateAdministratorResponse = object;
+
+export type PermissionMsgUpdateDeveloperResponse = object;
 
 /**
  * Params defines the parameters for the module.
@@ -49,8 +67,27 @@ export interface PermissionQueryAllAdministratorResponse {
   pagination?: V1Beta1PageResponse;
 }
 
+export interface PermissionQueryAllDeveloperResponse {
+  developer?: PermissionDeveloper[];
+
+  /**
+   * PageResponse is to be embedded in gRPC response messages where the
+   * corresponding request message has used PageRequest.
+   *
+   *  message SomeResponse {
+   *          repeated Bar results = 1;
+   *          PageResponse page = 2;
+   *  }
+   */
+  pagination?: V1Beta1PageResponse;
+}
+
 export interface PermissionQueryGetAdministratorResponse {
   administrator?: PermissionAdministrator;
+}
+
+export interface PermissionQueryGetDeveloperResponse {
+  developer?: PermissionDeveloper;
 }
 
 /**
@@ -306,6 +343,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   queryAdministrator = (address: string, params: RequestParams = {}) =>
     this.request<PermissionQueryGetAdministratorResponse, RpcStatus>({
       path: `/G4AL-Entertainment/g4al-chain/permission/administrator/${address}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDeveloperAll
+   * @summary Queries a list of Developer items.
+   * @request GET:/G4AL-Entertainment/g4al-chain/permission/developer
+   */
+  queryDeveloperAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<PermissionQueryAllDeveloperResponse, RpcStatus>({
+      path: `/G4AL-Entertainment/g4al-chain/permission/developer`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryDeveloper
+   * @summary Queries a Developer by index.
+   * @request GET:/G4AL-Entertainment/g4al-chain/permission/developer/{address}
+   */
+  queryDeveloper = (address: string, params: RequestParams = {}) =>
+    this.request<PermissionQueryGetDeveloperResponse, RpcStatus>({
+      path: `/G4AL-Entertainment/g4al-chain/permission/developer/${address}`,
       method: "GET",
       format: "json",
       ...params,

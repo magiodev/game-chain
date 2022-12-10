@@ -1,10 +1,11 @@
 import { Client, registry, MissingWalletError } from 'G4AL-Entertainment-g4al-chain-client-ts'
 
 import { Administrator } from "G4AL-Entertainment-g4al-chain-client-ts/g4alentertainment.g4alchain.permission/types"
+import { Developer } from "G4AL-Entertainment-g4al-chain-client-ts/g4alentertainment.g4alchain.permission/types"
 import { Params } from "G4AL-Entertainment-g4al-chain-client-ts/g4alentertainment.g4alchain.permission/types"
 
 
-export { Administrator, Params };
+export { Administrator, Developer, Params };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -38,9 +39,12 @@ const getDefaultState = () => {
 				Params: {},
 				Administrator: {},
 				AdministratorAll: {},
+				Developer: {},
+				DeveloperAll: {},
 				
 				_Structure: {
 						Administrator: getStructure(Administrator.fromPartial({})),
+						Developer: getStructure(Developer.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
 		},
@@ -87,6 +91,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.AdministratorAll[JSON.stringify(params)] ?? {}
+		},
+				getDeveloper: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Developer[JSON.stringify(params)] ?? {}
+		},
+				getDeveloperAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.DeveloperAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -192,6 +208,106 @@ export default {
 		},
 		
 		
+		
+		
+		 		
+		
+		
+		async QueryDeveloper({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.G4AlentertainmentG4AlchainPermission.query.queryDeveloper( key.address)).data
+				
+					
+				commit('QUERY', { query: 'Developer', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDeveloper', payload: { options: { all }, params: {...key},query }})
+				return getters['getDeveloper']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryDeveloper API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryDeveloperAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.G4AlentertainmentG4AlchainPermission.query.queryDeveloperAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.G4AlentertainmentG4AlchainPermission.query.queryDeveloperAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'DeveloperAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryDeveloperAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getDeveloperAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryDeveloperAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgUpdateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateDeveloper:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgDeleteDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgDeleteDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteDeveloper:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgDeleteDeveloper:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgCreateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgCreateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateDeveloper:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateDeveloper:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgUpdateAdministrator({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateAdministrator({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateAdministrator:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgCreateAdministrator({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -218,20 +334,59 @@ export default {
 				}
 			}
 		},
-		async sendMsgUpdateAdministrator({ rootGetters }, { value, fee = [], memo = '' }) {
+		
+		async MsgUpdateDeveloper({ rootGetters }, { value }) {
 			try {
-				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateAdministrator({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateDeveloper({value})
+				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUpdateAdministrator:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateDeveloper:Create Could not create message: ' + e.message)
 				}
 			}
 		},
-		
+		async MsgDeleteDeveloper({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgDeleteDeveloper({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteDeveloper:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDeleteDeveloper:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateDeveloper({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgCreateDeveloper({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateDeveloper:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateDeveloper:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateAdministrator({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateAdministrator({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateAdministrator:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgCreateAdministrator({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -255,19 +410,6 @@ export default {
 					throw new Error('TxClient:MsgDeleteAdministrator:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgDeleteAdministrator:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgUpdateAdministrator({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateAdministrator({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUpdateAdministrator:Create Could not create message: ' + e.message)
 				}
 			}
 		},

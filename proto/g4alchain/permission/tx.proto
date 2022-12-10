@@ -2,6 +2,7 @@ syntax = "proto3";
 package g4alentertainment.g4alchain.permission;
 
 import "g4alchain/permission/administrator.proto";
+import "g4alchain/permission/developer.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/permission/types";
@@ -11,6 +12,9 @@ service Msg {
       rpc CreateAdministrator(MsgCreateAdministrator) returns (MsgCreateAdministratorResponse);
   rpc UpdateAdministrator(MsgUpdateAdministrator) returns (MsgUpdateAdministratorResponse);
   rpc DeleteAdministrator(MsgDeleteAdministrator) returns (MsgDeleteAdministratorResponse);
+  rpc CreateDeveloper(MsgCreateDeveloper) returns (MsgCreateDeveloperResponse);
+  rpc UpdateDeveloper(MsgUpdateDeveloper) returns (MsgUpdateDeveloperResponse);
+  rpc DeleteDeveloper(MsgDeleteDeveloper) returns (MsgDeleteDeveloperResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -39,5 +43,31 @@ message MsgDeleteAdministrator {
   string address = 2;
 }
 message MsgDeleteAdministratorResponse {}
+
+message MsgCreateDeveloper {
+  string creator = 1;
+  string address = 2;
+
+  int32 createdAt = 3;
+  int32 updatedAt = 4;
+  bool blocked = 5;
+}
+message MsgCreateDeveloperResponse {}
+
+message MsgUpdateDeveloper {
+  string creator = 1;
+  string address = 2;
+
+  int32 createdAt = 3;
+  int32 updatedAt = 4;
+  bool blocked = 5;
+}
+message MsgUpdateDeveloperResponse {}
+
+message MsgDeleteDeveloper {
+  string creator = 1;
+  string address = 2;
+}
+message MsgDeleteDeveloperResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

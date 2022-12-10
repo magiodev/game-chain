@@ -1,21 +1,21 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { Administrator } from "./administrator";
+import { Developer } from "./developer";
 import { Params } from "./params";
 
 export const protobufPackage = "g4alentertainment.g4alchain.permission";
 
 /** GenesisState defines the permission module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   administratorList: Administrator[];
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  developerList: Developer[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, administratorList: [] };
+  return { params: undefined, administratorList: [], developerList: [] };
 }
 
 export const GenesisState = {
@@ -25,6 +25,9 @@ export const GenesisState = {
     }
     for (const v of message.administratorList) {
       Administrator.encode(v!, writer.uint32(18).fork()).ldelim();
+    }
+    for (const v of message.developerList) {
+      Developer.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -42,6 +45,9 @@ export const GenesisState = {
         case 2:
           message.administratorList.push(Administrator.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.developerList.push(Developer.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -56,6 +62,9 @@ export const GenesisState = {
       administratorList: Array.isArray(object?.administratorList)
         ? object.administratorList.map((e: any) => Administrator.fromJSON(e))
         : [],
+      developerList: Array.isArray(object?.developerList)
+        ? object.developerList.map((e: any) => Developer.fromJSON(e))
+        : [],
     };
   },
 
@@ -67,6 +76,11 @@ export const GenesisState = {
     } else {
       obj.administratorList = [];
     }
+    if (message.developerList) {
+      obj.developerList = message.developerList.map((e) => e ? Developer.toJSON(e) : undefined);
+    } else {
+      obj.developerList = [];
+    }
     return obj;
   },
 
@@ -76,6 +90,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.administratorList = object.administratorList?.map((e) => Administrator.fromPartial(e)) || [];
+    message.developerList = object.developerList?.map((e) => Developer.fromPartial(e)) || [];
     return message;
   },
 };
