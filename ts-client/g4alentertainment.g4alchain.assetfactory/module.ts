@@ -7,21 +7,29 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+import { MsgUpdateNft } from "./types/g4alchain/assetfactory/tx";
+import { MsgBurnNft } from "./types/g4alchain/assetfactory/tx";
 import { MsgUpdateClass } from "./types/g4alchain/assetfactory/tx";
-import { MsgMintNft } from "./types/g4alchain/assetfactory/tx";
 import { MsgCreateClass } from "./types/g4alchain/assetfactory/tx";
+import { MsgMintNft } from "./types/g4alchain/assetfactory/tx";
 
 
-export { MsgUpdateClass, MsgMintNft, MsgCreateClass };
+export { MsgUpdateNft, MsgBurnNft, MsgUpdateClass, MsgCreateClass, MsgMintNft };
 
-type sendMsgUpdateClassParams = {
-  value: MsgUpdateClass,
+type sendMsgUpdateNftParams = {
+  value: MsgUpdateNft,
   fee?: StdFee,
   memo?: string
 };
 
-type sendMsgMintNftParams = {
-  value: MsgMintNft,
+type sendMsgBurnNftParams = {
+  value: MsgBurnNft,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateClassParams = {
+  value: MsgUpdateClass,
   fee?: StdFee,
   memo?: string
 };
@@ -32,17 +40,31 @@ type sendMsgCreateClassParams = {
   memo?: string
 };
 
+type sendMsgMintNftParams = {
+  value: MsgMintNft,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgUpdateNftParams = {
+  value: MsgUpdateNft,
+};
+
+type msgBurnNftParams = {
+  value: MsgBurnNft,
+};
 
 type msgUpdateClassParams = {
   value: MsgUpdateClass,
 };
 
-type msgMintNftParams = {
-  value: MsgMintNft,
-};
-
 type msgCreateClassParams = {
   value: MsgCreateClass,
+};
+
+type msgMintNftParams = {
+  value: MsgMintNft,
 };
 
 
@@ -63,6 +85,34 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
+		async sendMsgUpdateNft({ value, fee, memo }: sendMsgUpdateNftParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateNft: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateNft({ value: MsgUpdateNft.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateNft: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgBurnNft({ value, fee, memo }: sendMsgBurnNftParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgBurnNft: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgBurnNft({ value: MsgBurnNft.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgBurnNft: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
 		async sendMsgUpdateClass({ value, fee, memo }: sendMsgUpdateClassParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgUpdateClass: Unable to sign Tx. Signer is not present.')
@@ -74,20 +124,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgUpdateClass: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgMintNft({ value, fee, memo }: sendMsgMintNftParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgMintNft: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgMintNft({ value: MsgMintNft.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgMintNft: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -105,6 +141,36 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		async sendMsgMintNft({ value, fee, memo }: sendMsgMintNftParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgMintNft: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgMintNft({ value: MsgMintNft.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgMintNft: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgUpdateNft({ value }: msgUpdateNftParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgUpdateNft", value: MsgUpdateNft.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateNft: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgBurnNft({ value }: msgBurnNftParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgBurnNft", value: MsgBurnNft.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgBurnNft: Could not create message: ' + e.message)
+			}
+		},
 		
 		msgUpdateClass({ value }: msgUpdateClassParams): EncodeObject {
 			try {
@@ -114,19 +180,19 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		msgMintNft({ value }: msgMintNftParams): EncodeObject {
-			try {
-				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgMintNft", value: MsgMintNft.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgMintNft: Could not create message: ' + e.message)
-			}
-		},
-		
 		msgCreateClass({ value }: msgCreateClassParams): EncodeObject {
 			try {
 				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgCreateClass", value: MsgCreateClass.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgCreateClass: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgMintNft({ value }: msgMintNftParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgMintNft", value: MsgMintNft.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgMintNft: Could not create message: ' + e.message)
 			}
 		},
 		

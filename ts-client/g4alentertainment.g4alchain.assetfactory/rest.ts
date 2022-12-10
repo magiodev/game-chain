@@ -19,11 +19,15 @@ export interface AssetfactoryClass {
   creator?: string;
 }
 
+export type AssetfactoryMsgBurnNftResponse = object;
+
 export type AssetfactoryMsgCreateClassResponse = object;
 
 export type AssetfactoryMsgMintNftResponse = object;
 
 export type AssetfactoryMsgUpdateClassResponse = object;
+
+export type AssetfactoryMsgUpdateNftResponse = object;
 
 /**
  * Params defines the parameters for the module.
