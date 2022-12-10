@@ -1,20 +1,20 @@
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
 import { Params } from "./params";
+import { Project } from "./project";
 
 export const protobufPackage = "g4alentertainment.g4alchain.game";
 
 /** GenesisState defines the game module's genesis state. */
 export interface GenesisState {
-  params:
-    | Params
-    | undefined;
-  /** this line is used by starport scaffolding # genesis/proto/state */
+  params: Params | undefined;
   portId: string;
+  /** this line is used by starport scaffolding # genesis/proto/state */
+  projectList: Project[];
 }
 
 function createBaseGenesisState(): GenesisState {
-  return { params: undefined, portId: "" };
+  return { params: undefined, portId: "", projectList: [] };
 }
 
 export const GenesisState = {
@@ -24,6 +24,9 @@ export const GenesisState = {
     }
     if (message.portId !== "") {
       writer.uint32(18).string(message.portId);
+    }
+    for (const v of message.projectList) {
+      Project.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -41,6 +44,9 @@ export const GenesisState = {
         case 2:
           message.portId = reader.string();
           break;
+        case 3:
+          message.projectList.push(Project.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -53,6 +59,7 @@ export const GenesisState = {
     return {
       params: isSet(object.params) ? Params.fromJSON(object.params) : undefined,
       portId: isSet(object.portId) ? String(object.portId) : "",
+      projectList: Array.isArray(object?.projectList) ? object.projectList.map((e: any) => Project.fromJSON(e)) : [],
     };
   },
 
@@ -60,6 +67,11 @@ export const GenesisState = {
     const obj: any = {};
     message.params !== undefined && (obj.params = message.params ? Params.toJSON(message.params) : undefined);
     message.portId !== undefined && (obj.portId = message.portId);
+    if (message.projectList) {
+      obj.projectList = message.projectList.map((e) => e ? Project.toJSON(e) : undefined);
+    } else {
+      obj.projectList = [];
+    }
     return obj;
   },
 
@@ -69,6 +81,7 @@ export const GenesisState = {
       ? Params.fromPartial(object.params)
       : undefined;
     message.portId = object.portId ?? "";
+    message.projectList = object.projectList?.map((e) => Project.fromPartial(e)) || [];
     return message;
   },
 };

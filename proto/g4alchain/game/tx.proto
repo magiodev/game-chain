@@ -1,13 +1,43 @@
 syntax = "proto3";
 package g4alentertainment.g4alchain.game;
 
+import "g4alchain/game/project.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/game/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc CreateProject(MsgCreateProject) returns (MsgCreateProjectResponse);
+  rpc UpdateProject(MsgUpdateProject) returns (MsgUpdateProjectResponse);
+  rpc DeleteProject(MsgDeleteProject) returns (MsgDeleteProjectResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
 }
+
+message MsgCreateProject {
+  string creator = 1;
+  string symbol = 2;
+
+  string name = 3;
+  string description = 4;
+  repeated string delegate = 5;
+}
+message MsgCreateProjectResponse {}
+
+message MsgUpdateProject {
+  string creator = 1;
+  string symbol = 2;
+
+  string name = 3;
+  string description = 4;
+  repeated string delegate = 5;
+}
+message MsgUpdateProjectResponse {}
+
+message MsgDeleteProject {
+  string creator = 1;
+  string symbol = 2;
+}
+message MsgDeleteProjectResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message
