@@ -10,7 +10,7 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/typ
 service Msg {
   rpc CreateClass(MsgCreateClass) returns (MsgCreateClassResponse);
   rpc UpdateClass(MsgUpdateClass) returns (MsgUpdateClassResponse);
-// this line is used by starport scaffolding # proto/tx/rpc
+  // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgCreateClass {
@@ -20,6 +20,11 @@ message MsgCreateClass {
   string project = 3;
   int32 maxSupply = 4;
   bool canChangeMaxSupply = 5;
+  string name = 6;
+  string description = 7;
+  string uri = 8;
+  string uri_hash = 9;
+  string data = 10;
 }
 message MsgCreateClassResponse {}
 
@@ -27,9 +32,13 @@ message MsgUpdateClass {
   string creator = 1;
   string symbol = 2;
 
-  string project = 3;
-  int32 maxSupply = 4;
-  bool canChangeMaxSupply = 5;
+  int32 maxSupply = 3;
+  string name = 4;
+  string description = 5;
+  string uri = 6;
+  string uri_hash = 7;
+  string data = 8;
+
 }
 message MsgUpdateClassResponse {}
 

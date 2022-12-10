@@ -196,20 +196,6 @@ export default {
 		},
 		
 		
-		async sendMsgCreateClass({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgCreateClass({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateClass:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-
 		async sendMsgUpdateClass({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -223,21 +209,20 @@ export default {
 				}
 			}
 		},
-		
-		async MsgCreateClass({ rootGetters }, { value }) {
+		async sendMsgCreateClass({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
-				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgCreateClass({value})
-				return msg
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgCreateClass({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreateClass:Create Could not create message: ' + e.message)
+				}else{
+					throw new Error('TxClient:MsgCreateClass:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
-
+		
 		async MsgUpdateClass({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -248,6 +233,19 @@ export default {
 					throw new Error('TxClient:MsgUpdateClass:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgUpdateClass:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateClass({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgCreateClass({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateClass:Create Could not create message: ' + e.message)
 				}
 			}
 		},

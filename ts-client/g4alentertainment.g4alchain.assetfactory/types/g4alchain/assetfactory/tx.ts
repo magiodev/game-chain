@@ -9,6 +9,11 @@ export interface MsgCreateClass {
   project: string;
   maxSupply: number;
   canChangeMaxSupply: boolean;
+  name: string;
+  description: string;
+  uri: string;
+  uriHash: string;
+  data: string;
 }
 
 export interface MsgCreateClassResponse {
@@ -17,16 +22,30 @@ export interface MsgCreateClassResponse {
 export interface MsgUpdateClass {
   creator: string;
   symbol: string;
-  project: string;
   maxSupply: number;
-  canChangeMaxSupply: boolean;
+  name: string;
+  description: string;
+  uri: string;
+  uriHash: string;
+  data: string;
 }
 
 export interface MsgUpdateClassResponse {
 }
 
 function createBaseMsgCreateClass(): MsgCreateClass {
-  return { creator: "", symbol: "", project: "", maxSupply: 0, canChangeMaxSupply: false };
+  return {
+    creator: "",
+    symbol: "",
+    project: "",
+    maxSupply: 0,
+    canChangeMaxSupply: false,
+    name: "",
+    description: "",
+    uri: "",
+    uriHash: "",
+    data: "",
+  };
 }
 
 export const MsgCreateClass = {
@@ -45,6 +64,21 @@ export const MsgCreateClass = {
     }
     if (message.canChangeMaxSupply === true) {
       writer.uint32(40).bool(message.canChangeMaxSupply);
+    }
+    if (message.name !== "") {
+      writer.uint32(50).string(message.name);
+    }
+    if (message.description !== "") {
+      writer.uint32(58).string(message.description);
+    }
+    if (message.uri !== "") {
+      writer.uint32(66).string(message.uri);
+    }
+    if (message.uriHash !== "") {
+      writer.uint32(74).string(message.uriHash);
+    }
+    if (message.data !== "") {
+      writer.uint32(82).string(message.data);
     }
     return writer;
   },
@@ -71,6 +105,21 @@ export const MsgCreateClass = {
         case 5:
           message.canChangeMaxSupply = reader.bool();
           break;
+        case 6:
+          message.name = reader.string();
+          break;
+        case 7:
+          message.description = reader.string();
+          break;
+        case 8:
+          message.uri = reader.string();
+          break;
+        case 9:
+          message.uriHash = reader.string();
+          break;
+        case 10:
+          message.data = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -86,6 +135,11 @@ export const MsgCreateClass = {
       project: isSet(object.project) ? String(object.project) : "",
       maxSupply: isSet(object.maxSupply) ? Number(object.maxSupply) : 0,
       canChangeMaxSupply: isSet(object.canChangeMaxSupply) ? Boolean(object.canChangeMaxSupply) : false,
+      name: isSet(object.name) ? String(object.name) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
+      uriHash: isSet(object.uriHash) ? String(object.uriHash) : "",
+      data: isSet(object.data) ? String(object.data) : "",
     };
   },
 
@@ -96,6 +150,11 @@ export const MsgCreateClass = {
     message.project !== undefined && (obj.project = message.project);
     message.maxSupply !== undefined && (obj.maxSupply = Math.round(message.maxSupply));
     message.canChangeMaxSupply !== undefined && (obj.canChangeMaxSupply = message.canChangeMaxSupply);
+    message.name !== undefined && (obj.name = message.name);
+    message.description !== undefined && (obj.description = message.description);
+    message.uri !== undefined && (obj.uri = message.uri);
+    message.uriHash !== undefined && (obj.uriHash = message.uriHash);
+    message.data !== undefined && (obj.data = message.data);
     return obj;
   },
 
@@ -106,6 +165,11 @@ export const MsgCreateClass = {
     message.project = object.project ?? "";
     message.maxSupply = object.maxSupply ?? 0;
     message.canChangeMaxSupply = object.canChangeMaxSupply ?? false;
+    message.name = object.name ?? "";
+    message.description = object.description ?? "";
+    message.uri = object.uri ?? "";
+    message.uriHash = object.uriHash ?? "";
+    message.data = object.data ?? "";
     return message;
   },
 };
@@ -150,7 +214,7 @@ export const MsgCreateClassResponse = {
 };
 
 function createBaseMsgUpdateClass(): MsgUpdateClass {
-  return { creator: "", symbol: "", project: "", maxSupply: 0, canChangeMaxSupply: false };
+  return { creator: "", symbol: "", maxSupply: 0, name: "", description: "", uri: "", uriHash: "", data: "" };
 }
 
 export const MsgUpdateClass = {
@@ -161,14 +225,23 @@ export const MsgUpdateClass = {
     if (message.symbol !== "") {
       writer.uint32(18).string(message.symbol);
     }
-    if (message.project !== "") {
-      writer.uint32(26).string(message.project);
-    }
     if (message.maxSupply !== 0) {
-      writer.uint32(32).int32(message.maxSupply);
+      writer.uint32(24).int32(message.maxSupply);
     }
-    if (message.canChangeMaxSupply === true) {
-      writer.uint32(40).bool(message.canChangeMaxSupply);
+    if (message.name !== "") {
+      writer.uint32(34).string(message.name);
+    }
+    if (message.description !== "") {
+      writer.uint32(42).string(message.description);
+    }
+    if (message.uri !== "") {
+      writer.uint32(50).string(message.uri);
+    }
+    if (message.uriHash !== "") {
+      writer.uint32(58).string(message.uriHash);
+    }
+    if (message.data !== "") {
+      writer.uint32(66).string(message.data);
     }
     return writer;
   },
@@ -187,13 +260,22 @@ export const MsgUpdateClass = {
           message.symbol = reader.string();
           break;
         case 3:
-          message.project = reader.string();
-          break;
-        case 4:
           message.maxSupply = reader.int32();
           break;
+        case 4:
+          message.name = reader.string();
+          break;
         case 5:
-          message.canChangeMaxSupply = reader.bool();
+          message.description = reader.string();
+          break;
+        case 6:
+          message.uri = reader.string();
+          break;
+        case 7:
+          message.uriHash = reader.string();
+          break;
+        case 8:
+          message.data = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -207,9 +289,12 @@ export const MsgUpdateClass = {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
       symbol: isSet(object.symbol) ? String(object.symbol) : "",
-      project: isSet(object.project) ? String(object.project) : "",
       maxSupply: isSet(object.maxSupply) ? Number(object.maxSupply) : 0,
-      canChangeMaxSupply: isSet(object.canChangeMaxSupply) ? Boolean(object.canChangeMaxSupply) : false,
+      name: isSet(object.name) ? String(object.name) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
+      uriHash: isSet(object.uriHash) ? String(object.uriHash) : "",
+      data: isSet(object.data) ? String(object.data) : "",
     };
   },
 
@@ -217,9 +302,12 @@ export const MsgUpdateClass = {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
     message.symbol !== undefined && (obj.symbol = message.symbol);
-    message.project !== undefined && (obj.project = message.project);
     message.maxSupply !== undefined && (obj.maxSupply = Math.round(message.maxSupply));
-    message.canChangeMaxSupply !== undefined && (obj.canChangeMaxSupply = message.canChangeMaxSupply);
+    message.name !== undefined && (obj.name = message.name);
+    message.description !== undefined && (obj.description = message.description);
+    message.uri !== undefined && (obj.uri = message.uri);
+    message.uriHash !== undefined && (obj.uriHash = message.uriHash);
+    message.data !== undefined && (obj.data = message.data);
     return obj;
   },
 
@@ -227,9 +315,12 @@ export const MsgUpdateClass = {
     const message = createBaseMsgUpdateClass();
     message.creator = object.creator ?? "";
     message.symbol = object.symbol ?? "";
-    message.project = object.project ?? "";
     message.maxSupply = object.maxSupply ?? 0;
-    message.canChangeMaxSupply = object.canChangeMaxSupply ?? false;
+    message.name = object.name ?? "";
+    message.description = object.description ?? "";
+    message.uri = object.uri ?? "";
+    message.uriHash = object.uriHash ?? "";
+    message.data = object.data ?? "";
     return message;
   },
 };
@@ -276,8 +367,8 @@ export const MsgUpdateClassResponse = {
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateClass(request: MsgCreateClass): Promise<MsgCreateClassResponse>;
-  UpdateClass(request: MsgUpdateClass): Promise<MsgUpdateClassResponse>;
   /** this line is used by starport scaffolding # proto/tx/rpc */
+  UpdateClass(request: MsgUpdateClass): Promise<MsgUpdateClassResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -298,7 +389,6 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("g4alentertainment.g4alchain.assetfactory.Msg", "UpdateClass", data);
     return promise.then((data) => MsgUpdateClassResponse.decode(new _m0.Reader(data)));
   }
-
 }
 
 interface Rpc {

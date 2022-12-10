@@ -18,6 +18,11 @@ func NewMsgCreateClass(
 	project string,
 	maxSupply int32,
 	canChangeMaxSupply bool,
+	name string,
+	description string,
+	uri string,
+	uri_hash string,
+	data string,
 
 ) *MsgCreateClass {
 	return &MsgCreateClass{
@@ -26,6 +31,11 @@ func NewMsgCreateClass(
 		Project:            project,
 		MaxSupply:          maxSupply,
 		CanChangeMaxSupply: canChangeMaxSupply,
+		Name:               name,
+		Description:        description,
+		Uri:                uri,
+		UriHash:            uri_hash,
+		Data:               data,
 	}
 }
 
@@ -63,17 +73,23 @@ var _ sdk.Msg = &MsgUpdateClass{}
 func NewMsgUpdateClass(
 	creator string,
 	symbol string,
-	project string,
 	maxSupply int32,
-	canChangeMaxSupply bool,
+	name string,
+	description string,
+	uri string,
+	uri_hash string,
+	data string,
 
 ) *MsgUpdateClass {
 	return &MsgUpdateClass{
-		Creator:            creator,
-		Symbol:             symbol,
-		Project:            project,
-		MaxSupply:          maxSupply,
-		CanChangeMaxSupply: canChangeMaxSupply,
+		Creator:     creator,
+		Symbol:      symbol,
+		MaxSupply:   maxSupply,
+		Name:        name,
+		Description: description,
+		Uri:         uri,
+		UriHash:     uri_hash,
+		Data:        data,
 	}
 }
 

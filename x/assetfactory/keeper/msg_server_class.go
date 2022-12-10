@@ -53,11 +53,11 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 	}
 
 	var class = types.Class{
-		Creator:            msg.Creator,
-		Symbol:             msg.Symbol,
-		Project:            msg.Project,
-		MaxSupply:          msg.MaxSupply,
-		CanChangeMaxSupply: msg.CanChangeMaxSupply,
+		Creator:            valFound.Creator,
+		Symbol:             valFound.Symbol,
+		Project:            valFound.Project,
+		MaxSupply:          msg.MaxSupply, // TODO
+		CanChangeMaxSupply: valFound.CanChangeMaxSupply,
 	}
 
 	k.SetClass(ctx, class)

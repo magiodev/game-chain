@@ -33,6 +33,11 @@ type MsgCreateClass struct {
 	Project            string `protobuf:"bytes,3,opt,name=project,proto3" json:"project,omitempty"`
 	MaxSupply          int32  `protobuf:"varint,4,opt,name=maxSupply,proto3" json:"maxSupply,omitempty"`
 	CanChangeMaxSupply bool   `protobuf:"varint,5,opt,name=canChangeMaxSupply,proto3" json:"canChangeMaxSupply,omitempty"`
+	Name               string `protobuf:"bytes,6,opt,name=name,proto3" json:"name,omitempty"`
+	Description        string `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
+	Uri                string `protobuf:"bytes,8,opt,name=uri,proto3" json:"uri,omitempty"`
+	UriHash            string `protobuf:"bytes,9,opt,name=uri_hash,json=uriHash,proto3" json:"uri_hash,omitempty"`
+	Data               string `protobuf:"bytes,10,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (m *MsgCreateClass) Reset()         { *m = MsgCreateClass{} }
@@ -103,6 +108,41 @@ func (m *MsgCreateClass) GetCanChangeMaxSupply() bool {
 	return false
 }
 
+func (m *MsgCreateClass) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *MsgCreateClass) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *MsgCreateClass) GetUri() string {
+	if m != nil {
+		return m.Uri
+	}
+	return ""
+}
+
+func (m *MsgCreateClass) GetUriHash() string {
+	if m != nil {
+		return m.UriHash
+	}
+	return ""
+}
+
+func (m *MsgCreateClass) GetData() string {
+	if m != nil {
+		return m.Data
+	}
+	return ""
+}
+
 type MsgCreateClassResponse struct {
 }
 
@@ -140,11 +180,14 @@ func (m *MsgCreateClassResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgCreateClassResponse proto.InternalMessageInfo
 
 type MsgUpdateClass struct {
-	Creator            string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Symbol             string `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
-	Project            string `protobuf:"bytes,3,opt,name=project,proto3" json:"project,omitempty"`
-	MaxSupply          int32  `protobuf:"varint,4,opt,name=maxSupply,proto3" json:"maxSupply,omitempty"`
-	CanChangeMaxSupply bool   `protobuf:"varint,5,opt,name=canChangeMaxSupply,proto3" json:"canChangeMaxSupply,omitempty"`
+	Creator     string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
+	Symbol      string `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	MaxSupply   int32  `protobuf:"varint,3,opt,name=maxSupply,proto3" json:"maxSupply,omitempty"`
+	Name        string `protobuf:"bytes,4,opt,name=name,proto3" json:"name,omitempty"`
+	Description string `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
+	Uri         string `protobuf:"bytes,6,opt,name=uri,proto3" json:"uri,omitempty"`
+	UriHash     string `protobuf:"bytes,7,opt,name=uri_hash,json=uriHash,proto3" json:"uri_hash,omitempty"`
+	Data        string `protobuf:"bytes,8,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (m *MsgUpdateClass) Reset()         { *m = MsgUpdateClass{} }
@@ -194,13 +237,6 @@ func (m *MsgUpdateClass) GetSymbol() string {
 	return ""
 }
 
-func (m *MsgUpdateClass) GetProject() string {
-	if m != nil {
-		return m.Project
-	}
-	return ""
-}
-
 func (m *MsgUpdateClass) GetMaxSupply() int32 {
 	if m != nil {
 		return m.MaxSupply
@@ -208,11 +244,39 @@ func (m *MsgUpdateClass) GetMaxSupply() int32 {
 	return 0
 }
 
-func (m *MsgUpdateClass) GetCanChangeMaxSupply() bool {
+func (m *MsgUpdateClass) GetName() string {
 	if m != nil {
-		return m.CanChangeMaxSupply
+		return m.Name
 	}
-	return false
+	return ""
+}
+
+func (m *MsgUpdateClass) GetDescription() string {
+	if m != nil {
+		return m.Description
+	}
+	return ""
+}
+
+func (m *MsgUpdateClass) GetUri() string {
+	if m != nil {
+		return m.Uri
+	}
+	return ""
+}
+
+func (m *MsgUpdateClass) GetUriHash() string {
+	if m != nil {
+		return m.UriHash
+	}
+	return ""
+}
+
+func (m *MsgUpdateClass) GetData() string {
+	if m != nil {
+		return m.Data
+	}
+	return ""
 }
 
 type MsgUpdateClassResponse struct {
@@ -261,31 +325,35 @@ func init() {
 func init() { proto.RegisterFile("g4alchain/assetfactory/tx.proto", fileDescriptor_c64669cb880b672c) }
 
 var fileDescriptor_c64669cb880b672c = []byte{
-	// 374 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x94, 0xc1, 0x4e, 0xc2, 0x30,
-	0x18, 0xc7, 0xa9, 0x08, 0x4a, 0x4d, 0x3c, 0xf4, 0x40, 0x16, 0x62, 0x26, 0xe1, 0xb4, 0x0b, 0x5d,
-	0xa2, 0x1c, 0xbc, 0x98, 0x28, 0x68, 0xbc, 0xc8, 0x65, 0xc6, 0x98, 0x78, 0x2b, 0xb5, 0x0e, 0xcc,
-	0xd6, 0x36, 0x6b, 0x49, 0xd8, 0x23, 0x78, 0xf3, 0x35, 0xf4, 0x49, 0x3c, 0x72, 0xf4, 0x68, 0xe0,
-	0x45, 0xcc, 0x06, 0xc3, 0x62, 0x66, 0xe2, 0xb8, 0x79, 0xfc, 0xf8, 0xfa, 0xff, 0xf7, 0xf7, 0xff,
-	0x3e, 0x3a, 0x78, 0xe8, 0x77, 0x48, 0x40, 0x87, 0x64, 0xc4, 0x5d, 0xa2, 0x14, 0xd3, 0x8f, 0x84,
-	0x6a, 0x11, 0xc5, 0xae, 0x9e, 0x60, 0x19, 0x09, 0x2d, 0x90, 0x93, 0x1c, 0x60, 0x5c, 0xb3, 0x48,
-	0x93, 0x11, 0x0f, 0x19, 0xd7, 0x78, 0x25, 0xc1, 0xa6, 0xa4, 0xd1, 0xfa, 0xc5, 0x8a, 0x06, 0x44,
-	0xa9, 0x85, 0x5b, 0xeb, 0x0d, 0xc0, 0xfd, 0xbe, 0xf2, 0x7b, 0x11, 0x23, 0x9a, 0xf5, 0x92, 0x06,
-	0xb2, 0xe0, 0x0e, 0x4d, 0x4a, 0x11, 0x59, 0xa0, 0x09, 0x9c, 0x9a, 0x97, 0x95, 0xa8, 0x0e, 0xab,
-	0x2a, 0x0e, 0x07, 0x22, 0xb0, 0xb6, 0xd2, 0xc6, 0xb2, 0x4a, 0x14, 0x32, 0x12, 0x4f, 0x8c, 0x6a,
-	0xab, 0xbc, 0x50, 0x2c, 0x4b, 0x74, 0x00, 0x6b, 0x21, 0x99, 0xdc, 0x8c, 0xa5, 0x0c, 0x62, 0x6b,
-	0xbb, 0x09, 0x9c, 0x8a, 0xf7, 0xfd, 0x03, 0xc2, 0x10, 0x51, 0xc2, 0x7b, 0x43, 0xc2, 0x7d, 0xd6,
-	0x5f, 0x1d, 0xab, 0x34, 0x81, 0xb3, 0xeb, 0xe5, 0x74, 0x5a, 0x16, 0xac, 0xaf, 0xb3, 0x7a, 0x4c,
-	0x49, 0xc1, 0x15, 0xcb, 0x62, 0xdc, 0xca, 0x87, 0x7f, 0x13, 0xc3, 0x60, 0x5d, 0xc5, 0xe8, 0xa6,
-	0x29, 0x2e, 0x58, 0xc0, 0x36, 0x4e, 0xb1, 0x74, 0x37, 0x3c, 0x32, 0xf7, 0xa3, 0xd7, 0x32, 0x2c,
-	0xf7, 0x95, 0x8f, 0x9e, 0x01, 0xdc, 0x33, 0x17, 0x7e, 0x82, 0xff, 0xfa, 0x97, 0xc2, 0xeb, 0xe3,
-	0x6f, 0x9c, 0x6d, 0xaa, 0xcc, 0x98, 0x52, 0x16, 0x73, 0x6b, 0xc5, 0x58, 0x0c, 0x65, 0x41, 0x96,
-	0x9c, 0xe9, 0xa7, 0x2c, 0xe6, 0xec, 0x8b, 0xb1, 0x18, 0xca, 0x82, 0x2c, 0x39, 0xbb, 0xea, 0xde,
-	0xbd, 0xcf, 0x6c, 0x30, 0x9d, 0xd9, 0xe0, 0x73, 0x66, 0x83, 0x97, 0xb9, 0x5d, 0x9a, 0xce, 0xed,
-	0xd2, 0xc7, 0xdc, 0x2e, 0xdd, 0x9f, 0xfa, 0x23, 0x3d, 0x1c, 0x0f, 0x30, 0x15, 0xa1, 0x7b, 0xd5,
-	0x39, 0xbf, 0x6e, 0x5f, 0x9a, 0xd7, 0xb8, 0xc9, 0x35, 0xed, 0xc5, 0xa3, 0x9f, 0xfc, 0xf8, 0x82,
-	0xc4, 0x92, 0xa9, 0x41, 0x35, 0x7d, 0xf7, 0xc7, 0x5f, 0x01, 0x00, 0x00, 0xff, 0xff, 0xda, 0x0c,
-	0xd8, 0x0c, 0x68, 0x04, 0x00, 0x00,
+	// 440 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x53, 0xbf, 0x8e, 0xd3, 0x30,
+	0x18, 0xaf, 0xfb, 0xbf, 0x3e, 0x09, 0x21, 0x0f, 0x27, 0x73, 0x42, 0xa1, 0xea, 0xd4, 0xe5, 0x12,
+	0x09, 0x6e, 0x60, 0x41, 0x02, 0x2a, 0x04, 0x03, 0x5d, 0x82, 0x10, 0x12, 0x0b, 0x72, 0x5d, 0x93,
+	0x18, 0x25, 0xb6, 0x65, 0x3b, 0x52, 0xf3, 0x08, 0x6c, 0xbc, 0x00, 0x03, 0x6f, 0xc3, 0x78, 0x1b,
+	0x8c, 0xa8, 0x7d, 0x11, 0x64, 0xe7, 0x72, 0xa4, 0x47, 0x2a, 0x51, 0x6e, 0xfb, 0xbe, 0x7c, 0xfe,
+	0xf9, 0xf7, 0x27, 0xfe, 0xe0, 0x83, 0xe4, 0x82, 0x64, 0x34, 0x25, 0x5c, 0x44, 0xc4, 0x18, 0x66,
+	0x3f, 0x12, 0x6a, 0xa5, 0x2e, 0x23, 0xbb, 0x09, 0x95, 0x96, 0x56, 0xa2, 0xb9, 0x3b, 0xc0, 0x84,
+	0x65, 0xda, 0x12, 0x2e, 0x72, 0x26, 0x6c, 0x78, 0x0d, 0x09, 0x9b, 0x90, 0xb3, 0xd9, 0x81, 0xab,
+	0x68, 0x46, 0x8c, 0xa9, 0x6e, 0x9b, 0x7d, 0xeb, 0xc2, 0x3b, 0x4b, 0x93, 0x2c, 0x34, 0x23, 0x96,
+	0x2d, 0xdc, 0x00, 0x61, 0x38, 0xa2, 0xae, 0x95, 0x1a, 0x83, 0x29, 0x98, 0x4f, 0xe2, 0xba, 0x45,
+	0xa7, 0x70, 0x68, 0xca, 0x7c, 0x25, 0x33, 0xdc, 0xf5, 0x83, 0xab, 0xce, 0x21, 0x94, 0x96, 0x9f,
+	0x18, 0xb5, 0xb8, 0x57, 0x21, 0xae, 0x5a, 0x74, 0x1f, 0x4e, 0x72, 0xb2, 0x79, 0x53, 0x28, 0x95,
+	0x95, 0xb8, 0x3f, 0x05, 0xf3, 0x41, 0xfc, 0xe7, 0x03, 0x0a, 0x21, 0xa2, 0x44, 0x2c, 0x52, 0x22,
+	0x12, 0xb6, 0xbc, 0x3e, 0x36, 0x98, 0x82, 0xf9, 0x38, 0x6e, 0x99, 0x20, 0x04, 0xfb, 0x82, 0xe4,
+	0x0c, 0x0f, 0x3d, 0x89, 0xaf, 0xd1, 0x14, 0x9e, 0xac, 0x99, 0xa1, 0x9a, 0x2b, 0xcb, 0xa5, 0xc0,
+	0x23, 0x3f, 0x6a, 0x7e, 0x42, 0x77, 0x61, 0xaf, 0xd0, 0x1c, 0x8f, 0xfd, 0xc4, 0x95, 0xe8, 0x1e,
+	0x1c, 0x17, 0x9a, 0x7f, 0x48, 0x89, 0x49, 0xf1, 0xa4, 0x12, 0x5c, 0x68, 0xfe, 0x8a, 0x98, 0xd4,
+	0x51, 0xac, 0x89, 0x25, 0x18, 0x56, 0x14, 0xae, 0x9e, 0x61, 0x78, 0xba, 0x1f, 0x51, 0xcc, 0x8c,
+	0x92, 0xc2, 0xb0, 0xd9, 0x0f, 0xe0, 0xd3, 0x7b, 0xab, 0xd6, 0xb7, 0x48, 0x6f, 0x2f, 0xa3, 0xde,
+	0xcd, 0x8c, 0x6a, 0xcf, 0xfd, 0xc3, 0x9e, 0x07, 0x07, 0x3d, 0x0f, 0xdb, 0x3d, 0x8f, 0xda, 0x3d,
+	0x8f, 0xff, 0xf2, 0xdc, 0x30, 0x56, 0x7b, 0x7e, 0xf8, 0xb5, 0x0b, 0x7b, 0x4b, 0x93, 0xa0, 0xcf,
+	0x00, 0x9e, 0x34, 0x9f, 0xcd, 0xe3, 0xf0, 0x5f, 0x1f, 0x66, 0xb8, 0x9f, 0xe6, 0xd9, 0xd3, 0xff,
+	0x45, 0xd6, 0x9a, 0xbc, 0x96, 0xe6, 0x4f, 0x38, 0x4e, 0x4b, 0x03, 0x79, 0xa4, 0x96, 0x96, 0x7c,
+	0x9e, 0xbf, 0xfb, 0xbe, 0x0d, 0xc0, 0xe5, 0x36, 0x00, 0xbf, 0xb6, 0x01, 0xf8, 0xb2, 0x0b, 0x3a,
+	0x97, 0xbb, 0xa0, 0xf3, 0x73, 0x17, 0x74, 0xde, 0x3f, 0x49, 0xb8, 0x4d, 0x8b, 0x55, 0x48, 0x65,
+	0x1e, 0xbd, 0xbc, 0x78, 0xf6, 0xfa, 0xfc, 0x45, 0x93, 0x26, 0x72, 0x34, 0xe7, 0xd5, 0xba, 0x6e,
+	0x6e, 0xec, 0x7e, 0xa9, 0x98, 0x59, 0x0d, 0xfd, 0xc6, 0x3e, 0xfa, 0x1d, 0x00, 0x00, 0xff, 0xff,
+	0xb4, 0x21, 0x7b, 0x42, 0x22, 0x04, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -424,6 +492,41 @@ func (m *MsgCreateClass) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
+	if len(m.Data) > 0 {
+		i -= len(m.Data)
+		copy(dAtA[i:], m.Data)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Data)))
+		i--
+		dAtA[i] = 0x52
+	}
+	if len(m.UriHash) > 0 {
+		i -= len(m.UriHash)
+		copy(dAtA[i:], m.UriHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.UriHash)))
+		i--
+		dAtA[i] = 0x4a
+	}
+	if len(m.Uri) > 0 {
+		i -= len(m.Uri)
+		copy(dAtA[i:], m.Uri)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Uri)))
+		i--
+		dAtA[i] = 0x42
+	}
+	if len(m.Description) > 0 {
+		i -= len(m.Description)
+		copy(dAtA[i:], m.Description)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Description)))
+		i--
+		dAtA[i] = 0x3a
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0x32
+	}
 	if m.CanChangeMaxSupply {
 		i--
 		if m.CanChangeMaxSupply {
@@ -506,27 +609,45 @@ func (m *MsgUpdateClass) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if m.CanChangeMaxSupply {
+	if len(m.Data) > 0 {
+		i -= len(m.Data)
+		copy(dAtA[i:], m.Data)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Data)))
 		i--
-		if m.CanChangeMaxSupply {
-			dAtA[i] = 1
-		} else {
-			dAtA[i] = 0
-		}
+		dAtA[i] = 0x42
+	}
+	if len(m.UriHash) > 0 {
+		i -= len(m.UriHash)
+		copy(dAtA[i:], m.UriHash)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.UriHash)))
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x3a
+	}
+	if len(m.Uri) > 0 {
+		i -= len(m.Uri)
+		copy(dAtA[i:], m.Uri)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Uri)))
+		i--
+		dAtA[i] = 0x32
+	}
+	if len(m.Description) > 0 {
+		i -= len(m.Description)
+		copy(dAtA[i:], m.Description)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Description)))
+		i--
+		dAtA[i] = 0x2a
+	}
+	if len(m.Name) > 0 {
+		i -= len(m.Name)
+		copy(dAtA[i:], m.Name)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Name)))
+		i--
+		dAtA[i] = 0x22
 	}
 	if m.MaxSupply != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.MaxSupply))
 		i--
-		dAtA[i] = 0x20
-	}
-	if len(m.Project) > 0 {
-		i -= len(m.Project)
-		copy(dAtA[i:], m.Project)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Project)))
-		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x18
 	}
 	if len(m.Symbol) > 0 {
 		i -= len(m.Symbol)
@@ -603,6 +724,26 @@ func (m *MsgCreateClass) Size() (n int) {
 	if m.CanChangeMaxSupply {
 		n += 2
 	}
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Uri)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.UriHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Data)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
 	return n
 }
 
@@ -629,15 +770,28 @@ func (m *MsgUpdateClass) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovTx(uint64(l))
 	}
-	l = len(m.Project)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
 	if m.MaxSupply != 0 {
 		n += 1 + sovTx(uint64(m.MaxSupply))
 	}
-	if m.CanChangeMaxSupply {
-		n += 2
+	l = len(m.Name)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Description)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Uri)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.UriHash)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.Data)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	return n
 }
@@ -821,6 +975,166 @@ func (m *MsgCreateClass) Unmarshal(dAtA []byte) error {
 				}
 			}
 			m.CanChangeMaxSupply = bool(v != 0)
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Name = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Uri", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Uri = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 9:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UriHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UriHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 10:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Data = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])
@@ -986,8 +1300,27 @@ func (m *MsgUpdateClass) Unmarshal(dAtA []byte) error {
 			m.Symbol = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 3:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field MaxSupply", wireType)
+			}
+			m.MaxSupply = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.MaxSupply |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 4:
 			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Project", wireType)
+				return fmt.Errorf("proto: wrong wireType = %d for field Name", wireType)
 			}
 			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
@@ -1015,32 +1348,13 @@ func (m *MsgUpdateClass) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Project = string(dAtA[iNdEx:postIndex])
+			m.Name = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 4:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field MaxSupply", wireType)
-			}
-			m.MaxSupply = 0
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				m.MaxSupply |= int32(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
 		case 5:
-			if wireType != 0 {
-				return fmt.Errorf("proto: wrong wireType = %d for field CanChangeMaxSupply", wireType)
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Description", wireType)
 			}
-			var v int
+			var stringLen uint64
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowTx
@@ -1050,12 +1364,120 @@ func (m *MsgUpdateClass) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				v |= int(b&0x7F) << shift
+				stringLen |= uint64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			m.CanChangeMaxSupply = bool(v != 0)
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Description = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 6:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Uri", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Uri = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 7:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UriHash", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UriHash = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 8:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Data", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Data = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
 			skippy, err := skipTx(dAtA[iNdEx:])

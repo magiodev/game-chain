@@ -11,9 +11,9 @@ import (
 
 func CmdCreateClass() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-class [symbol] [project] [max-supply] [can-change-max-supply]",
+		Use:   "create-class [symbol] [project] [max-supply] [can-change-max-supply] [name] [description] [uri] [uri-hash] [data]",
 		Short: "Create a new Class",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(9),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexSymbol := args[0]
@@ -28,6 +28,11 @@ func CmdCreateClass() *cobra.Command {
 			if err != nil {
 				return err
 			}
+			argName := args[4]
+			argDescription := args[5]
+			argUri := args[6]
+			argUriHash := args[7]
+			argData := args[8]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -40,6 +45,11 @@ func CmdCreateClass() *cobra.Command {
 				argProject,
 				argMaxSupply,
 				argCanChangeMaxSupply,
+				argName,
+				argDescription,
+				argUri,
+				argUriHash,
+				argData,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -55,23 +65,23 @@ func CmdCreateClass() *cobra.Command {
 
 func CmdUpdateClass() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-class [symbol] [project] [max-supply] [can-change-max-supply]",
+		Use:   "update-class [symbol] [max-supply] [name] [description] [uri] [uri-hash] [data]",
 		Short: "Update a Class",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(7),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexSymbol := args[0]
 
 			// Get value arguments
-			argProject := args[1]
-			argMaxSupply, err := cast.ToInt32E(args[2])
+			argMaxSupply, err := cast.ToInt32E(args[1])
 			if err != nil {
 				return err
 			}
-			argCanChangeMaxSupply, err := cast.ToBoolE(args[3])
-			if err != nil {
-				return err
-			}
+			argName := args[2]
+			argDescription := args[3]
+			argUri := args[4]
+			argUriHash := args[5]
+			argData := args[6]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -81,9 +91,12 @@ func CmdUpdateClass() *cobra.Command {
 			msg := types.NewMsgUpdateClass(
 				clientCtx.GetFromAddress().String(),
 				indexSymbol,
-				argProject,
 				argMaxSupply,
-				argCanChangeMaxSupply,
+				argName,
+				argDescription,
+				argUri,
+				argUriHash,
+				argData,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

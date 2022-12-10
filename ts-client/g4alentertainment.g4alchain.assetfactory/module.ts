@@ -65,7 +65,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				throw new Error('TxClient:sendMsgCreateClass: Could not broadcast Tx: '+ e.message)
 			}
 		},
-
 		
 		async sendMsgUpdateClass({ value, fee, memo }: sendMsgUpdateClassParams): Promise<DeliverTxResponse> {
 			if (!signer) {
@@ -89,7 +88,7 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				throw new Error('TxClient:MsgCreateClass: Could not create message: ' + e.message)
 			}
 		},
-
+		
 		msgUpdateClass({ value }: msgUpdateClassParams): EncodeObject {
 			try {
 				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgUpdateClass", value: MsgUpdateClass.fromPartial( value ) }  
