@@ -84,32 +84,3 @@ func CmdUpdateProject() *cobra.Command {
 
 	return cmd
 }
-
-func CmdDeleteProject() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "delete-project [symbol]",
-		Short: "Delete a Project",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			indexSymbol := args[0]
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgDeleteProject(
-				clientCtx.GetFromAddress().String(),
-				indexSymbol,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}

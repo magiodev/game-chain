@@ -25,14 +25,6 @@ export interface MsgUpdateProject {
 export interface MsgUpdateProjectResponse {
 }
 
-export interface MsgDeleteProject {
-  creator: string;
-  symbol: string;
-}
-
-export interface MsgDeleteProjectResponse {
-}
-
 function createBaseMsgCreateProject(): MsgCreateProject {
   return { creator: "", symbol: "", name: "", description: "", delegate: [] };
 }
@@ -289,109 +281,11 @@ export const MsgUpdateProjectResponse = {
   },
 };
 
-function createBaseMsgDeleteProject(): MsgDeleteProject {
-  return { creator: "", symbol: "" };
-}
-
-export const MsgDeleteProject = {
-  encode(message: MsgDeleteProject, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator !== "") {
-      writer.uint32(10).string(message.creator);
-    }
-    if (message.symbol !== "") {
-      writer.uint32(18).string(message.symbol);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteProject {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteProject();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.creator = reader.string();
-          break;
-        case 2:
-          message.symbol = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgDeleteProject {
-    return {
-      creator: isSet(object.creator) ? String(object.creator) : "",
-      symbol: isSet(object.symbol) ? String(object.symbol) : "",
-    };
-  },
-
-  toJSON(message: MsgDeleteProject): unknown {
-    const obj: any = {};
-    message.creator !== undefined && (obj.creator = message.creator);
-    message.symbol !== undefined && (obj.symbol = message.symbol);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteProject>, I>>(object: I): MsgDeleteProject {
-    const message = createBaseMsgDeleteProject();
-    message.creator = object.creator ?? "";
-    message.symbol = object.symbol ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgDeleteProjectResponse(): MsgDeleteProjectResponse {
-  return {};
-}
-
-export const MsgDeleteProjectResponse = {
-  encode(_: MsgDeleteProjectResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteProjectResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteProjectResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgDeleteProjectResponse {
-    return {};
-  },
-
-  toJSON(_: MsgDeleteProjectResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteProjectResponse>, I>>(_: I): MsgDeleteProjectResponse {
-    const message = createBaseMsgDeleteProjectResponse();
-    return message;
-  },
-};
-
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateProject(request: MsgCreateProject): Promise<MsgCreateProjectResponse>;
   UpdateProject(request: MsgUpdateProject): Promise<MsgUpdateProjectResponse>;
   /** this line is used by starport scaffolding # proto/tx/rpc */
-  DeleteProject(request: MsgDeleteProject): Promise<MsgDeleteProjectResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -400,7 +294,6 @@ export class MsgClientImpl implements Msg {
     this.rpc = rpc;
     this.CreateProject = this.CreateProject.bind(this);
     this.UpdateProject = this.UpdateProject.bind(this);
-    this.DeleteProject = this.DeleteProject.bind(this);
   }
   CreateProject(request: MsgCreateProject): Promise<MsgCreateProjectResponse> {
     const data = MsgCreateProject.encode(request).finish();
@@ -414,11 +307,6 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) => MsgUpdateProjectResponse.decode(new _m0.Reader(data)));
   }
 
-  DeleteProject(request: MsgDeleteProject): Promise<MsgDeleteProjectResponse> {
-    const data = MsgDeleteProject.encode(request).finish();
-    const promise = this.rpc.request("g4alentertainment.g4alchain.game.Msg", "DeleteProject", data);
-    return promise.then((data) => MsgDeleteProjectResponse.decode(new _m0.Reader(data)));
-  }
 }
 
 interface Rpc {

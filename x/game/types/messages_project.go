@@ -8,7 +8,6 @@ import (
 const (
 	TypeMsgCreateProject = "create_project"
 	TypeMsgUpdateProject = "update_project"
-	TypeMsgDeleteProject = "delete_project"
 )
 
 var _ sdk.Msg = &MsgCreateProject{}
@@ -100,47 +99,6 @@ func (msg *MsgUpdateProject) GetSignBytes() []byte {
 }
 
 func (msg *MsgUpdateProject) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-	return nil
-}
-
-var _ sdk.Msg = &MsgDeleteProject{}
-
-func NewMsgDeleteProject(
-	creator string,
-	symbol string,
-
-) *MsgDeleteProject {
-	return &MsgDeleteProject{
-		Creator: creator,
-		Symbol:  symbol,
-	}
-}
-func (msg *MsgDeleteProject) Route() string {
-	return RouterKey
-}
-
-func (msg *MsgDeleteProject) Type() string {
-	return TypeMsgDeleteProject
-}
-
-func (msg *MsgDeleteProject) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-func (msg *MsgDeleteProject) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-func (msg *MsgDeleteProject) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

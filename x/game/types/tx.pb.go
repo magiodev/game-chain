@@ -251,101 +251,11 @@ func (m *MsgUpdateProjectResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateProjectResponse proto.InternalMessageInfo
 
-type MsgDeleteProject struct {
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Symbol  string `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
-}
-
-func (m *MsgDeleteProject) Reset()         { *m = MsgDeleteProject{} }
-func (m *MsgDeleteProject) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteProject) ProtoMessage()    {}
-func (*MsgDeleteProject) Descriptor() ([]byte, []int) {
-	return fileDescriptor_72f587bd2183429d, []int{4}
-}
-func (m *MsgDeleteProject) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteProject) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteProject.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteProject) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteProject.Merge(m, src)
-}
-func (m *MsgDeleteProject) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteProject) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteProject.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteProject proto.InternalMessageInfo
-
-func (m *MsgDeleteProject) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
-func (m *MsgDeleteProject) GetSymbol() string {
-	if m != nil {
-		return m.Symbol
-	}
-	return ""
-}
-
-type MsgDeleteProjectResponse struct {
-}
-
-func (m *MsgDeleteProjectResponse) Reset()         { *m = MsgDeleteProjectResponse{} }
-func (m *MsgDeleteProjectResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteProjectResponse) ProtoMessage()    {}
-func (*MsgDeleteProjectResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_72f587bd2183429d, []int{5}
-}
-func (m *MsgDeleteProjectResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteProjectResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteProjectResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteProjectResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteProjectResponse.Merge(m, src)
-}
-func (m *MsgDeleteProjectResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteProjectResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteProjectResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteProjectResponse proto.InternalMessageInfo
-
 func init() {
 	proto.RegisterType((*MsgCreateProject)(nil), "g4alentertainment.g4alchain.game.MsgCreateProject")
 	proto.RegisterType((*MsgCreateProjectResponse)(nil), "g4alentertainment.g4alchain.game.MsgCreateProjectResponse")
 	proto.RegisterType((*MsgUpdateProject)(nil), "g4alentertainment.g4alchain.game.MsgUpdateProject")
 	proto.RegisterType((*MsgUpdateProjectResponse)(nil), "g4alentertainment.g4alchain.game.MsgUpdateProjectResponse")
-	proto.RegisterType((*MsgDeleteProject)(nil), "g4alentertainment.g4alchain.game.MsgDeleteProject")
-	proto.RegisterType((*MsgDeleteProjectResponse)(nil), "g4alentertainment.g4alchain.game.MsgDeleteProjectResponse")
 }
 
 func init() { proto.RegisterFile("g4alchain/game/tx.proto", fileDescriptor_72f587bd2183429d) }
@@ -391,7 +301,6 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	CreateProject(ctx context.Context, in *MsgCreateProject, opts ...grpc.CallOption) (*MsgCreateProjectResponse, error)
 	UpdateProject(ctx context.Context, in *MsgUpdateProject, opts ...grpc.CallOption) (*MsgUpdateProjectResponse, error)
-	DeleteProject(ctx context.Context, in *MsgDeleteProject, opts ...grpc.CallOption) (*MsgDeleteProjectResponse, error)
 }
 
 type msgClient struct {
@@ -420,20 +329,10 @@ func (c *msgClient) UpdateProject(ctx context.Context, in *MsgUpdateProject, opt
 	return out, nil
 }
 
-func (c *msgClient) DeleteProject(ctx context.Context, in *MsgDeleteProject, opts ...grpc.CallOption) (*MsgDeleteProjectResponse, error) {
-	out := new(MsgDeleteProjectResponse)
-	err := c.cc.Invoke(ctx, "/g4alentertainment.g4alchain.game.Msg/DeleteProject", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	CreateProject(context.Context, *MsgCreateProject) (*MsgCreateProjectResponse, error)
 	UpdateProject(context.Context, *MsgUpdateProject) (*MsgUpdateProjectResponse, error)
-	DeleteProject(context.Context, *MsgDeleteProject) (*MsgDeleteProjectResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -445,9 +344,6 @@ func (*UnimplementedMsgServer) CreateProject(ctx context.Context, req *MsgCreate
 }
 func (*UnimplementedMsgServer) UpdateProject(ctx context.Context, req *MsgUpdateProject) (*MsgUpdateProjectResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateProject not implemented")
-}
-func (*UnimplementedMsgServer) DeleteProject(ctx context.Context, req *MsgDeleteProject) (*MsgDeleteProjectResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteProject not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -490,24 +386,6 @@ func _Msg_UpdateProject_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_DeleteProject_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgDeleteProject)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).DeleteProject(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/g4alentertainment.g4alchain.game.Msg/DeleteProject",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).DeleteProject(ctx, req.(*MsgDeleteProject))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "g4alentertainment.g4alchain.game.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -519,10 +397,6 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateProject",
 			Handler:    _Msg_UpdateProject_Handler,
-		},
-		{
-			MethodName: "DeleteProject",
-			Handler:    _Msg_DeleteProject_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -695,66 +569,6 @@ func (m *MsgUpdateProjectResponse) MarshalToSizedBuffer(dAtA []byte) (int, error
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDeleteProject) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteProject) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteProject) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Symbol) > 0 {
-		i -= len(m.Symbol)
-		copy(dAtA[i:], m.Symbol)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Symbol)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgDeleteProjectResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteProjectResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteProjectResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -838,32 +652,6 @@ func (m *MsgUpdateProject) Size() (n int) {
 }
 
 func (m *MsgUpdateProjectResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
-func (m *MsgDeleteProject) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Symbol)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgDeleteProjectResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1375,170 +1163,6 @@ func (m *MsgUpdateProjectResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgUpdateProjectResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgDeleteProject) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteProject: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteProject: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Symbol", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Symbol = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgDeleteProjectResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteProjectResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteProjectResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

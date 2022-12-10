@@ -8,20 +8,13 @@ import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
 import { MsgCreateProject } from "./types/g4alchain/game/tx";
-import { MsgDeleteProject } from "./types/g4alchain/game/tx";
 import { MsgUpdateProject } from "./types/g4alchain/game/tx";
 
 
-export { MsgCreateProject, MsgDeleteProject, MsgUpdateProject };
+export { MsgCreateProject, MsgUpdateProject };
 
 type sendMsgCreateProjectParams = {
   value: MsgCreateProject,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgDeleteProjectParams = {
-  value: MsgDeleteProject,
   fee?: StdFee,
   memo?: string
 };
@@ -35,10 +28,6 @@ type sendMsgUpdateProjectParams = {
 
 type msgCreateProjectParams = {
   value: MsgCreateProject,
-};
-
-type msgDeleteProjectParams = {
-  value: MsgDeleteProject,
 };
 
 type msgUpdateProjectParams = {
@@ -77,20 +66,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgDeleteProject({ value, fee, memo }: sendMsgDeleteProjectParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteProject: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteProject({ value: MsgDeleteProject.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteProject: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgUpdateProject({ value, fee, memo }: sendMsgUpdateProjectParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgUpdateProject: Unable to sign Tx. Signer is not present.')
@@ -111,14 +86,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return { typeUrl: "/g4alentertainment.g4alchain.game.MsgCreateProject", value: MsgCreateProject.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgCreateProject: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgDeleteProject({ value }: msgDeleteProjectParams): EncodeObject {
-			try {
-				return { typeUrl: "/g4alentertainment.g4alchain.game.MsgDeleteProject", value: MsgDeleteProject.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteProject: Could not create message: ' + e.message)
 			}
 		},
 		

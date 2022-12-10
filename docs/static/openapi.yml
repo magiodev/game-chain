@@ -70376,8 +70376,6 @@ definitions:
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   g4alentertainment.g4alchain.game.MsgCreateProjectResponse:
     type: object
-  g4alentertainment.g4alchain.game.MsgDeleteProjectResponse:
-    type: object
   g4alentertainment.g4alchain.game.MsgUpdateProjectResponse:
     type: object
   g4alentertainment.g4alchain.game.Params:

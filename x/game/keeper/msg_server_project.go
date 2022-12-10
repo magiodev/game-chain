@@ -64,28 +64,3 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	return &types.MsgUpdateProjectResponse{}, nil
 }
-
-func (k msgServer) DeleteProject(goCtx context.Context, msg *types.MsgDeleteProject) (*types.MsgDeleteProjectResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Check if the value exists
-	valFound, isFound := k.GetProject(
-		ctx,
-		msg.Symbol,
-	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	k.RemoveProject(
-		ctx,
-		msg.Symbol,
-	)
-
-	return &types.MsgDeleteProjectResponse{}, nil
-}

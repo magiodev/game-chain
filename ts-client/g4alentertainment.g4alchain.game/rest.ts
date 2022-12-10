@@ -11,8 +11,6 @@
 
 export type GameMsgCreateProjectResponse = object;
 
-export type GameMsgDeleteProjectResponse = object;
-
 export type GameMsgUpdateProjectResponse = object;
 
 /**
