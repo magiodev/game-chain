@@ -28,6 +28,8 @@ type Project struct {
 	Description string   `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 	Delegate    []string `protobuf:"bytes,4,rep,name=delegate,proto3" json:"delegate,omitempty"`
 	Creator     string   `protobuf:"bytes,5,opt,name=creator,proto3" json:"creator,omitempty"`
+	CreatedAt   int32    `protobuf:"varint,6,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt   int32    `protobuf:"varint,7,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 }
 
 func (m *Project) Reset()         { *m = Project{} }

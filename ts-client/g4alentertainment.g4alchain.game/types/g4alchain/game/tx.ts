@@ -284,8 +284,8 @@ export const MsgUpdateProjectResponse = {
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateProject(request: MsgCreateProject): Promise<MsgCreateProjectResponse>;
-  UpdateProject(request: MsgUpdateProject): Promise<MsgUpdateProjectResponse>;
   /** this line is used by starport scaffolding # proto/tx/rpc */
+  UpdateProject(request: MsgUpdateProject): Promise<MsgUpdateProjectResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -306,7 +306,6 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("g4alentertainment.g4alchain.game.Msg", "UpdateProject", data);
     return promise.then((data) => MsgUpdateProjectResponse.decode(new _m0.Reader(data)));
   }
-
 }
 
 interface Rpc {

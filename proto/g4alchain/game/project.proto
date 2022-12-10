@@ -9,5 +9,7 @@ message Project {
   string description = 3; 
   repeated string delegate = 4; 
   string creator = 5;
+  int32 createdAt = 6;
+  int32 updatedAt = 7;
 }
 
