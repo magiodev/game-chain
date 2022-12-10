@@ -47,7 +47,7 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 	}
 
 	// Check if the value exists
-	valFound, isFound := k.GetDeveloper(
+	dev, isFound := k.GetDeveloper(
 		ctx,
 		msg.Address,
 	)
@@ -55,15 +55,10 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
 	}
 
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
 	var developer = types.Developer{
-		//Creator:   msg.Creator,
-		//Address:   msg.Address,
-		//CreatedAt: msg.CreatedAt,
+		Creator:   dev.Creator,
+		Address:   dev.Address,
+		CreatedAt: dev.CreatedAt,
 		UpdatedAt: int32(ctx.BlockHeight()),
 		Blocked:   msg.Blocked,
 	}

@@ -11,26 +11,12 @@ import (
 
 func CmdCreateAdministrator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-administrator [address] [created-at] [updated-at] [blocked]",
+		Use:   "create-administrator [address]",
 		Short: "Create a new Administrator",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexAddress := args[0]
-
-			// Get value arguments
-			argCreatedAt, err := cast.ToInt32E(args[1])
-			if err != nil {
-				return err
-			}
-			argUpdatedAt, err := cast.ToInt32E(args[2])
-			if err != nil {
-				return err
-			}
-			argBlocked, err := cast.ToBoolE(args[3])
-			if err != nil {
-				return err
-			}
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -40,9 +26,6 @@ func CmdCreateAdministrator() *cobra.Command {
 			msg := types.NewMsgCreateAdministrator(
 				clientCtx.GetFromAddress().String(),
 				indexAddress,
-				argCreatedAt,
-				argUpdatedAt,
-				argBlocked,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -58,23 +41,14 @@ func CmdCreateAdministrator() *cobra.Command {
 
 func CmdUpdateAdministrator() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-administrator [address] [created-at] [updated-at] [blocked]",
+		Use:   "update-administrator [address] [blocked]",
 		Short: "Update a Administrator",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(2),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexAddress := args[0]
 
-			// Get value arguments
-			argCreatedAt, err := cast.ToInt32E(args[1])
-			if err != nil {
-				return err
-			}
-			argUpdatedAt, err := cast.ToInt32E(args[2])
-			if err != nil {
-				return err
-			}
-			argBlocked, err := cast.ToBoolE(args[3])
+			argBlocked, err := cast.ToBoolE(args[1])
 			if err != nil {
 				return err
 			}
@@ -87,8 +61,6 @@ func CmdUpdateAdministrator() *cobra.Command {
 			msg := types.NewMsgUpdateAdministrator(
 				clientCtx.GetFromAddress().String(),
 				indexAddress,
-				argCreatedAt,
-				argUpdatedAt,
 				argBlocked,
 			)
 			if err := msg.ValidateBasic(); err != nil {
