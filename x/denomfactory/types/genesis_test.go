@@ -22,9 +22,31 @@ func TestGenesisState_Validate(t *testing.T) {
 			desc: "valid genesis state",
 			genState: &types.GenesisState{
 				PortId: types.PortID,
+				DenomList: []types.Denom{
+					{
+						Symbol: "0",
+					},
+					{
+						Symbol: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
+		},
+		{
+			desc: "duplicated denom",
+			genState: &types.GenesisState{
+				DenomList: []types.Denom{
+					{
+						Symbol: "0",
+					},
+					{
+						Symbol: "0",
+					},
+				},
+			},
+			valid: false,
 		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
