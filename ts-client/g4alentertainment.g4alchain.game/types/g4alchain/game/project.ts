@@ -9,10 +9,12 @@ export interface Project {
   description: string;
   delegate: string[];
   creator: string;
+  createdAt: number;
+  updatedAt: number;
 }
 
 function createBaseProject(): Project {
-  return { symbol: "", name: "", description: "", delegate: [], creator: "" };
+  return { symbol: "", name: "", description: "", delegate: [], creator: "", createdAt: 0, updatedAt: 0 };
 }
 
 export const Project = {
@@ -31,6 +33,12 @@ export const Project = {
     }
     if (message.creator !== "") {
       writer.uint32(42).string(message.creator);
+    }
+    if (message.createdAt !== 0) {
+      writer.uint32(48).int32(message.createdAt);
+    }
+    if (message.updatedAt !== 0) {
+      writer.uint32(56).int32(message.updatedAt);
     }
     return writer;
   },
@@ -57,6 +65,12 @@ export const Project = {
         case 5:
           message.creator = reader.string();
           break;
+        case 6:
+          message.createdAt = reader.int32();
+          break;
+        case 7:
+          message.updatedAt = reader.int32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -72,6 +86,8 @@ export const Project = {
       description: isSet(object.description) ? String(object.description) : "",
       delegate: Array.isArray(object?.delegate) ? object.delegate.map((e: any) => String(e)) : [],
       creator: isSet(object.creator) ? String(object.creator) : "",
+      createdAt: isSet(object.createdAt) ? Number(object.createdAt) : 0,
+      updatedAt: isSet(object.updatedAt) ? Number(object.updatedAt) : 0,
     };
   },
 
@@ -86,6 +102,8 @@ export const Project = {
       obj.delegate = [];
     }
     message.creator !== undefined && (obj.creator = message.creator);
+    message.createdAt !== undefined && (obj.createdAt = Math.round(message.createdAt));
+    message.updatedAt !== undefined && (obj.updatedAt = Math.round(message.updatedAt));
     return obj;
   },
 
@@ -96,6 +114,8 @@ export const Project = {
     message.description = object.description ?? "";
     message.delegate = object.delegate?.map((e) => e) || [];
     message.creator = object.creator ?? "";
+    message.createdAt = object.createdAt ?? 0;
+    message.updatedAt = object.updatedAt ?? 0;
     return message;
   },
 };

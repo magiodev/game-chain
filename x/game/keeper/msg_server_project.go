@@ -84,8 +84,11 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 	}
 
 	// appending new delegate values to valFound.Delegate
-	for _, newDelegate := range msg.Delegate {
-		valFound.Delegate = append(valFound.Delegate, newDelegate)
+	for _, delegate := range msg.Delegate {
+		bech32, err := sdk.AccAddressFromBech32(delegate)
+		if err == nil {
+			valFound.Delegate = append(valFound.Delegate, bech32.String())
+		}
 	}
 
 	var project = types.Project{

@@ -24,6 +24,12 @@ export interface GameProject {
   description?: string;
   delegate?: string[];
   creator?: string;
+
+  /** @format int32 */
+  createdAt?: number;
+
+  /** @format int32 */
+  updatedAt?: number;
 }
 
 export interface GameQueryAllProjectResponse {

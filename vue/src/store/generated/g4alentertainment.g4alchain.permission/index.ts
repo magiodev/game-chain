@@ -256,16 +256,16 @@ export default {
 		},
 		
 		
-		async sendMsgCreateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgUpdateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgCreateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateDeveloper:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateDeveloper:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgUpdateDeveloper:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -282,16 +282,16 @@ export default {
 				}
 			}
 		},
-		async sendMsgUpdateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgCreateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgCreateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateDeveloper:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgUpdateDeveloper:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgCreateDeveloper:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -309,16 +309,16 @@ export default {
 			}
 		},
 		
-		async MsgCreateDeveloper({ rootGetters }, { value }) {
+		async MsgUpdateDeveloper({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgCreateDeveloper({value})
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateDeveloper({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateDeveloper:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateDeveloper:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgUpdateDeveloper:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -335,16 +335,16 @@ export default {
 				}
 			}
 		},
-		async MsgUpdateDeveloper({ rootGetters }, { value }) {
+		async MsgCreateDeveloper({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateDeveloper({value})
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgCreateDeveloper({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgCreateDeveloper:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgUpdateDeveloper:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgCreateDeveloper:Create Could not create message: ' + e.message)
 				}
 			}
 		},

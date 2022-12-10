@@ -34040,6 +34040,12 @@ paths:
                         type: string
                     creator:
                       type: string
+                    createdAt:
+                      type: integer
+                      format: int32
+                    updatedAt:
+                      type: integer
+                      format: int32
               pagination:
                 type: object
                 properties:
@@ -34170,6 +34176,12 @@ paths:
                       type: string
                   creator:
                     type: string
+                  createdAt:
+                    type: integer
+                    format: int32
+                  updatedAt:
+                    type: integer
+                    format: int32
         default:
           description: An unexpected error response.
           schema:
@@ -70396,6 +70408,12 @@ definitions:
           type: string
       creator:
         type: string
+      createdAt:
+        type: integer
+        format: int32
+      updatedAt:
+        type: integer
+        format: int32
   g4alentertainment.g4alchain.game.QueryAllProjectResponse:
     type: object
     properties:
@@ -70416,6 +70434,12 @@ definitions:
                 type: string
             creator:
               type: string
+            createdAt:
+              type: integer
+              format: int32
+            updatedAt:
+              type: integer
+              format: int32
       pagination:
         type: object
         properties:
@@ -70460,6 +70484,12 @@ definitions:
               type: string
           creator:
             type: string
+          createdAt:
+            type: integer
+            format: int32
+          updatedAt:
+            type: integer
+            format: int32
   g4alentertainment.g4alchain.game.QueryParamsResponse:
     type: object
     properties:
