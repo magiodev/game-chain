@@ -6,10 +6,19 @@ import (
 	"github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/x/nft"
 )
 
 func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass) (*types.MsgCreateClassResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// TODO validate is Developer
+
+	// TODO validate is referring to existing Game ID
+
+	// TODO validate Project Symbol is created by msg.Creator
+
+	// TODO validation parameters
 
 	// Check if the value already exists
 	_, isFound := k.GetClass(
@@ -26,6 +35,21 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 		Project:            msg.Project,
 		MaxSupply:          msg.MaxSupply,
 		CanChangeMaxSupply: msg.CanChangeMaxSupply,
+	}
+
+	// TODO NFT workflow
+	var nftClass = nft.Class{
+		Id:          msg.Symbol,
+		Name:        msg.Name,
+		Symbol:      msg.Symbol,
+		Description: msg.Description,
+		Uri:         msg.Uri,
+		UriHash:     msg.UriHash,
+		//Data:        msg.Data,
+	}
+	err := k.nftKeeper.SaveClass(ctx, nftClass)
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "class creation has not occurred")
 	}
 
 	k.SetClass(
@@ -53,12 +77,12 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 	}
 
 	var class = types.Class{
-		Creator:            valFound.Creator,
-		Symbol:             valFound.Symbol,
-		Project:            valFound.Project,
-		MaxSupply:          msg.MaxSupply, // TODO
-		CanChangeMaxSupply: valFound.CanChangeMaxSupply,
+		Creator:   msg.Creator,
+		Symbol:    msg.Symbol,
+		MaxSupply: msg.MaxSupply,
 	}
+
+	//TODO metadata workflow
 
 	k.SetClass(ctx, class)
 
