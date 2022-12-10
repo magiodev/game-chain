@@ -10,7 +10,6 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/typ
 service Msg {
       rpc CreateDenom(MsgCreateDenom) returns (MsgCreateDenomResponse);
   rpc UpdateDenom(MsgUpdateDenom) returns (MsgUpdateDenomResponse);
-  rpc DeleteDenom(MsgDeleteDenom) returns (MsgDeleteDenomResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -21,6 +20,12 @@ message MsgCreateDenom {
   string project = 3;
   int32 maxSupply = 4;
   bool canChangeMaxSupply = 5;
+  string name = 6;
+  string description = 7;
+  int32 precision = 8;
+  string uri = 9;
+  string uri_hash = 10;
+
 }
 message MsgCreateDenomResponse {}
 
@@ -30,14 +35,11 @@ message MsgUpdateDenom {
 
   string project = 3;
   int32 maxSupply = 4;
-  bool canChangeMaxSupply = 5;
+  string name = 5;
+  string description = 6;
+  string uri = 7;
+  string uri_hash = 8;
 }
 message MsgUpdateDenomResponse {}
-
-message MsgDeleteDenom {
-  string creator = 1;
-  string symbol = 2;
-}
-message MsgDeleteDenomResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

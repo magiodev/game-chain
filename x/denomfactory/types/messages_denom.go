@@ -8,7 +8,6 @@ import (
 const (
 	TypeMsgCreateDenom = "create_denom"
 	TypeMsgUpdateDenom = "update_denom"
-	TypeMsgDeleteDenom = "delete_denom"
 )
 
 var _ sdk.Msg = &MsgCreateDenom{}
@@ -19,6 +18,11 @@ func NewMsgCreateDenom(
 	project string,
 	maxSupply int32,
 	canChangeMaxSupply bool,
+	name string,
+	description string,
+	precision int32,
+	uri string,
+	uri_hash string,
 
 ) *MsgCreateDenom {
 	return &MsgCreateDenom{
@@ -27,6 +31,11 @@ func NewMsgCreateDenom(
 		Project:            project,
 		MaxSupply:          maxSupply,
 		CanChangeMaxSupply: canChangeMaxSupply,
+		Name:               name,
+		Description:        description,
+		Precision:          precision,
+		Uri:                uri,
+		UriHash:            uri_hash,
 	}
 }
 
@@ -66,15 +75,21 @@ func NewMsgUpdateDenom(
 	symbol string,
 	project string,
 	maxSupply int32,
-	canChangeMaxSupply bool,
+	name string,
+	description string,
+	uri string,
+	uri_hash string,
 
 ) *MsgUpdateDenom {
 	return &MsgUpdateDenom{
-		Creator:            creator,
-		Symbol:             symbol,
-		Project:            project,
-		MaxSupply:          maxSupply,
-		CanChangeMaxSupply: canChangeMaxSupply,
+		Creator:     creator,
+		Symbol:      symbol,
+		Project:     project,
+		MaxSupply:   maxSupply,
+		Name:        name,
+		Description: description,
+		Uri:         uri,
+		UriHash:     uri_hash,
 	}
 }
 
@@ -100,47 +115,6 @@ func (msg *MsgUpdateDenom) GetSignBytes() []byte {
 }
 
 func (msg *MsgUpdateDenom) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-	return nil
-}
-
-var _ sdk.Msg = &MsgDeleteDenom{}
-
-func NewMsgDeleteDenom(
-	creator string,
-	symbol string,
-
-) *MsgDeleteDenom {
-	return &MsgDeleteDenom{
-		Creator: creator,
-		Symbol:  symbol,
-	}
-}
-func (msg *MsgDeleteDenom) Route() string {
-	return RouterKey
-}
-
-func (msg *MsgDeleteDenom) Type() string {
-	return TypeMsgDeleteDenom
-}
-
-func (msg *MsgDeleteDenom) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-func (msg *MsgDeleteDenom) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-func (msg *MsgDeleteDenom) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

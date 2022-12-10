@@ -70608,8 +70608,6 @@ definitions:
         type: string
   g4alentertainment.g4alchain.denomfactory.MsgCreateDenomResponse:
     type: object
-  g4alentertainment.g4alchain.denomfactory.MsgDeleteDenomResponse:
-    type: object
   g4alentertainment.g4alchain.denomfactory.MsgUpdateDenomResponse:
     type: object
   g4alentertainment.g4alchain.denomfactory.Params:

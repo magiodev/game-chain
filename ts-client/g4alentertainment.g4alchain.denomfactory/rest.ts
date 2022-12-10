@@ -21,8 +21,6 @@ export interface DenomfactoryDenom {
 
 export type DenomfactoryMsgCreateDenomResponse = object;
 
-export type DenomfactoryMsgDeleteDenomResponse = object;
-
 export type DenomfactoryMsgUpdateDenomResponse = object;
 
 /**
