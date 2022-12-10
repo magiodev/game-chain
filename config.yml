@@ -1,12 +1,53 @@
 version: 1
 accounts:
   - name: alice
-    coins: ["20000token", "200000000stake"]
+    mnemonic: skirt useless suggest trophy donate sister patch enrich size business need bleak spend damp truck coffee bring where educate ecology craft velvet grace tumble
+    coins: [ "200000000uggt" ]
   - name: bob
-    coins: ["10000token", "100000000stake"]
+    mnemonic: inquiry proud host flat tent position shoot choice damage north absent enlist question skate position segment renew bird caution wing whip apart hero alter
+    coins: [ "100000000uggt" ]
+  - name: magiodev
+    mnemonic: sauce story wash have cement rib keep grid senior float soda beyond train blood accuse dad situate rely reveal shove sudden bulk deal dumb
+    coins: [ "100000000uggt" ]
 validators:
   - name: alice
-    bonded: "100000000stake"
+    bonded: "100000000uggt"
+genesis:
+  app_state:
+    #permission:
+    #  params:
+    #    genesisAdmin: "g4al1f7e3s7jayfk3nfnxcv08myguvf522f2e00cxuy"
+    staking:
+      params:
+        bond_denom: "uggt"
+    crisis:
+      constant_fee:
+        denom: "uggt"
+        amount: "1000"
+    mint:
+      minter:
+        inflation: "0.000000000000000000"
+        annual_provisions: "0.000000000000000000"
+      params:
+        mint_denom: "uggt"
+        inflation_rate_change: "0.000000000000000000"
+        inflation_max: "0.000000000000000000"
+        inflation_min: "0.000000000000000000"
+    gov:
+      deposit_params:
+        min_deposit:
+          - denom: "uggt"
+            amount: "10000000"
+    distribution:
+      params:
+        base_proposer_reward: "0.000000000000000000"
+        withdraw_addr_enabled: false
+        community_tax: "0.000000000000000000"
+        bonus_proposer_reward: "0.000000000000000000"
+    slashing:
+      params:
+        slash_fraction_double_sign: "0.050000000000000000"
+        slash_fraction_downtime: "0.000000000000000000"
 client:
   openapi:
     path: "docs/static/openapi.yml"
@@ -16,4 +57,4 @@ client:
     path: "vue/src/store"
 faucet:
   name: bob
-  coins: ["5token", "100000stake"]
+  coins: [ "100000uggt" ]
