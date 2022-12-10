@@ -70608,6 +70608,8 @@ definitions:
         type: string
   g4alentertainment.g4alchain.assetfactory.MsgCreateClassResponse:
     type: object
+  g4alentertainment.g4alchain.assetfactory.MsgMintNftResponse:
+    type: object
   g4alentertainment.g4alchain.assetfactory.MsgUpdateClassResponse:
     type: object
   g4alentertainment.g4alchain.assetfactory.Params:

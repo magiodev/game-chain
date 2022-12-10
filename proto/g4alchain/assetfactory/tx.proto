@@ -10,7 +10,8 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/typ
 service Msg {
   rpc CreateClass(MsgCreateClass) returns (MsgCreateClassResponse);
   rpc UpdateClass(MsgUpdateClass) returns (MsgUpdateClassResponse);
-  // this line is used by starport scaffolding # proto/tx/rpc
+    rpc MintNft(MsgMintNft) returns (MsgMintNftResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
 }
 
 message MsgCreateClass {
@@ -41,5 +42,18 @@ message MsgUpdateClass {
 
 }
 message MsgUpdateClassResponse {}
+
+message MsgMintNft {
+  string creator = 1;
+  string project = 2;
+  string symbol = 3;
+  string uri = 4;
+  string uriHash = 5;
+  string data = 6;
+  string receiver = 7;
+}
+
+message MsgMintNftResponse {
+}
 
 // this line is used by starport scaffolding # proto/tx/message

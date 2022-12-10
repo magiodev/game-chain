@@ -10,6 +10,7 @@ import (
 func RegisterCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgCreateClass{}, "assetfactory/CreateClass", nil)
 	cdc.RegisterConcrete(&MsgUpdateClass{}, "assetfactory/UpdateClass", nil)
+	cdc.RegisterConcrete(&MsgMintNft{}, "assetfactory/MintNft", nil)
 	// this line is used by starport scaffolding # 2
 }
 
@@ -17,6 +18,9 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 	registry.RegisterImplementations((*sdk.Msg)(nil),
 		&MsgCreateClass{},
 		&MsgUpdateClass{},
+	)
+	registry.RegisterImplementations((*sdk.Msg)(nil),
+		&MsgMintNft{},
 	)
 	// this line is used by starport scaffolding # 3
 

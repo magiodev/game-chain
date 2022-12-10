@@ -7,17 +7,12 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
-import { MsgCreateClass } from "./types/g4alchain/assetfactory/tx";
 import { MsgUpdateClass } from "./types/g4alchain/assetfactory/tx";
+import { MsgMintNft } from "./types/g4alchain/assetfactory/tx";
+import { MsgCreateClass } from "./types/g4alchain/assetfactory/tx";
 
 
-export { MsgCreateClass, MsgUpdateClass };
-
-type sendMsgCreateClassParams = {
-  value: MsgCreateClass,
-  fee?: StdFee,
-  memo?: string
-};
+export { MsgUpdateClass, MsgMintNft, MsgCreateClass };
 
 type sendMsgUpdateClassParams = {
   value: MsgUpdateClass,
@@ -25,13 +20,29 @@ type sendMsgUpdateClassParams = {
   memo?: string
 };
 
-
-type msgCreateClassParams = {
-  value: MsgCreateClass,
+type sendMsgMintNftParams = {
+  value: MsgMintNft,
+  fee?: StdFee,
+  memo?: string
 };
+
+type sendMsgCreateClassParams = {
+  value: MsgCreateClass,
+  fee?: StdFee,
+  memo?: string
+};
+
 
 type msgUpdateClassParams = {
   value: MsgUpdateClass,
+};
+
+type msgMintNftParams = {
+  value: MsgMintNft,
+};
+
+type msgCreateClassParams = {
+  value: MsgCreateClass,
 };
 
 
@@ -52,20 +63,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
-		async sendMsgCreateClass({ value, fee, memo }: sendMsgCreateClassParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateClass: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateClass({ value: MsgCreateClass.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateClass: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgUpdateClass({ value, fee, memo }: sendMsgUpdateClassParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgUpdateClass: Unable to sign Tx. Signer is not present.')
@@ -80,20 +77,56 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		
-		msgCreateClass({ value }: msgCreateClassParams): EncodeObject {
-			try {
-				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgCreateClass", value: MsgCreateClass.fromPartial( value ) }  
+		async sendMsgMintNft({ value, fee, memo }: sendMsgMintNftParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgMintNft: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgMintNft({ value: MsgMintNft.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateClass: Could not create message: ' + e.message)
+				throw new Error('TxClient:sendMsgMintNft: Could not broadcast Tx: '+ e.message)
 			}
 		},
+		
+		async sendMsgCreateClass({ value, fee, memo }: sendMsgCreateClassParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateClass: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateClass({ value: MsgCreateClass.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateClass: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
 		
 		msgUpdateClass({ value }: msgUpdateClassParams): EncodeObject {
 			try {
 				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgUpdateClass", value: MsgUpdateClass.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgUpdateClass: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgMintNft({ value }: msgMintNftParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgMintNft", value: MsgMintNft.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgMintNft: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCreateClass({ value }: msgCreateClassParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgCreateClass", value: MsgCreateClass.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateClass: Could not create message: ' + e.message)
 			}
 		},
 		

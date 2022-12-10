@@ -33,6 +33,19 @@ export interface MsgUpdateClass {
 export interface MsgUpdateClassResponse {
 }
 
+export interface MsgMintNft {
+  creator: string;
+  project: string;
+  symbol: string;
+  uri: string;
+  uriHash: string;
+  data: string;
+  receiver: string;
+}
+
+export interface MsgMintNftResponse {
+}
+
 function createBaseMsgCreateClass(): MsgCreateClass {
   return {
     creator: "",
@@ -364,11 +377,154 @@ export const MsgUpdateClassResponse = {
   },
 };
 
+function createBaseMsgMintNft(): MsgMintNft {
+  return { creator: "", project: "", symbol: "", uri: "", uriHash: "", data: "", receiver: "" };
+}
+
+export const MsgMintNft = {
+  encode(message: MsgMintNft, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.project !== "") {
+      writer.uint32(18).string(message.project);
+    }
+    if (message.symbol !== "") {
+      writer.uint32(26).string(message.symbol);
+    }
+    if (message.uri !== "") {
+      writer.uint32(34).string(message.uri);
+    }
+    if (message.uriHash !== "") {
+      writer.uint32(42).string(message.uriHash);
+    }
+    if (message.data !== "") {
+      writer.uint32(50).string(message.data);
+    }
+    if (message.receiver !== "") {
+      writer.uint32(58).string(message.receiver);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgMintNft {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgMintNft();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.project = reader.string();
+          break;
+        case 3:
+          message.symbol = reader.string();
+          break;
+        case 4:
+          message.uri = reader.string();
+          break;
+        case 5:
+          message.uriHash = reader.string();
+          break;
+        case 6:
+          message.data = reader.string();
+          break;
+        case 7:
+          message.receiver = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MsgMintNft {
+    return {
+      creator: isSet(object.creator) ? String(object.creator) : "",
+      project: isSet(object.project) ? String(object.project) : "",
+      symbol: isSet(object.symbol) ? String(object.symbol) : "",
+      uri: isSet(object.uri) ? String(object.uri) : "",
+      uriHash: isSet(object.uriHash) ? String(object.uriHash) : "",
+      data: isSet(object.data) ? String(object.data) : "",
+      receiver: isSet(object.receiver) ? String(object.receiver) : "",
+    };
+  },
+
+  toJSON(message: MsgMintNft): unknown {
+    const obj: any = {};
+    message.creator !== undefined && (obj.creator = message.creator);
+    message.project !== undefined && (obj.project = message.project);
+    message.symbol !== undefined && (obj.symbol = message.symbol);
+    message.uri !== undefined && (obj.uri = message.uri);
+    message.uriHash !== undefined && (obj.uriHash = message.uriHash);
+    message.data !== undefined && (obj.data = message.data);
+    message.receiver !== undefined && (obj.receiver = message.receiver);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgMintNft>, I>>(object: I): MsgMintNft {
+    const message = createBaseMsgMintNft();
+    message.creator = object.creator ?? "";
+    message.project = object.project ?? "";
+    message.symbol = object.symbol ?? "";
+    message.uri = object.uri ?? "";
+    message.uriHash = object.uriHash ?? "";
+    message.data = object.data ?? "";
+    message.receiver = object.receiver ?? "";
+    return message;
+  },
+};
+
+function createBaseMsgMintNftResponse(): MsgMintNftResponse {
+  return {};
+}
+
+export const MsgMintNftResponse = {
+  encode(_: MsgMintNftResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MsgMintNftResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgMintNftResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(_: any): MsgMintNftResponse {
+    return {};
+  },
+
+  toJSON(_: MsgMintNftResponse): unknown {
+    const obj: any = {};
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MsgMintNftResponse>, I>>(_: I): MsgMintNftResponse {
+    const message = createBaseMsgMintNftResponse();
+    return message;
+  },
+};
+
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateClass(request: MsgCreateClass): Promise<MsgCreateClassResponse>;
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   UpdateClass(request: MsgUpdateClass): Promise<MsgUpdateClassResponse>;
+  /** this line is used by starport scaffolding # proto/tx/rpc */
+  MintNft(request: MsgMintNft): Promise<MsgMintNftResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -377,6 +533,7 @@ export class MsgClientImpl implements Msg {
     this.rpc = rpc;
     this.CreateClass = this.CreateClass.bind(this);
     this.UpdateClass = this.UpdateClass.bind(this);
+    this.MintNft = this.MintNft.bind(this);
   }
   CreateClass(request: MsgCreateClass): Promise<MsgCreateClassResponse> {
     const data = MsgCreateClass.encode(request).finish();
@@ -388,6 +545,12 @@ export class MsgClientImpl implements Msg {
     const data = MsgUpdateClass.encode(request).finish();
     const promise = this.rpc.request("g4alentertainment.g4alchain.assetfactory.Msg", "UpdateClass", data);
     return promise.then((data) => MsgUpdateClassResponse.decode(new _m0.Reader(data)));
+  }
+
+  MintNft(request: MsgMintNft): Promise<MsgMintNftResponse> {
+    const data = MsgMintNft.encode(request).finish();
+    const promise = this.rpc.request("g4alentertainment.g4alchain.assetfactory.Msg", "MintNft", data);
+    return promise.then((data) => MsgMintNftResponse.decode(new _m0.Reader(data)));
   }
 }
 
