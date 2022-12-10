@@ -8,9 +8,8 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/typ
 
 // Msg defines the Msg service.
 service Msg {
-      rpc CreateClass(MsgCreateClass) returns (MsgCreateClassResponse);
+  rpc CreateClass(MsgCreateClass) returns (MsgCreateClassResponse);
   rpc UpdateClass(MsgUpdateClass) returns (MsgUpdateClassResponse);
-  rpc DeleteClass(MsgDeleteClass) returns (MsgDeleteClassResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -33,11 +32,5 @@ message MsgUpdateClass {
   bool canChangeMaxSupply = 5;
 }
 message MsgUpdateClassResponse {}
-
-message MsgDeleteClass {
-  string creator = 1;
-  string symbol = 2;
-}
-message MsgDeleteClassResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

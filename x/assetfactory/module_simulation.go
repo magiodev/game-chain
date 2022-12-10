@@ -32,10 +32,6 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateClass int = 100
 
-	opWeightMsgDeleteClass = "op_weight_msg_class"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteClass int = 100
-
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -101,17 +97,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgUpdateClass,
 		assetfactorysimulation.SimulateMsgUpdateClass(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgDeleteClass int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteClass, &weightMsgDeleteClass, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteClass = defaultWeightMsgDeleteClass
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteClass,
-		assetfactorysimulation.SimulateMsgDeleteClass(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

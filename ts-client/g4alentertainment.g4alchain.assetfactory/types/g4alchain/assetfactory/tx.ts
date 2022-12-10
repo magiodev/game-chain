@@ -25,14 +25,6 @@ export interface MsgUpdateClass {
 export interface MsgUpdateClassResponse {
 }
 
-export interface MsgDeleteClass {
-  creator: string;
-  symbol: string;
-}
-
-export interface MsgDeleteClassResponse {
-}
-
 function createBaseMsgCreateClass(): MsgCreateClass {
   return { creator: "", symbol: "", project: "", maxSupply: 0, canChangeMaxSupply: false };
 }
@@ -281,109 +273,11 @@ export const MsgUpdateClassResponse = {
   },
 };
 
-function createBaseMsgDeleteClass(): MsgDeleteClass {
-  return { creator: "", symbol: "" };
-}
-
-export const MsgDeleteClass = {
-  encode(message: MsgDeleteClass, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator !== "") {
-      writer.uint32(10).string(message.creator);
-    }
-    if (message.symbol !== "") {
-      writer.uint32(18).string(message.symbol);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteClass {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteClass();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.creator = reader.string();
-          break;
-        case 2:
-          message.symbol = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgDeleteClass {
-    return {
-      creator: isSet(object.creator) ? String(object.creator) : "",
-      symbol: isSet(object.symbol) ? String(object.symbol) : "",
-    };
-  },
-
-  toJSON(message: MsgDeleteClass): unknown {
-    const obj: any = {};
-    message.creator !== undefined && (obj.creator = message.creator);
-    message.symbol !== undefined && (obj.symbol = message.symbol);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteClass>, I>>(object: I): MsgDeleteClass {
-    const message = createBaseMsgDeleteClass();
-    message.creator = object.creator ?? "";
-    message.symbol = object.symbol ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgDeleteClassResponse(): MsgDeleteClassResponse {
-  return {};
-}
-
-export const MsgDeleteClassResponse = {
-  encode(_: MsgDeleteClassResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteClassResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteClassResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgDeleteClassResponse {
-    return {};
-  },
-
-  toJSON(_: MsgDeleteClassResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteClassResponse>, I>>(_: I): MsgDeleteClassResponse {
-    const message = createBaseMsgDeleteClassResponse();
-    return message;
-  },
-};
-
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateClass(request: MsgCreateClass): Promise<MsgCreateClassResponse>;
   UpdateClass(request: MsgUpdateClass): Promise<MsgUpdateClassResponse>;
   /** this line is used by starport scaffolding # proto/tx/rpc */
-  DeleteClass(request: MsgDeleteClass): Promise<MsgDeleteClassResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -392,7 +286,6 @@ export class MsgClientImpl implements Msg {
     this.rpc = rpc;
     this.CreateClass = this.CreateClass.bind(this);
     this.UpdateClass = this.UpdateClass.bind(this);
-    this.DeleteClass = this.DeleteClass.bind(this);
   }
   CreateClass(request: MsgCreateClass): Promise<MsgCreateClassResponse> {
     const data = MsgCreateClass.encode(request).finish();
@@ -406,11 +299,6 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) => MsgUpdateClassResponse.decode(new _m0.Reader(data)));
   }
 
-  DeleteClass(request: MsgDeleteClass): Promise<MsgDeleteClassResponse> {
-    const data = MsgDeleteClass.encode(request).finish();
-    const promise = this.rpc.request("g4alentertainment.g4alchain.assetfactory.Msg", "DeleteClass", data);
-    return promise.then((data) => MsgDeleteClassResponse.decode(new _m0.Reader(data)));
-  }
 }
 
 interface Rpc {

@@ -21,8 +21,6 @@ export interface AssetfactoryClass {
 
 export type AssetfactoryMsgCreateClassResponse = object;
 
-export type AssetfactoryMsgDeleteClassResponse = object;
-
 export type AssetfactoryMsgUpdateClassResponse = object;
 
 /**

@@ -209,19 +209,7 @@ export default {
 				}
 			}
 		},
-		async sendMsgDeleteClass({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgDeleteClass({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteClass:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgDeleteClass:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
+
 		async sendMsgUpdateClass({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -249,19 +237,7 @@ export default {
 				}
 			}
 		},
-		async MsgDeleteClass({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgDeleteClass({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteClass:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgDeleteClass:Create Could not create message: ' + e.message)
-				}
-			}
-		},
+
 		async MsgUpdateClass({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)

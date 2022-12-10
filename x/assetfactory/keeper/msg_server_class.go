@@ -64,28 +64,3 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 
 	return &types.MsgUpdateClassResponse{}, nil
 }
-
-func (k msgServer) DeleteClass(goCtx context.Context, msg *types.MsgDeleteClass) (*types.MsgDeleteClassResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Check if the value exists
-	valFound, isFound := k.GetClass(
-		ctx,
-		msg.Symbol,
-	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	k.RemoveClass(
-		ctx,
-		msg.Symbol,
-	)
-
-	return &types.MsgDeleteClassResponse{}, nil
-}

@@ -251,101 +251,11 @@ func (m *MsgUpdateClassResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_MsgUpdateClassResponse proto.InternalMessageInfo
 
-type MsgDeleteClass struct {
-	Creator string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
-	Symbol  string `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol,omitempty"`
-}
-
-func (m *MsgDeleteClass) Reset()         { *m = MsgDeleteClass{} }
-func (m *MsgDeleteClass) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteClass) ProtoMessage()    {}
-func (*MsgDeleteClass) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c64669cb880b672c, []int{4}
-}
-func (m *MsgDeleteClass) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteClass) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteClass.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteClass) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteClass.Merge(m, src)
-}
-func (m *MsgDeleteClass) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteClass) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteClass.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteClass proto.InternalMessageInfo
-
-func (m *MsgDeleteClass) GetCreator() string {
-	if m != nil {
-		return m.Creator
-	}
-	return ""
-}
-
-func (m *MsgDeleteClass) GetSymbol() string {
-	if m != nil {
-		return m.Symbol
-	}
-	return ""
-}
-
-type MsgDeleteClassResponse struct {
-}
-
-func (m *MsgDeleteClassResponse) Reset()         { *m = MsgDeleteClassResponse{} }
-func (m *MsgDeleteClassResponse) String() string { return proto.CompactTextString(m) }
-func (*MsgDeleteClassResponse) ProtoMessage()    {}
-func (*MsgDeleteClassResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_c64669cb880b672c, []int{5}
-}
-func (m *MsgDeleteClassResponse) XXX_Unmarshal(b []byte) error {
-	return m.Unmarshal(b)
-}
-func (m *MsgDeleteClassResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	if deterministic {
-		return xxx_messageInfo_MsgDeleteClassResponse.Marshal(b, m, deterministic)
-	} else {
-		b = b[:cap(b)]
-		n, err := m.MarshalToSizedBuffer(b)
-		if err != nil {
-			return nil, err
-		}
-		return b[:n], nil
-	}
-}
-func (m *MsgDeleteClassResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgDeleteClassResponse.Merge(m, src)
-}
-func (m *MsgDeleteClassResponse) XXX_Size() int {
-	return m.Size()
-}
-func (m *MsgDeleteClassResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgDeleteClassResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_MsgDeleteClassResponse proto.InternalMessageInfo
-
 func init() {
 	proto.RegisterType((*MsgCreateClass)(nil), "g4alentertainment.g4alchain.assetfactory.MsgCreateClass")
 	proto.RegisterType((*MsgCreateClassResponse)(nil), "g4alentertainment.g4alchain.assetfactory.MsgCreateClassResponse")
 	proto.RegisterType((*MsgUpdateClass)(nil), "g4alentertainment.g4alchain.assetfactory.MsgUpdateClass")
 	proto.RegisterType((*MsgUpdateClassResponse)(nil), "g4alentertainment.g4alchain.assetfactory.MsgUpdateClassResponse")
-	proto.RegisterType((*MsgDeleteClass)(nil), "g4alentertainment.g4alchain.assetfactory.MsgDeleteClass")
-	proto.RegisterType((*MsgDeleteClassResponse)(nil), "g4alentertainment.g4alchain.assetfactory.MsgDeleteClassResponse")
 }
 
 func init() { proto.RegisterFile("g4alchain/assetfactory/tx.proto", fileDescriptor_c64669cb880b672c) }
@@ -392,7 +302,6 @@ const _ = grpc.SupportPackageIsVersion4
 type MsgClient interface {
 	CreateClass(ctx context.Context, in *MsgCreateClass, opts ...grpc.CallOption) (*MsgCreateClassResponse, error)
 	UpdateClass(ctx context.Context, in *MsgUpdateClass, opts ...grpc.CallOption) (*MsgUpdateClassResponse, error)
-	DeleteClass(ctx context.Context, in *MsgDeleteClass, opts ...grpc.CallOption) (*MsgDeleteClassResponse, error)
 }
 
 type msgClient struct {
@@ -421,20 +330,10 @@ func (c *msgClient) UpdateClass(ctx context.Context, in *MsgUpdateClass, opts ..
 	return out, nil
 }
 
-func (c *msgClient) DeleteClass(ctx context.Context, in *MsgDeleteClass, opts ...grpc.CallOption) (*MsgDeleteClassResponse, error) {
-	out := new(MsgDeleteClassResponse)
-	err := c.cc.Invoke(ctx, "/g4alentertainment.g4alchain.assetfactory.Msg/DeleteClass", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
 	CreateClass(context.Context, *MsgCreateClass) (*MsgCreateClassResponse, error)
 	UpdateClass(context.Context, *MsgUpdateClass) (*MsgUpdateClassResponse, error)
-	DeleteClass(context.Context, *MsgDeleteClass) (*MsgDeleteClassResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
@@ -446,9 +345,6 @@ func (*UnimplementedMsgServer) CreateClass(ctx context.Context, req *MsgCreateCl
 }
 func (*UnimplementedMsgServer) UpdateClass(ctx context.Context, req *MsgUpdateClass) (*MsgUpdateClassResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateClass not implemented")
-}
-func (*UnimplementedMsgServer) DeleteClass(ctx context.Context, req *MsgDeleteClass) (*MsgDeleteClassResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteClass not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
@@ -491,24 +387,6 @@ func _Msg_UpdateClass_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_DeleteClass_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgDeleteClass)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MsgServer).DeleteClass(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/g4alentertainment.g4alchain.assetfactory.Msg/DeleteClass",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).DeleteClass(ctx, req.(*MsgDeleteClass))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 var _Msg_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "g4alentertainment.g4alchain.assetfactory.Msg",
 	HandlerType: (*MsgServer)(nil),
@@ -520,10 +398,6 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateClass",
 			Handler:    _Msg_UpdateClass_Handler,
-		},
-		{
-			MethodName: "DeleteClass",
-			Handler:    _Msg_DeleteClass_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -694,66 +568,6 @@ func (m *MsgUpdateClassResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) 
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgDeleteClass) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteClass) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteClass) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	if len(m.Symbol) > 0 {
-		i -= len(m.Symbol)
-		copy(dAtA[i:], m.Symbol)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Symbol)))
-		i--
-		dAtA[i] = 0x12
-	}
-	if len(m.Creator) > 0 {
-		i -= len(m.Creator)
-		copy(dAtA[i:], m.Creator)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.Creator)))
-		i--
-		dAtA[i] = 0xa
-	}
-	return len(dAtA) - i, nil
-}
-
-func (m *MsgDeleteClassResponse) Marshal() (dAtA []byte, err error) {
-	size := m.Size()
-	dAtA = make([]byte, size)
-	n, err := m.MarshalToSizedBuffer(dAtA[:size])
-	if err != nil {
-		return nil, err
-	}
-	return dAtA[:n], nil
-}
-
-func (m *MsgDeleteClassResponse) MarshalTo(dAtA []byte) (int, error) {
-	size := m.Size()
-	return m.MarshalToSizedBuffer(dAtA[:size])
-}
-
-func (m *MsgDeleteClassResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
-	i := len(dAtA)
-	_ = i
-	var l int
-	_ = l
-	return len(dAtA) - i, nil
-}
-
 func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	offset -= sovTx(v)
 	base := offset
@@ -829,32 +643,6 @@ func (m *MsgUpdateClass) Size() (n int) {
 }
 
 func (m *MsgUpdateClassResponse) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	return n
-}
-
-func (m *MsgDeleteClass) Size() (n int) {
-	if m == nil {
-		return 0
-	}
-	var l int
-	_ = l
-	l = len(m.Creator)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	l = len(m.Symbol)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
-	return n
-}
-
-func (m *MsgDeleteClassResponse) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1316,170 +1104,6 @@ func (m *MsgUpdateClassResponse) Unmarshal(dAtA []byte) error {
 		}
 		if fieldNum <= 0 {
 			return fmt.Errorf("proto: MsgUpdateClassResponse: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgDeleteClass) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteClass: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteClass: illegal tag %d (wire type %d)", fieldNum, wire)
-		}
-		switch fieldNum {
-		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Creator", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Creator = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Symbol", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Symbol = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		default:
-			iNdEx = preIndex
-			skippy, err := skipTx(dAtA[iNdEx:])
-			if err != nil {
-				return err
-			}
-			if (skippy < 0) || (iNdEx+skippy) < 0 {
-				return ErrInvalidLengthTx
-			}
-			if (iNdEx + skippy) > l {
-				return io.ErrUnexpectedEOF
-			}
-			iNdEx += skippy
-		}
-	}
-
-	if iNdEx > l {
-		return io.ErrUnexpectedEOF
-	}
-	return nil
-}
-func (m *MsgDeleteClassResponse) Unmarshal(dAtA []byte) error {
-	l := len(dAtA)
-	iNdEx := 0
-	for iNdEx < l {
-		preIndex := iNdEx
-		var wire uint64
-		for shift := uint(0); ; shift += 7 {
-			if shift >= 64 {
-				return ErrIntOverflowTx
-			}
-			if iNdEx >= l {
-				return io.ErrUnexpectedEOF
-			}
-			b := dAtA[iNdEx]
-			iNdEx++
-			wire |= uint64(b&0x7F) << shift
-			if b < 0x80 {
-				break
-			}
-		}
-		fieldNum := int32(wire >> 3)
-		wireType := int(wire & 0x7)
-		if wireType == 4 {
-			return fmt.Errorf("proto: MsgDeleteClassResponse: wiretype end group for non-group")
-		}
-		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgDeleteClassResponse: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		default:

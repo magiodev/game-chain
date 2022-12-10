@@ -8,7 +8,6 @@ import (
 const (
 	TypeMsgCreateClass = "create_class"
 	TypeMsgUpdateClass = "update_class"
-	TypeMsgDeleteClass = "delete_class"
 )
 
 var _ sdk.Msg = &MsgCreateClass{}
@@ -100,47 +99,6 @@ func (msg *MsgUpdateClass) GetSignBytes() []byte {
 }
 
 func (msg *MsgUpdateClass) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-	return nil
-}
-
-var _ sdk.Msg = &MsgDeleteClass{}
-
-func NewMsgDeleteClass(
-	creator string,
-	symbol string,
-
-) *MsgDeleteClass {
-	return &MsgDeleteClass{
-		Creator: creator,
-		Symbol:  symbol,
-	}
-}
-func (msg *MsgDeleteClass) Route() string {
-	return RouterKey
-}
-
-func (msg *MsgDeleteClass) Type() string {
-	return TypeMsgDeleteClass
-}
-
-func (msg *MsgDeleteClass) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-func (msg *MsgDeleteClass) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-func (msg *MsgDeleteClass) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

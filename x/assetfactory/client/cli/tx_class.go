@@ -96,32 +96,3 @@ func CmdUpdateClass() *cobra.Command {
 
 	return cmd
 }
-
-func CmdDeleteClass() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "delete-class [symbol]",
-		Short: "Delete a Class",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			indexSymbol := args[0]
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgDeleteClass(
-				clientCtx.GetFromAddress().String(),
-				indexSymbol,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}
