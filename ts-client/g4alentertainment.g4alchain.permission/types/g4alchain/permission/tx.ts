@@ -548,8 +548,8 @@ export interface Msg {
   CreateAdministrator(request: MsgCreateAdministrator): Promise<MsgCreateAdministratorResponse>;
   UpdateAdministrator(request: MsgUpdateAdministrator): Promise<MsgUpdateAdministratorResponse>;
   CreateDeveloper(request: MsgCreateDeveloper): Promise<MsgCreateDeveloperResponse>;
-  UpdateDeveloper(request: MsgUpdateDeveloper): Promise<MsgUpdateDeveloperResponse>;
   /** this line is used by starport scaffolding # proto/tx/rpc */
+  UpdateDeveloper(request: MsgUpdateDeveloper): Promise<MsgUpdateDeveloperResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -584,7 +584,6 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "UpdateDeveloper", data);
     return promise.then((data) => MsgUpdateDeveloperResponse.decode(new _m0.Reader(data)));
   }
-
 }
 
 interface Rpc {

@@ -8,21 +8,15 @@ import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
 import { MsgUpdateDeveloper } from "./types/g4alchain/permission/tx";
-import { MsgCreateDeveloper } from "./types/g4alchain/permission/tx";
 import { MsgUpdateAdministrator } from "./types/g4alchain/permission/tx";
 import { MsgCreateAdministrator } from "./types/g4alchain/permission/tx";
+import { MsgCreateDeveloper } from "./types/g4alchain/permission/tx";
 
 
-export { MsgUpdateDeveloper, MsgCreateDeveloper, MsgUpdateAdministrator, MsgCreateAdministrator };
+export { MsgUpdateDeveloper, MsgUpdateAdministrator, MsgCreateAdministrator, MsgCreateDeveloper };
 
 type sendMsgUpdateDeveloperParams = {
   value: MsgUpdateDeveloper,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgCreateDeveloperParams = {
-  value: MsgCreateDeveloper,
   fee?: StdFee,
   memo?: string
 };
@@ -39,12 +33,15 @@ type sendMsgCreateAdministratorParams = {
   memo?: string
 };
 
-type msgUpdateDeveloperParams = {
-  value: MsgUpdateDeveloper,
+type sendMsgCreateDeveloperParams = {
+  value: MsgCreateDeveloper,
+  fee?: StdFee,
+  memo?: string
 };
 
-type msgCreateDeveloperParams = {
-  value: MsgCreateDeveloper,
+
+type msgUpdateDeveloperParams = {
+  value: MsgUpdateDeveloper,
 };
 
 type msgUpdateAdministratorParams = {
@@ -54,6 +51,11 @@ type msgUpdateAdministratorParams = {
 type msgCreateAdministratorParams = {
   value: MsgCreateAdministrator,
 };
+
+type msgCreateDeveloperParams = {
+  value: MsgCreateDeveloper,
+};
+
 
 export const registry = new Registry(msgTypes);
 
@@ -86,20 +88,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgCreateDeveloper({ value, fee, memo }: sendMsgCreateDeveloperParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgCreateDeveloper: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgCreateDeveloper({ value: MsgCreateDeveloper.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgCreateDeveloper: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
 		async sendMsgUpdateAdministrator({ value, fee, memo }: sendMsgUpdateAdministratorParams): Promise<DeliverTxResponse> {
 			if (!signer) {
 					throw new Error('TxClient:sendMsgUpdateAdministrator: Unable to sign Tx. Signer is not present.')
@@ -128,19 +116,26 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
+		async sendMsgCreateDeveloper({ value, fee, memo }: sendMsgCreateDeveloperParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateDeveloper: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateDeveloper({ value: MsgCreateDeveloper.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateDeveloper: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
 		msgUpdateDeveloper({ value }: msgUpdateDeveloperParams): EncodeObject {
 			try {
 				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgUpdateDeveloper", value: MsgUpdateDeveloper.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgUpdateDeveloper: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgCreateDeveloper({ value }: msgCreateDeveloperParams): EncodeObject {
-			try {
-				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgCreateDeveloper", value: MsgCreateDeveloper.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgCreateDeveloper: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -157,6 +152,14 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgCreateAdministrator", value: MsgCreateAdministrator.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgCreateAdministrator: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgCreateDeveloper({ value }: msgCreateDeveloperParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgCreateDeveloper", value: MsgCreateDeveloper.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateDeveloper: Could not create message: ' + e.message)
 			}
 		},
 		
