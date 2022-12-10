@@ -107,6 +107,9 @@ import (
 	g4alchainmodule "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain"
 	g4alchainmodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain/keeper"
 	g4alchainmoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain/types"
+	permissionmodule "github.com/G4AL-Entertainment/g4al-chain/x/permission"
+	permissionmodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/permission/keeper"
+	permissionmoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
 
 	appparams "github.com/G4AL-Entertainment/g4al-chain/app/params"
@@ -166,6 +169,7 @@ var (
 		ica.AppModuleBasic{},
 		vesting.AppModuleBasic{},
 		g4alchainmodule.AppModuleBasic{},
+		permissionmodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -240,6 +244,8 @@ type App struct {
 	ScopedICAHostKeeper  capabilitykeeper.ScopedKeeper
 
 	G4alchainKeeper g4alchainmodulekeeper.Keeper
+
+	PermissionKeeper permissionmodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -285,6 +291,7 @@ func New(
 		ibctransfertypes.StoreKey, icahosttypes.StoreKey, capabilitytypes.StoreKey, group.StoreKey,
 		icacontrollertypes.StoreKey,
 		g4alchainmoduletypes.StoreKey,
+		permissionmoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -510,6 +517,16 @@ func New(
 	)
 	g4alchainModule := g4alchainmodule.NewAppModule(appCodec, app.G4alchainKeeper, app.AccountKeeper, app.BankKeeper)
 
+	app.PermissionKeeper = *permissionmodulekeeper.NewKeeper(
+		appCodec,
+		keys[permissionmoduletypes.StoreKey],
+		keys[permissionmoduletypes.MemStoreKey],
+		app.GetSubspace(permissionmoduletypes.ModuleName),
+
+		app.AccountKeeper,
+	)
+	permissionModule := permissionmodule.NewAppModule(appCodec, app.PermissionKeeper, app.AccountKeeper, app.BankKeeper)
+
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Sealing prevents other modules from creating scoped sub-keepers
@@ -556,6 +573,7 @@ func New(
 		transferModule,
 		icaModule,
 		g4alchainModule,
+		permissionModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -586,6 +604,7 @@ func New(
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		g4alchainmoduletypes.ModuleName,
+		permissionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -611,6 +630,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		g4alchainmoduletypes.ModuleName,
+		permissionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -641,6 +661,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		g4alchainmoduletypes.ModuleName,
+		permissionmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -671,6 +692,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		transferModule,
 		g4alchainModule,
+		permissionModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -870,6 +892,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(icacontrollertypes.SubModuleName)
 	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 	paramsKeeper.Subspace(g4alchainmoduletypes.ModuleName)
+	paramsKeeper.Subspace(permissionmoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper
