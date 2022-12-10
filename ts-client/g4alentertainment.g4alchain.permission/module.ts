@@ -7,10 +7,43 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+import { MsgCreateAdministrator } from "./types/g4alchain/permission/tx";
+import { MsgDeleteAdministrator } from "./types/g4alchain/permission/tx";
+import { MsgUpdateAdministrator } from "./types/g4alchain/permission/tx";
 
 
-export {  };
+export { MsgCreateAdministrator, MsgDeleteAdministrator, MsgUpdateAdministrator };
 
+type sendMsgCreateAdministratorParams = {
+  value: MsgCreateAdministrator,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgDeleteAdministratorParams = {
+  value: MsgDeleteAdministrator,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateAdministratorParams = {
+  value: MsgUpdateAdministrator,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgCreateAdministratorParams = {
+  value: MsgCreateAdministrator,
+};
+
+type msgDeleteAdministratorParams = {
+  value: MsgDeleteAdministrator,
+};
+
+type msgUpdateAdministratorParams = {
+  value: MsgUpdateAdministrator,
+};
 
 
 export const registry = new Registry(msgTypes);
@@ -30,6 +63,72 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
+		async sendMsgCreateAdministrator({ value, fee, memo }: sendMsgCreateAdministratorParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateAdministrator: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateAdministrator({ value: MsgCreateAdministrator.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateAdministrator: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgDeleteAdministrator({ value, fee, memo }: sendMsgDeleteAdministratorParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteAdministrator: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteAdministrator({ value: MsgDeleteAdministrator.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteAdministrator: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgUpdateAdministrator({ value, fee, memo }: sendMsgUpdateAdministratorParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateAdministrator: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateAdministrator({ value: MsgUpdateAdministrator.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateAdministrator: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgCreateAdministrator({ value }: msgCreateAdministratorParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgCreateAdministrator", value: MsgCreateAdministrator.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateAdministrator: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteAdministrator({ value }: msgDeleteAdministratorParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgDeleteAdministrator", value: MsgDeleteAdministrator.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteAdministrator: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgUpdateAdministrator({ value }: msgUpdateAdministratorParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgUpdateAdministrator", value: MsgUpdateAdministrator.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateAdministrator: Could not create message: ' + e.message)
+			}
+		},
 		
 	}
 };
