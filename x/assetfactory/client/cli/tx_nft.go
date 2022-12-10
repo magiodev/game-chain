@@ -118,3 +118,36 @@ func CmdBurnNft() *cobra.Command {
 
 	return cmd
 }
+
+func CmdTransferNft() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "transfer-nft [symbol] [id] [receiver]",
+		Short: "Broadcast message transfer-nft",
+		Args:  cobra.ExactArgs(3),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			argSymbol := args[0]
+			argId := args[1]
+			argReceiver := args[2]
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgTransferNft(
+				clientCtx.GetFromAddress().String(),
+				argSymbol,
+				argId,
+				argReceiver,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}

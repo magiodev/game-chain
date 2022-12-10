@@ -25,6 +25,8 @@ export type AssetfactoryMsgCreateClassResponse = object;
 
 export type AssetfactoryMsgMintNftResponse = object;
 
+export type AssetfactoryMsgTransferNftResponse = object;
+
 export type AssetfactoryMsgUpdateClassResponse = object;
 
 export type AssetfactoryMsgUpdateNftResponse = object;

@@ -196,6 +196,19 @@ export default {
 		},
 		
 		
+		async sendMsgCreateClass({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgCreateClass({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateClass:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
 		async sendMsgMintNft({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -222,16 +235,16 @@ export default {
 				}
 			}
 		},
-		async sendMsgBurnNft({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgTransferNft({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgBurnNft({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgTransferNft({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBurnNft:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgTransferNft:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgBurnNft:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgTransferNft:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -248,20 +261,33 @@ export default {
 				}
 			}
 		},
-		async sendMsgCreateClass({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgBurnNft({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgCreateClass({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgBurnNft({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgBurnNft:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgCreateClass:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgBurnNft:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
+		async MsgCreateClass({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgCreateClass({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateClass:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		async MsgMintNft({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -288,16 +314,16 @@ export default {
 				}
 			}
 		},
-		async MsgBurnNft({ rootGetters }, { value }) {
+		async MsgTransferNft({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgBurnNft({value})
+				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgTransferNft({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgBurnNft:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgTransferNft:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgBurnNft:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgTransferNft:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -314,16 +340,16 @@ export default {
 				}
 			}
 		},
-		async MsgCreateClass({ rootGetters }, { value }) {
+		async MsgBurnNft({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgCreateClass({value})
+				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgBurnNft({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgBurnNft:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgCreateClass:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgBurnNft:Create Could not create message: ' + e.message)
 				}
 			}
 		},

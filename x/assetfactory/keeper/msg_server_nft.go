@@ -33,3 +33,12 @@ func (k msgServer) BurnNft(goCtx context.Context, msg *types.MsgBurnNft) (*types
 
 	return &types.MsgBurnNftResponse{}, nil
 }
+
+func (k msgServer) TransferNft(goCtx context.Context, msg *types.MsgTransferNft) (*types.MsgTransferNftResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// TODO: Handling the message
+	_ = ctx
+
+	return &types.MsgTransferNftResponse{}, nil
+}
