@@ -15,17 +15,11 @@ var _ sdk.Msg = &MsgCreateAdministrator{}
 func NewMsgCreateAdministrator(
 	creator string,
 	address string,
-	createdAt int32,
-	updatedAt int32,
-	blocked bool,
 
 ) *MsgCreateAdministrator {
 	return &MsgCreateAdministrator{
-		Creator:   creator,
-		Address:   address,
-		CreatedAt: createdAt,
-		UpdatedAt: updatedAt,
-		Blocked:   blocked,
+		Creator: creator,
+		Address: address,
 	}
 }
 
@@ -63,17 +57,13 @@ var _ sdk.Msg = &MsgUpdateAdministrator{}
 func NewMsgUpdateAdministrator(
 	creator string,
 	address string,
-	createdAt int32,
-	updatedAt int32,
 	blocked bool,
 
 ) *MsgUpdateAdministrator {
 	return &MsgUpdateAdministrator{
-		Creator:   creator,
-		Address:   address,
-		CreatedAt: createdAt,
-		UpdatedAt: updatedAt,
-		Blocked:   blocked,
+		Creator: creator,
+		Address: address,
+		Blocked: blocked,
 	}
 }
 
