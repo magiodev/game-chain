@@ -196,19 +196,6 @@ export default {
 		},
 		
 		
-		async sendMsgCreateProject({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainGame.tx.sendMsgCreateProject({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgCreateProject:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgCreateProject:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgUpdateProject({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -222,20 +209,20 @@ export default {
 				}
 			}
 		},
-		
-		async MsgCreateProject({ rootGetters }, { value }) {
+		async sendMsgCreateProject({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
-				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainGame.tx.msgCreateProject({value})
-				return msg
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainGame.tx.sendMsgCreateProject({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgCreateProject:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgCreateProject:Create Could not create message: ' + e.message)
+				}else{
+					throw new Error('TxClient:MsgCreateProject:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
+		
 		async MsgUpdateProject({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -246,6 +233,19 @@ export default {
 					throw new Error('TxClient:MsgUpdateProject:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgUpdateProject:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgCreateProject({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainGame.tx.msgCreateProject({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateProject:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateProject:Create Could not create message: ' + e.message)
 				}
 			}
 		},

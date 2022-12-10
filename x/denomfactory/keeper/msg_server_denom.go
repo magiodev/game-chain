@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"cosmossdk.io/math"
 	"fmt"
 	"github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -48,9 +47,9 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	}
 
 	// Creating sdk.Coin
-	coin := sdk.NewCoin(denom.Symbol, math.NewInt(int64(0))) // TODO awful conversion
+	//coin := sdk.NewCoin(denom.Symbol, math.NewInt(int64(0))) // improve this conversion
 	// Minting coins with x/bank module
-	err = k.bankKeeper.MintCoins(ctx, "coinfactory", sdk.NewCoins(coin))
+	//err = k.bankKeeper.MintCoins(ctx, "denomfactory", sdk.NewCoins(coin))
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "mint has not occurred")
 	}
@@ -200,7 +199,7 @@ func validateUpdateDenom(ctx sdk.Context, k msgServer, msg *types.MsgUpdateDenom
 func regExSymbol(symbol string) (string, error) {
 	reg, _ := regexp.Compile("([^\\w])")                       // leaving only words meaning azAZ09 and _ without spaces
 	symbol = strings.ToLower(reg.ReplaceAllString(symbol, "")) // toLower
-	if len(symbol) < 8 {
+	if len(symbol) < 3 {
 		return "", sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("symbol must be at least 8 digits: (%s)", symbol)) // TODO remove "" as return value
 	}
 	return symbol, nil
