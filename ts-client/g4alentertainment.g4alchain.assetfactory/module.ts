@@ -7,10 +7,43 @@ import { msgTypes } from './registry';
 import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
+import { MsgCreateClass } from "./types/g4alchain/assetfactory/tx";
+import { MsgDeleteClass } from "./types/g4alchain/assetfactory/tx";
+import { MsgUpdateClass } from "./types/g4alchain/assetfactory/tx";
 
 
-export {  };
+export { MsgCreateClass, MsgDeleteClass, MsgUpdateClass };
 
+type sendMsgCreateClassParams = {
+  value: MsgCreateClass,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgDeleteClassParams = {
+  value: MsgDeleteClass,
+  fee?: StdFee,
+  memo?: string
+};
+
+type sendMsgUpdateClassParams = {
+  value: MsgUpdateClass,
+  fee?: StdFee,
+  memo?: string
+};
+
+
+type msgCreateClassParams = {
+  value: MsgCreateClass,
+};
+
+type msgDeleteClassParams = {
+  value: MsgDeleteClass,
+};
+
+type msgUpdateClassParams = {
+  value: MsgUpdateClass,
+};
 
 
 export const registry = new Registry(msgTypes);
@@ -30,6 +63,72 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 
   return {
 		
+		async sendMsgCreateClass({ value, fee, memo }: sendMsgCreateClassParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgCreateClass: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgCreateClass({ value: MsgCreateClass.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgCreateClass: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgDeleteClass({ value, fee, memo }: sendMsgDeleteClassParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgDeleteClass: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgDeleteClass({ value: MsgDeleteClass.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgDeleteClass: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		async sendMsgUpdateClass({ value, fee, memo }: sendMsgUpdateClassParams): Promise<DeliverTxResponse> {
+			if (!signer) {
+					throw new Error('TxClient:sendMsgUpdateClass: Unable to sign Tx. Signer is not present.')
+			}
+			try {			
+				const { address } = (await signer.getAccounts())[0]; 
+				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
+				let msg = this.msgUpdateClass({ value: MsgUpdateClass.fromPartial(value) })
+				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
+			} catch (e: any) {
+				throw new Error('TxClient:sendMsgUpdateClass: Could not broadcast Tx: '+ e.message)
+			}
+		},
+		
+		
+		msgCreateClass({ value }: msgCreateClassParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgCreateClass", value: MsgCreateClass.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgCreateClass: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgDeleteClass({ value }: msgDeleteClassParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgDeleteClass", value: MsgDeleteClass.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgDeleteClass: Could not create message: ' + e.message)
+			}
+		},
+		
+		msgUpdateClass({ value }: msgUpdateClassParams): EncodeObject {
+			try {
+				return { typeUrl: "/g4alentertainment.g4alchain.assetfactory.MsgUpdateClass", value: MsgUpdateClass.fromPartial( value ) }  
+			} catch (e: any) {
+				throw new Error('TxClient:MsgUpdateClass: Could not create message: ' + e.message)
+			}
+		},
 		
 	}
 };

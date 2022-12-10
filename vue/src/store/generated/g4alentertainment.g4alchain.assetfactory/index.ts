@@ -1,11 +1,12 @@
 import { Client, registry, MissingWalletError } from 'G4AL-Entertainment-g4al-chain-client-ts'
 
+import { Class } from "G4AL-Entertainment-g4al-chain-client-ts/g4alentertainment.g4alchain.assetfactory/types"
 import { AssetfactoryPacketData } from "G4AL-Entertainment-g4al-chain-client-ts/g4alentertainment.g4alchain.assetfactory/types"
 import { NoData } from "G4AL-Entertainment-g4al-chain-client-ts/g4alentertainment.g4alchain.assetfactory/types"
 import { Params } from "G4AL-Entertainment-g4al-chain-client-ts/g4alentertainment.g4alchain.assetfactory/types"
 
 
-export { AssetfactoryPacketData, NoData, Params };
+export { Class, AssetfactoryPacketData, NoData, Params };
 
 function initClient(vuexGetters) {
 	return new Client(vuexGetters['common/env/getEnv'], vuexGetters['common/wallet/signer'])
@@ -37,8 +38,11 @@ function getStructure(template) {
 const getDefaultState = () => {
 	return {
 				Params: {},
+				Class: {},
+				ClassAll: {},
 				
 				_Structure: {
+						Class: getStructure(Class.fromPartial({})),
 						AssetfactoryPacketData: getStructure(AssetfactoryPacketData.fromPartial({})),
 						NoData: getStructure(NoData.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
@@ -75,6 +79,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.Params[JSON.stringify(params)] ?? {}
+		},
+				getClass: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.Class[JSON.stringify(params)] ?? {}
+		},
+				getClassAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.ClassAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -133,6 +149,132 @@ export default {
 		
 		
 		
+		
+		 		
+		
+		
+		async QueryClass({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.G4AlentertainmentG4AlchainAssetfactory.query.queryClass( key.symbol)).data
+				
+					
+				commit('QUERY', { query: 'Class', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryClass', payload: { options: { all }, params: {...key},query }})
+				return getters['getClass']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryClass API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryClassAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const client = initClient(rootGetters);
+				let value= (await client.G4AlentertainmentG4AlchainAssetfactory.query.queryClassAll(query ?? undefined)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await client.G4AlentertainmentG4AlchainAssetfactory.query.queryClassAll({...query ?? {}, 'pagination.key':(<any> value).pagination.next_key} as any)).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'ClassAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryClassAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getClassAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryClassAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		async sendMsgCreateClass({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgCreateClass({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgCreateClass:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgDeleteClass({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgDeleteClass({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteClass:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgDeleteClass:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		async sendMsgUpdateClass({ rootGetters }, { value, fee = [], memo = '' }) {
+			try {
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainAssetfactory.tx.sendMsgUpdateClass({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateClass:Init Could not initialize signing client. Wallet is required.')
+				}else{
+					throw new Error('TxClient:MsgUpdateClass:Send Could not broadcast Tx: '+ e.message)
+				}
+			}
+		},
+		
+		async MsgCreateClass({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgCreateClass({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgCreateClass:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgCreateClass:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgDeleteClass({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgDeleteClass({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgDeleteClass:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgDeleteClass:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateClass({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainAssetfactory.tx.msgUpdateClass({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateClass:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateClass:Create Could not create message: ' + e.message)
+				}
+			}
+		},
 		
 	}
 }
