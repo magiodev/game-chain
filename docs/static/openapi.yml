@@ -70190,10 +70190,6 @@ definitions:
     type: object
   g4alentertainment.g4alchain.permission.MsgCreateDeveloperResponse:
     type: object
-  g4alentertainment.g4alchain.permission.MsgDeleteAdministratorResponse:
-    type: object
-  g4alentertainment.g4alchain.permission.MsgDeleteDeveloperResponse:
-    type: object
   g4alentertainment.g4alchain.permission.MsgUpdateAdministratorResponse:
     type: object
   g4alentertainment.g4alchain.permission.MsgUpdateDeveloperResponse:

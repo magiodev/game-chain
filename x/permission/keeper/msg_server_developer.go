@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-
 	"github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -63,29 +62,4 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 	k.SetDeveloper(ctx, developer)
 
 	return &types.MsgUpdateDeveloperResponse{}, nil
-}
-
-func (k msgServer) DeleteDeveloper(goCtx context.Context, msg *types.MsgDeleteDeveloper) (*types.MsgDeleteDeveloperResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Check if the value exists
-	valFound, isFound := k.GetDeveloper(
-		ctx,
-		msg.Address,
-	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	k.RemoveDeveloper(
-		ctx,
-		msg.Address,
-	)
-
-	return &types.MsgDeleteDeveloperResponse{}, nil
 }

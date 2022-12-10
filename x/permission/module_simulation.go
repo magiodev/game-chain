@@ -32,10 +32,6 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateAdministrator int = 100
 
-	opWeightMsgDeleteAdministrator = "op_weight_msg_administrator"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteAdministrator int = 100
-
 	opWeightMsgCreateDeveloper = "op_weight_msg_developer"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgCreateDeveloper int = 100
@@ -43,10 +39,6 @@ const (
 	opWeightMsgUpdateDeveloper = "op_weight_msg_developer"
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateDeveloper int = 100
-
-	opWeightMsgDeleteDeveloper = "op_weight_msg_developer"
-	// TODO: Determine the simulation weight value
-	defaultWeightMsgDeleteDeveloper int = 100
 
 	// this line is used by starport scaffolding # simapp/module/const
 )
@@ -128,17 +120,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 		permissionsimulation.SimulateMsgUpdateAdministrator(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
-	var weightMsgDeleteAdministrator int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteAdministrator, &weightMsgDeleteAdministrator, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteAdministrator = defaultWeightMsgDeleteAdministrator
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteAdministrator,
-		permissionsimulation.SimulateMsgDeleteAdministrator(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
 	var weightMsgCreateDeveloper int
 	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgCreateDeveloper, &weightMsgCreateDeveloper, nil,
 		func(_ *rand.Rand) {
@@ -159,17 +140,6 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgUpdateDeveloper,
 		permissionsimulation.SimulateMsgUpdateDeveloper(am.accountKeeper, am.bankKeeper, am.keeper),
-	))
-
-	var weightMsgDeleteDeveloper int
-	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgDeleteDeveloper, &weightMsgDeleteDeveloper, nil,
-		func(_ *rand.Rand) {
-			weightMsgDeleteDeveloper = defaultWeightMsgDeleteDeveloper
-		},
-	)
-	operations = append(operations, simulation.NewWeightedOperation(
-		weightMsgDeleteDeveloper,
-		permissionsimulation.SimulateMsgDeleteDeveloper(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation

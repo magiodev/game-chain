@@ -8,7 +8,6 @@ import (
 const (
 	TypeMsgCreateAdministrator = "create_administrator"
 	TypeMsgUpdateAdministrator = "update_administrator"
-	TypeMsgDeleteAdministrator = "delete_administrator"
 )
 
 var _ sdk.Msg = &MsgCreateAdministrator{}
@@ -100,47 +99,6 @@ func (msg *MsgUpdateAdministrator) GetSignBytes() []byte {
 }
 
 func (msg *MsgUpdateAdministrator) ValidateBasic() error {
-	_, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)
-	}
-	return nil
-}
-
-var _ sdk.Msg = &MsgDeleteAdministrator{}
-
-func NewMsgDeleteAdministrator(
-	creator string,
-	address string,
-
-) *MsgDeleteAdministrator {
-	return &MsgDeleteAdministrator{
-		Creator: creator,
-		Address: address,
-	}
-}
-func (msg *MsgDeleteAdministrator) Route() string {
-	return RouterKey
-}
-
-func (msg *MsgDeleteAdministrator) Type() string {
-	return TypeMsgDeleteAdministrator
-}
-
-func (msg *MsgDeleteAdministrator) GetSigners() []sdk.AccAddress {
-	creator, err := sdk.AccAddressFromBech32(msg.Creator)
-	if err != nil {
-		panic(err)
-	}
-	return []sdk.AccAddress{creator}
-}
-
-func (msg *MsgDeleteAdministrator) GetSignBytes() []byte {
-	bz := ModuleCdc.MustMarshalJSON(msg)
-	return sdk.MustSortJSON(bz)
-}
-
-func (msg *MsgDeleteAdministrator) ValidateBasic() error {
 	_, err := sdk.AccAddressFromBech32(msg.Creator)
 	if err != nil {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid creator address (%s)", err)

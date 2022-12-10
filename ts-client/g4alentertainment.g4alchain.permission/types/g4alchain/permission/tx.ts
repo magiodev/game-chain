@@ -25,14 +25,6 @@ export interface MsgUpdateAdministrator {
 export interface MsgUpdateAdministratorResponse {
 }
 
-export interface MsgDeleteAdministrator {
-  creator: string;
-  address: string;
-}
-
-export interface MsgDeleteAdministratorResponse {
-}
-
 export interface MsgCreateDeveloper {
   creator: string;
   address: string;
@@ -53,14 +45,6 @@ export interface MsgUpdateDeveloper {
 }
 
 export interface MsgUpdateDeveloperResponse {
-}
-
-export interface MsgDeleteDeveloper {
-  creator: string;
-  address: string;
-}
-
-export interface MsgDeleteDeveloperResponse {
 }
 
 function createBaseMsgCreateAdministrator(): MsgCreateAdministrator {
@@ -307,103 +291,6 @@ export const MsgUpdateAdministratorResponse = {
 
   fromPartial<I extends Exact<DeepPartial<MsgUpdateAdministratorResponse>, I>>(_: I): MsgUpdateAdministratorResponse {
     const message = createBaseMsgUpdateAdministratorResponse();
-    return message;
-  },
-};
-
-function createBaseMsgDeleteAdministrator(): MsgDeleteAdministrator {
-  return { creator: "", address: "" };
-}
-
-export const MsgDeleteAdministrator = {
-  encode(message: MsgDeleteAdministrator, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator !== "") {
-      writer.uint32(10).string(message.creator);
-    }
-    if (message.address !== "") {
-      writer.uint32(18).string(message.address);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteAdministrator {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteAdministrator();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.creator = reader.string();
-          break;
-        case 2:
-          message.address = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgDeleteAdministrator {
-    return {
-      creator: isSet(object.creator) ? String(object.creator) : "",
-      address: isSet(object.address) ? String(object.address) : "",
-    };
-  },
-
-  toJSON(message: MsgDeleteAdministrator): unknown {
-    const obj: any = {};
-    message.creator !== undefined && (obj.creator = message.creator);
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteAdministrator>, I>>(object: I): MsgDeleteAdministrator {
-    const message = createBaseMsgDeleteAdministrator();
-    message.creator = object.creator ?? "";
-    message.address = object.address ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgDeleteAdministratorResponse(): MsgDeleteAdministratorResponse {
-  return {};
-}
-
-export const MsgDeleteAdministratorResponse = {
-  encode(_: MsgDeleteAdministratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteAdministratorResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteAdministratorResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgDeleteAdministratorResponse {
-    return {};
-  },
-
-  toJSON(_: MsgDeleteAdministratorResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteAdministratorResponse>, I>>(_: I): MsgDeleteAdministratorResponse {
-    const message = createBaseMsgDeleteAdministratorResponse();
     return message;
   },
 };
@@ -656,112 +543,13 @@ export const MsgUpdateDeveloperResponse = {
   },
 };
 
-function createBaseMsgDeleteDeveloper(): MsgDeleteDeveloper {
-  return { creator: "", address: "" };
-}
-
-export const MsgDeleteDeveloper = {
-  encode(message: MsgDeleteDeveloper, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.creator !== "") {
-      writer.uint32(10).string(message.creator);
-    }
-    if (message.address !== "") {
-      writer.uint32(18).string(message.address);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteDeveloper {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteDeveloper();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.creator = reader.string();
-          break;
-        case 2:
-          message.address = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): MsgDeleteDeveloper {
-    return {
-      creator: isSet(object.creator) ? String(object.creator) : "",
-      address: isSet(object.address) ? String(object.address) : "",
-    };
-  },
-
-  toJSON(message: MsgDeleteDeveloper): unknown {
-    const obj: any = {};
-    message.creator !== undefined && (obj.creator = message.creator);
-    message.address !== undefined && (obj.address = message.address);
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteDeveloper>, I>>(object: I): MsgDeleteDeveloper {
-    const message = createBaseMsgDeleteDeveloper();
-    message.creator = object.creator ?? "";
-    message.address = object.address ?? "";
-    return message;
-  },
-};
-
-function createBaseMsgDeleteDeveloperResponse(): MsgDeleteDeveloperResponse {
-  return {};
-}
-
-export const MsgDeleteDeveloperResponse = {
-  encode(_: MsgDeleteDeveloperResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): MsgDeleteDeveloperResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMsgDeleteDeveloperResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(_: any): MsgDeleteDeveloperResponse {
-    return {};
-  },
-
-  toJSON(_: MsgDeleteDeveloperResponse): unknown {
-    const obj: any = {};
-    return obj;
-  },
-
-  fromPartial<I extends Exact<DeepPartial<MsgDeleteDeveloperResponse>, I>>(_: I): MsgDeleteDeveloperResponse {
-    const message = createBaseMsgDeleteDeveloperResponse();
-    return message;
-  },
-};
-
 /** Msg defines the Msg service. */
 export interface Msg {
   CreateAdministrator(request: MsgCreateAdministrator): Promise<MsgCreateAdministratorResponse>;
   UpdateAdministrator(request: MsgUpdateAdministrator): Promise<MsgUpdateAdministratorResponse>;
-  DeleteAdministrator(request: MsgDeleteAdministrator): Promise<MsgDeleteAdministratorResponse>;
   CreateDeveloper(request: MsgCreateDeveloper): Promise<MsgCreateDeveloperResponse>;
   UpdateDeveloper(request: MsgUpdateDeveloper): Promise<MsgUpdateDeveloperResponse>;
   /** this line is used by starport scaffolding # proto/tx/rpc */
-  DeleteDeveloper(request: MsgDeleteDeveloper): Promise<MsgDeleteDeveloperResponse>;
 }
 
 export class MsgClientImpl implements Msg {
@@ -770,10 +558,8 @@ export class MsgClientImpl implements Msg {
     this.rpc = rpc;
     this.CreateAdministrator = this.CreateAdministrator.bind(this);
     this.UpdateAdministrator = this.UpdateAdministrator.bind(this);
-    this.DeleteAdministrator = this.DeleteAdministrator.bind(this);
     this.CreateDeveloper = this.CreateDeveloper.bind(this);
     this.UpdateDeveloper = this.UpdateDeveloper.bind(this);
-    this.DeleteDeveloper = this.DeleteDeveloper.bind(this);
   }
   CreateAdministrator(request: MsgCreateAdministrator): Promise<MsgCreateAdministratorResponse> {
     const data = MsgCreateAdministrator.encode(request).finish();
@@ -785,12 +571,6 @@ export class MsgClientImpl implements Msg {
     const data = MsgUpdateAdministrator.encode(request).finish();
     const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "UpdateAdministrator", data);
     return promise.then((data) => MsgUpdateAdministratorResponse.decode(new _m0.Reader(data)));
-  }
-
-  DeleteAdministrator(request: MsgDeleteAdministrator): Promise<MsgDeleteAdministratorResponse> {
-    const data = MsgDeleteAdministrator.encode(request).finish();
-    const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "DeleteAdministrator", data);
-    return promise.then((data) => MsgDeleteAdministratorResponse.decode(new _m0.Reader(data)));
   }
 
   CreateDeveloper(request: MsgCreateDeveloper): Promise<MsgCreateDeveloperResponse> {
@@ -805,11 +585,6 @@ export class MsgClientImpl implements Msg {
     return promise.then((data) => MsgUpdateDeveloperResponse.decode(new _m0.Reader(data)));
   }
 
-  DeleteDeveloper(request: MsgDeleteDeveloper): Promise<MsgDeleteDeveloperResponse> {
-    const data = MsgDeleteDeveloper.encode(request).finish();
-    const promise = this.rpc.request("g4alentertainment.g4alchain.permission.Msg", "DeleteDeveloper", data);
-    return promise.then((data) => MsgDeleteDeveloperResponse.decode(new _m0.Reader(data)));
-  }
 }
 
 interface Rpc {

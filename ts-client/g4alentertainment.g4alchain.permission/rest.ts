@@ -37,10 +37,6 @@ export type PermissionMsgCreateAdministratorResponse = object;
 
 export type PermissionMsgCreateDeveloperResponse = object;
 
-export type PermissionMsgDeleteAdministratorResponse = object;
-
-export type PermissionMsgDeleteDeveloperResponse = object;
-
 export type PermissionMsgUpdateAdministratorResponse = object;
 
 export type PermissionMsgUpdateDeveloperResponse = object;

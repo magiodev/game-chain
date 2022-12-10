@@ -64,28 +64,3 @@ func (k msgServer) UpdateAdministrator(goCtx context.Context, msg *types.MsgUpda
 
 	return &types.MsgUpdateAdministratorResponse{}, nil
 }
-
-func (k msgServer) DeleteAdministrator(goCtx context.Context, msg *types.MsgDeleteAdministrator) (*types.MsgDeleteAdministratorResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	// Check if the value exists
-	valFound, isFound := k.GetAdministrator(
-		ctx,
-		msg.Address,
-	)
-	if !isFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	k.RemoveAdministrator(
-		ctx,
-		msg.Address,
-	)
-
-	return &types.MsgDeleteAdministratorResponse{}, nil
-}

@@ -8,23 +8,15 @@ import { IgniteClient } from "../client"
 import { MissingWalletError } from "../helpers"
 import { Api } from "./rest";
 import { MsgUpdateDeveloper } from "./types/g4alchain/permission/tx";
-import { MsgDeleteDeveloper } from "./types/g4alchain/permission/tx";
 import { MsgCreateDeveloper } from "./types/g4alchain/permission/tx";
 import { MsgUpdateAdministrator } from "./types/g4alchain/permission/tx";
 import { MsgCreateAdministrator } from "./types/g4alchain/permission/tx";
-import { MsgDeleteAdministrator } from "./types/g4alchain/permission/tx";
 
 
-export { MsgUpdateDeveloper, MsgDeleteDeveloper, MsgCreateDeveloper, MsgUpdateAdministrator, MsgCreateAdministrator, MsgDeleteAdministrator };
+export { MsgUpdateDeveloper, MsgCreateDeveloper, MsgUpdateAdministrator, MsgCreateAdministrator };
 
 type sendMsgUpdateDeveloperParams = {
   value: MsgUpdateDeveloper,
-  fee?: StdFee,
-  memo?: string
-};
-
-type sendMsgDeleteDeveloperParams = {
-  value: MsgDeleteDeveloper,
   fee?: StdFee,
   memo?: string
 };
@@ -47,19 +39,8 @@ type sendMsgCreateAdministratorParams = {
   memo?: string
 };
 
-type sendMsgDeleteAdministratorParams = {
-  value: MsgDeleteAdministrator,
-  fee?: StdFee,
-  memo?: string
-};
-
-
 type msgUpdateDeveloperParams = {
   value: MsgUpdateDeveloper,
-};
-
-type msgDeleteDeveloperParams = {
-  value: MsgDeleteDeveloper,
 };
 
 type msgCreateDeveloperParams = {
@@ -73,11 +54,6 @@ type msgUpdateAdministratorParams = {
 type msgCreateAdministratorParams = {
   value: MsgCreateAdministrator,
 };
-
-type msgDeleteAdministratorParams = {
-  value: MsgDeleteAdministrator,
-};
-
 
 export const registry = new Registry(msgTypes);
 
@@ -107,20 +83,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
 			} catch (e: any) {
 				throw new Error('TxClient:sendMsgUpdateDeveloper: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		async sendMsgDeleteDeveloper({ value, fee, memo }: sendMsgDeleteDeveloperParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteDeveloper: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteDeveloper({ value: MsgDeleteDeveloper.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteDeveloper: Could not broadcast Tx: '+ e.message)
 			}
 		},
 		
@@ -166,34 +128,11 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 			}
 		},
 		
-		async sendMsgDeleteAdministrator({ value, fee, memo }: sendMsgDeleteAdministratorParams): Promise<DeliverTxResponse> {
-			if (!signer) {
-					throw new Error('TxClient:sendMsgDeleteAdministrator: Unable to sign Tx. Signer is not present.')
-			}
-			try {			
-				const { address } = (await signer.getAccounts())[0]; 
-				const signingClient = await SigningStargateClient.connectWithSigner(addr,signer,{registry, prefix});
-				let msg = this.msgDeleteAdministrator({ value: MsgDeleteAdministrator.fromPartial(value) })
-				return await signingClient.signAndBroadcast(address, [msg], fee ? fee : defaultFee, memo)
-			} catch (e: any) {
-				throw new Error('TxClient:sendMsgDeleteAdministrator: Could not broadcast Tx: '+ e.message)
-			}
-		},
-		
-		
 		msgUpdateDeveloper({ value }: msgUpdateDeveloperParams): EncodeObject {
 			try {
 				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgUpdateDeveloper", value: MsgUpdateDeveloper.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgUpdateDeveloper: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgDeleteDeveloper({ value }: msgDeleteDeveloperParams): EncodeObject {
-			try {
-				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgDeleteDeveloper", value: MsgDeleteDeveloper.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteDeveloper: Could not create message: ' + e.message)
 			}
 		},
 		
@@ -218,14 +157,6 @@ export const txClient = ({ signer, prefix, addr }: TxClientOptions = { addr: "ht
 				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgCreateAdministrator", value: MsgCreateAdministrator.fromPartial( value ) }  
 			} catch (e: any) {
 				throw new Error('TxClient:MsgCreateAdministrator: Could not create message: ' + e.message)
-			}
-		},
-		
-		msgDeleteAdministrator({ value }: msgDeleteAdministratorParams): EncodeObject {
-			try {
-				return { typeUrl: "/g4alentertainment.g4alchain.permission.MsgDeleteAdministrator", value: MsgDeleteAdministrator.fromPartial( value ) }  
-			} catch (e: any) {
-				throw new Error('TxClient:MsgDeleteAdministrator: Could not create message: ' + e.message)
 			}
 		},
 		

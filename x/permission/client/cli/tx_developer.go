@@ -102,32 +102,3 @@ func CmdUpdateDeveloper() *cobra.Command {
 
 	return cmd
 }
-
-func CmdDeleteDeveloper() *cobra.Command {
-	cmd := &cobra.Command{
-		Use:   "delete-developer [address]",
-		Short: "Delete a Developer",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			indexAddress := args[0]
-
-			clientCtx, err := client.GetClientTxContext(cmd)
-			if err != nil {
-				return err
-			}
-
-			msg := types.NewMsgDeleteDeveloper(
-				clientCtx.GetFromAddress().String(),
-				indexAddress,
-			)
-			if err := msg.ValidateBasic(); err != nil {
-				return err
-			}
-			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
-		},
-	}
-
-	flags.AddTxFlagsToCmd(cmd)
-
-	return cmd
-}

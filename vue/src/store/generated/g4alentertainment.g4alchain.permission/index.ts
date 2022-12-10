@@ -256,32 +256,6 @@ export default {
 		},
 		
 		
-		async sendMsgUpdateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUpdateDeveloper:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
-		async sendMsgDeleteDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgDeleteDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteDeveloper:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgDeleteDeveloper:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgCreateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -295,16 +269,16 @@ export default {
 				}
 			}
 		},
-		async sendMsgUpdateAdministrator({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgUpdateDeveloper({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateAdministrator({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateDeveloper({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgUpdateAdministrator:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgUpdateDeveloper:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
@@ -321,46 +295,20 @@ export default {
 				}
 			}
 		},
-		async sendMsgDeleteAdministrator({ rootGetters }, { value, fee = [], memo = '' }) {
+		async sendMsgUpdateAdministrator({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgDeleteAdministrator({ value, fee: {amount: fee, gas: "200000"}, memo })
+				const result = await client.G4AlentertainmentG4AlchainPermission.tx.sendMsgUpdateAdministrator({ value, fee: {amount: fee, gas: "200000"}, memo })
 				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteAdministrator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
 				}else{
-					throw new Error('TxClient:MsgDeleteAdministrator:Send Could not broadcast Tx: '+ e.message)
+					throw new Error('TxClient:MsgUpdateAdministrator:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
 		
-		async MsgUpdateDeveloper({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateDeveloper({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUpdateDeveloper:Create Could not create message: ' + e.message)
-				}
-			}
-		},
-		async MsgDeleteDeveloper({ rootGetters }, { value }) {
-			try {
-				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgDeleteDeveloper({value})
-				return msg
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteDeveloper:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgDeleteDeveloper:Create Could not create message: ' + e.message)
-				}
-			}
-		},
 		async MsgCreateDeveloper({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -374,16 +322,16 @@ export default {
 				}
 			}
 		},
-		async MsgUpdateAdministrator({ rootGetters }, { value }) {
+		async MsgUpdateDeveloper({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateAdministrator({value})
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateDeveloper({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateDeveloper:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgUpdateAdministrator:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgUpdateDeveloper:Create Could not create message: ' + e.message)
 				}
 			}
 		},
@@ -400,16 +348,16 @@ export default {
 				}
 			}
 		},
-		async MsgDeleteAdministrator({ rootGetters }, { value }) {
+		async MsgUpdateAdministrator({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgDeleteAdministrator({value})
+				const msg = await client.G4AlentertainmentG4AlchainPermission.tx.msgUpdateAdministrator({value})
 				return msg
 			} catch (e) {
 				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgDeleteAdministrator:Init Could not initialize signing client. Wallet is required.')
+					throw new Error('TxClient:MsgUpdateAdministrator:Init Could not initialize signing client. Wallet is required.')
 				} else{
-					throw new Error('TxClient:MsgDeleteAdministrator:Create Could not create message: ' + e.message)
+					throw new Error('TxClient:MsgUpdateAdministrator:Create Could not create message: ' + e.message)
 				}
 			}
 		},
