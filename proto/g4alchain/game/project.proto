@@ -1,0 +1,15 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.game;
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/game/types";
+
+message Project {
+  string symbol = 1; 
+  string name = 2; 
+  string description = 3; 
+  repeated string delegate = 4; 
+  string creator = 5;
+  int32 createdAt = 6;
+  int32 updatedAt = 7;
+}
+

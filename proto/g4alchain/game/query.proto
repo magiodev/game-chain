@@ -1,0 +1,59 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.game;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "g4alchain/game/params.proto";
+import "g4alchain/game/project.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/game/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/game/params";
+  }
+  // Queries a Project by index.
+	rpc Project(QueryGetProjectRequest) returns (QueryGetProjectResponse) {
+		option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/game/project/{symbol}";
+	}
+
+	// Queries a list of Project items.
+	rpc ProjectAll(QueryAllProjectRequest) returns (QueryAllProjectResponse) {
+		option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/game/project";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetProjectRequest {
+	  string symbol = 1;
+
+}
+
+message QueryGetProjectResponse {
+	Project project = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllProjectRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllProjectResponse {
+	repeated Project project = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3
