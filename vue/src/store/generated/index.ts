@@ -1,5 +1,6 @@
 // THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
 
+import G4AlentertainmentG4AlchainAssetfactory from './g4alentertainment.g4alchain.assetfactory'
 import G4AlentertainmentG4AlchainDenomfactory from './g4alentertainment.g4alchain.denomfactory'
 import G4AlentertainmentG4AlchainG4Alchain from './g4alentertainment.g4alchain.g4alchain'
 import G4AlentertainmentG4AlchainGame from './g4alentertainment.g4alchain.game'
@@ -7,6 +8,7 @@ import G4AlentertainmentG4AlchainPermission from './g4alentertainment.g4alchain.
 
 
 export default { 
+  G4AlentertainmentG4AlchainAssetfactory: load(G4AlentertainmentG4AlchainAssetfactory, 'g4alentertainment.g4alchain.assetfactory'),
   G4AlentertainmentG4AlchainDenomfactory: load(G4AlentertainmentG4AlchainDenomfactory, 'g4alentertainment.g4alchain.denomfactory'),
   G4AlentertainmentG4AlchainG4Alchain: load(G4AlentertainmentG4AlchainG4Alchain, 'g4alentertainment.g4alchain.g4alchain'),
   G4AlentertainmentG4AlchainGame: load(G4AlentertainmentG4AlchainGame, 'g4alentertainment.g4alchain.game'),

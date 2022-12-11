@@ -133,7 +133,7 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 // Private Methods
 
 func validateCreateDenom(ctx sdk.Context, k msgServer, msg *types.MsgCreateDenom) error {
-	// Checking administrator role
+	// Checking developer role
 	val, found := k.permissionKeeper.GetDeveloper(ctx, msg.Creator)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator invalid developer address (%s)", msg.Creator)

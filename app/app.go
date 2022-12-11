@@ -2,6 +2,9 @@ package app
 
 import (
 	"fmt"
+	"github.com/cosmos/cosmos-sdk/x/nft"
+	nftkeeper "github.com/cosmos/cosmos-sdk/x/nft/keeper"
+	nftmodule "github.com/cosmos/cosmos-sdk/x/nft/module"
 	"io"
 	"net/http"
 	"os"
@@ -104,6 +107,9 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
+	assetfactorymodule "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory"
+	assetfactorymodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/keeper"
+	assetfactorymoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types"
 	denomfactorymodule "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory"
 	denomfactorymodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/keeper"
 	denomfactorymoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types"
@@ -161,6 +167,7 @@ var (
 		capability.AppModuleBasic{},
 		staking.AppModuleBasic{},
 		mint.AppModuleBasic{},
+		nftmodule.AppModuleBasic{},
 		distr.AppModuleBasic{},
 		gov.NewAppModuleBasic(getGovProposalHandlers()),
 		params.AppModuleBasic{},
@@ -178,6 +185,7 @@ var (
 		permissionmodule.AppModuleBasic{},
 		gamemodule.AppModuleBasic{},
 		denomfactorymodule.AppModuleBasic{},
+		assetfactorymodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
 
@@ -187,6 +195,7 @@ var (
 		distrtypes.ModuleName:              nil,
 		icatypes.ModuleName:                nil,
 		minttypes.ModuleName:               {authtypes.Minter},
+		nft.ModuleName:                     nil, //{authtypes.Minter},
 		stakingtypes.BondedPoolName:        {authtypes.Burner, authtypes.Staking},
 		stakingtypes.NotBondedPoolName:     {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:                {authtypes.Burner},
@@ -235,6 +244,7 @@ type App struct {
 	StakingKeeper    stakingkeeper.Keeper
 	SlashingKeeper   slashingkeeper.Keeper
 	MintKeeper       mintkeeper.Keeper
+	NftKeeper        nftkeeper.Keeper
 	DistrKeeper      distrkeeper.Keeper
 	GovKeeper        govkeeper.Keeper
 	CrisisKeeper     crisiskeeper.Keeper
@@ -257,6 +267,8 @@ type App struct {
 	PermissionKeeper         permissionmodulekeeper.Keeper
 	ScopedGameKeeper         capabilitykeeper.ScopedKeeper
 	GameKeeper               gamemodulekeeper.Keeper
+	ScopedAssetfactoryKeeper capabilitykeeper.ScopedKeeper
+	AssetfactoryKeeper       assetfactorymodulekeeper.Keeper
 	ScopedDenomfactoryKeeper capabilitykeeper.ScopedKeeper
 	DenomfactoryKeeper       denomfactorymodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
@@ -299,7 +311,7 @@ func New(
 
 	keys := sdk.NewKVStoreKeys(
 		authtypes.StoreKey, authz.ModuleName, banktypes.StoreKey, stakingtypes.StoreKey,
-		minttypes.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey, govtypes.StoreKey,
+		minttypes.StoreKey, nft.StoreKey, distrtypes.StoreKey, slashingtypes.StoreKey, govtypes.StoreKey,
 		paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey, feegrant.StoreKey, evidencetypes.StoreKey,
 		ibctransfertypes.StoreKey, icahosttypes.StoreKey, capabilitytypes.StoreKey, group.StoreKey,
 		icacontrollertypes.StoreKey,
@@ -307,6 +319,7 @@ func New(
 		permissionmoduletypes.StoreKey,
 		gamemoduletypes.StoreKey,
 		denomfactorymoduletypes.StoreKey,
+		assetfactorymoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
@@ -388,6 +401,13 @@ func New(
 		app.AccountKeeper,
 		app.BankKeeper,
 		authtypes.FeeCollectorName,
+	)
+
+	app.NftKeeper = nftkeeper.NewKeeper(
+		keys[minttypes.StoreKey],
+		appCodec,
+		app.AccountKeeper,
+		app.BankKeeper,
 	)
 
 	app.DistrKeeper = distrkeeper.NewKeeper(
@@ -558,6 +578,24 @@ func New(
 	gameModule := gamemodule.NewAppModule(appCodec, app.GameKeeper, app.AccountKeeper, app.BankKeeper)
 
 	gameIBCModule := gamemodule.NewIBCModule(app.GameKeeper)
+	scopedAssetfactoryKeeper := app.CapabilityKeeper.ScopeToModule(assetfactorymoduletypes.ModuleName)
+	app.ScopedAssetfactoryKeeper = scopedAssetfactoryKeeper
+	app.AssetfactoryKeeper = *assetfactorymodulekeeper.NewKeeper(
+		appCodec,
+		keys[assetfactorymoduletypes.StoreKey],
+		keys[assetfactorymoduletypes.MemStoreKey],
+		app.GetSubspace(assetfactorymoduletypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedAssetfactoryKeeper,
+		app.AccountKeeper,
+		app.PermissionKeeper,
+		app.GameKeeper,
+		app.NftKeeper,
+	)
+	assetfactoryModule := assetfactorymodule.NewAppModule(appCodec, app.AssetfactoryKeeper, app.AccountKeeper, app.BankKeeper)
+
+	assetfactoryIBCModule := assetfactorymodule.NewIBCModule(app.AssetfactoryKeeper)
 	scopedDenomfactoryKeeper := app.CapabilityKeeper.ScopeToModule(denomfactorymoduletypes.ModuleName)
 	app.ScopedDenomfactoryKeeper = scopedDenomfactoryKeeper
 	app.DenomfactoryKeeper = *denomfactorymodulekeeper.NewKeeper(
@@ -586,6 +624,7 @@ func New(
 	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 	ibcRouter.AddRoute(gamemoduletypes.ModuleName, gameIBCModule)
+	ibcRouter.AddRoute(assetfactorymoduletypes.ModuleName, assetfactoryIBCModule)
 	ibcRouter.AddRoute(denomfactorymoduletypes.ModuleName, denomfactoryIBCModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
@@ -614,6 +653,7 @@ func New(
 		crisis.NewAppModule(&app.CrisisKeeper, skipGenesisInvariants),
 		gov.NewAppModule(appCodec, app.GovKeeper, app.AccountKeeper, app.BankKeeper),
 		mint.NewAppModule(appCodec, app.MintKeeper, app.AccountKeeper, minttypes.DefaultInflationCalculationFn),
+		nftmodule.NewAppModule(appCodec, app.NftKeeper, app.AccountKeeper, app.BankKeeper, app.interfaceRegistry),
 		slashing.NewAppModule(appCodec, app.SlashingKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		distr.NewAppModule(appCodec, app.DistrKeeper, app.AccountKeeper, app.BankKeeper, app.StakingKeeper),
 		staking.NewAppModule(appCodec, app.StakingKeeper, app.AccountKeeper, app.BankKeeper),
@@ -626,6 +666,7 @@ func New(
 		g4alchainModule,
 		permissionModule,
 		gameModule,
+		assetfactoryModule,
 		denomfactoryModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -639,6 +680,7 @@ func New(
 		upgradetypes.ModuleName,
 		capabilitytypes.ModuleName,
 		minttypes.ModuleName,
+		nft.ModuleName,
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
 		evidencetypes.ModuleName,
@@ -659,6 +701,7 @@ func New(
 		g4alchainmoduletypes.ModuleName,
 		permissionmoduletypes.ModuleName,
 		gamemoduletypes.ModuleName,
+		assetfactorymoduletypes.ModuleName,
 		denomfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
@@ -676,6 +719,7 @@ func New(
 		distrtypes.ModuleName,
 		slashingtypes.ModuleName,
 		minttypes.ModuleName,
+		nft.ModuleName,
 		genutiltypes.ModuleName,
 		evidencetypes.ModuleName,
 		authz.ModuleName,
@@ -687,6 +731,7 @@ func New(
 		g4alchainmoduletypes.ModuleName,
 		permissionmoduletypes.ModuleName,
 		gamemoduletypes.ModuleName,
+		assetfactorymoduletypes.ModuleName,
 		denomfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
@@ -705,6 +750,7 @@ func New(
 		slashingtypes.ModuleName,
 		govtypes.ModuleName,
 		minttypes.ModuleName,
+		nft.ModuleName,
 		crisistypes.ModuleName,
 		genutiltypes.ModuleName,
 		ibctransfertypes.ModuleName,
@@ -720,6 +766,7 @@ func New(
 		g4alchainmoduletypes.ModuleName,
 		permissionmoduletypes.ModuleName,
 		gamemoduletypes.ModuleName,
+		assetfactorymoduletypes.ModuleName,
 		denomfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
@@ -753,6 +800,7 @@ func New(
 		g4alchainModule,
 		permissionModule,
 		gameModule,
+		assetfactoryModule,
 		denomfactoryModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
@@ -944,6 +992,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(banktypes.ModuleName)
 	paramsKeeper.Subspace(stakingtypes.ModuleName)
 	paramsKeeper.Subspace(minttypes.ModuleName)
+	paramsKeeper.Subspace(nft.ModuleName)
 	paramsKeeper.Subspace(distrtypes.ModuleName)
 	paramsKeeper.Subspace(slashingtypes.ModuleName)
 	paramsKeeper.Subspace(govtypes.ModuleName).WithKeyTable(govv1.ParamKeyTable())
@@ -955,6 +1004,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(g4alchainmoduletypes.ModuleName)
 	paramsKeeper.Subspace(permissionmoduletypes.ModuleName)
 	paramsKeeper.Subspace(gamemoduletypes.ModuleName)
+	paramsKeeper.Subspace(assetfactorymoduletypes.ModuleName)
 	paramsKeeper.Subspace(denomfactorymoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 

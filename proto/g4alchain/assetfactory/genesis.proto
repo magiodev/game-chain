@@ -1,0 +1,17 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.assetfactory;
+
+import "gogoproto/gogo.proto";
+import "g4alchain/assetfactory/params.proto";
+import "g4alchain/assetfactory/class.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types";
+
+// GenesisState defines the assetfactory module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  string port_id = 2;
+  repeated Class classList = 3 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}

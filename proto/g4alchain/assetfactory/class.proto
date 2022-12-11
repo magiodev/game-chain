@@ -1,0 +1,13 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.assetfactory;
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types";
+
+message Class {
+  string symbol = 1; 
+  string project = 2; 
+  int32 maxSupply = 3; 
+  bool canChangeMaxSupply = 4; 
+  string creator = 5;
+}
+
