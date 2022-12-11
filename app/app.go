@@ -110,6 +110,9 @@ import (
 	assetfactorymodule "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory"
 	assetfactorymodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/keeper"
 	assetfactorymoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types"
+	denomfactorymodule "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory"
+	denomfactorymodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/keeper"
+	denomfactorymoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types"
 	g4alchainmodule "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain"
 	g4alchainmodulekeeper "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain/keeper"
 	g4alchainmoduletypes "github.com/G4AL-Entertainment/g4al-chain/x/g4alchain/types"
@@ -181,6 +184,7 @@ var (
 		g4alchainmodule.AppModuleBasic{},
 		permissionmodule.AppModuleBasic{},
 		gamemodule.AppModuleBasic{},
+		denomfactorymodule.AppModuleBasic{},
 		assetfactorymodule.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
 	)
@@ -196,6 +200,15 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		authtypes.FeeCollectorName:         nil,
+		distrtypes.ModuleName:              nil,
+		icatypes.ModuleName:                nil,
+		minttypes.ModuleName:               {authtypes.Minter},
+		stakingtypes.BondedPoolName:        {authtypes.Burner, authtypes.Staking},
+		stakingtypes.NotBondedPoolName:     {authtypes.Burner, authtypes.Staking},
+		govtypes.ModuleName:                {authtypes.Burner},
+		ibctransfertypes.ModuleName:        {authtypes.Minter, authtypes.Burner},
+		denomfactorymoduletypes.ModuleName: {authtypes.Minter, authtypes.Burner, authtypes.Staking},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 )
@@ -264,6 +277,8 @@ type App struct {
 	GameKeeper               gamemodulekeeper.Keeper
 	ScopedAssetfactoryKeeper capabilitykeeper.ScopedKeeper
 	AssetfactoryKeeper       assetfactorymodulekeeper.Keeper
+	ScopedDenomfactoryKeeper capabilitykeeper.ScopedKeeper
+	DenomfactoryKeeper       denomfactorymodulekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// mm is the module manager
@@ -311,6 +326,7 @@ func New(
 		g4alchainmoduletypes.StoreKey,
 		permissionmoduletypes.StoreKey,
 		gamemoduletypes.StoreKey,
+		denomfactorymoduletypes.StoreKey,
 		assetfactorymoduletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
 	)
@@ -588,6 +604,24 @@ func New(
 	assetfactoryModule := assetfactorymodule.NewAppModule(appCodec, app.AssetfactoryKeeper, app.AccountKeeper, app.BankKeeper)
 
 	assetfactoryIBCModule := assetfactorymodule.NewIBCModule(app.AssetfactoryKeeper)
+	scopedDenomfactoryKeeper := app.CapabilityKeeper.ScopeToModule(denomfactorymoduletypes.ModuleName)
+	app.ScopedDenomfactoryKeeper = scopedDenomfactoryKeeper
+	app.DenomfactoryKeeper = *denomfactorymodulekeeper.NewKeeper(
+		appCodec,
+		keys[denomfactorymoduletypes.StoreKey],
+		keys[denomfactorymoduletypes.MemStoreKey],
+		app.GetSubspace(denomfactorymoduletypes.ModuleName),
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		scopedDenomfactoryKeeper,
+		app.AccountKeeper,
+		app.PermissionKeeper,
+		app.GameKeeper,
+		app.BankKeeper,
+	)
+	denomfactoryModule := denomfactorymodule.NewAppModule(appCodec, app.DenomfactoryKeeper, app.AccountKeeper, app.BankKeeper)
+
+	denomfactoryIBCModule := denomfactorymodule.NewIBCModule(app.DenomfactoryKeeper)
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// Sealing prevents other modules from creating scoped sub-keepers
@@ -599,6 +633,7 @@ func New(
 		AddRoute(ibctransfertypes.ModuleName, transferIBCModule)
 	ibcRouter.AddRoute(gamemoduletypes.ModuleName, gameIBCModule)
 	ibcRouter.AddRoute(assetfactorymoduletypes.ModuleName, assetfactoryIBCModule)
+	ibcRouter.AddRoute(denomfactorymoduletypes.ModuleName, denomfactoryIBCModule)
 	// this line is used by starport scaffolding # ibc/app/router
 	app.IBCKeeper.SetRouter(ibcRouter)
 
@@ -639,6 +674,7 @@ func New(
 		permissionModule,
 		gameModule,
 		assetfactoryModule,
+		denomfactoryModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -672,6 +708,7 @@ func New(
 		permissionmoduletypes.ModuleName,
 		gamemoduletypes.ModuleName,
 		assetfactorymoduletypes.ModuleName,
+		denomfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	)
 
@@ -700,6 +737,7 @@ func New(
 		permissionmoduletypes.ModuleName,
 		gamemoduletypes.ModuleName,
 		assetfactorymoduletypes.ModuleName,
+		denomfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	)
 
@@ -733,6 +771,7 @@ func New(
 		permissionmoduletypes.ModuleName,
 		gamemoduletypes.ModuleName,
 		assetfactorymoduletypes.ModuleName,
+		denomfactorymoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	)
 
@@ -766,6 +805,7 @@ func New(
 		permissionModule,
 		gameModule,
 		assetfactoryModule,
+		denomfactoryModule,
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 	app.sm.RegisterStoreDecoders()
@@ -968,6 +1008,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(permissionmoduletypes.ModuleName)
 	paramsKeeper.Subspace(gamemoduletypes.ModuleName)
 	paramsKeeper.Subspace(assetfactorymoduletypes.ModuleName)
+	paramsKeeper.Subspace(denomfactorymoduletypes.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
 
 	return paramsKeeper

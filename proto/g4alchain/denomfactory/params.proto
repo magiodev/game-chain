@@ -1,0 +1,12 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.denomfactory;
+
+import "gogoproto/gogo.proto";
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (gogoproto.goproto_stringer) = false;
+  
+}

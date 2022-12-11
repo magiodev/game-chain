@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -12,7 +11,7 @@ func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDe
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if err := validateCreateDeveloper(ctx, k, msg); err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("wrappedError: invalid administrator address (%s)", msg.Creator))
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
 	// Check if the value already exists
@@ -43,7 +42,7 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	if err := validateUpdateDeveloper(ctx, k, msg); err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("wrappedError: invalid administrator address (%s)", msg.Creator))
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
 	// Check if the value exists

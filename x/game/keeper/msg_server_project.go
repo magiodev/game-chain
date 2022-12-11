@@ -15,7 +15,7 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 
 	err := validateCreateProject(ctx, k, msg)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("wrappedError: invalid developer address (%s)", msg.Creator))
+		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
 	// Regex first of all as we strip characters
