@@ -196,19 +196,6 @@ export default {
 		},
 		
 		
-		async sendMsgUpdateDenom({ rootGetters }, { value, fee = [], memo = '' }) {
-			try {
-				const client=await initClient(rootGetters)
-				const result = await client.G4AlentertainmentG4AlchainDenomfactory.tx.sendMsgUpdateDenom({ value, fee: {amount: fee, gas: "200000"}, memo })
-				return result
-			} catch (e) {
-				if (e == MissingWalletError) {
-					throw new Error('TxClient:MsgUpdateDenom:Init Could not initialize signing client. Wallet is required.')
-				}else{
-					throw new Error('TxClient:MsgUpdateDenom:Send Could not broadcast Tx: '+ e.message)
-				}
-			}
-		},
 		async sendMsgCreateDenom({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
 				const client=await initClient(rootGetters)
@@ -222,20 +209,20 @@ export default {
 				}
 			}
 		},
-		
-		async MsgUpdateDenom({ rootGetters }, { value }) {
+		async sendMsgUpdateDenom({ rootGetters }, { value, fee = [], memo = '' }) {
 			try {
-				const client=initClient(rootGetters)
-				const msg = await client.G4AlentertainmentG4AlchainDenomfactory.tx.msgUpdateDenom({value})
-				return msg
+				const client=await initClient(rootGetters)
+				const result = await client.G4AlentertainmentG4AlchainDenomfactory.tx.sendMsgUpdateDenom({ value, fee: {amount: fee, gas: "200000"}, memo })
+				return result
 			} catch (e) {
 				if (e == MissingWalletError) {
 					throw new Error('TxClient:MsgUpdateDenom:Init Could not initialize signing client. Wallet is required.')
-				} else{
-					throw new Error('TxClient:MsgUpdateDenom:Create Could not create message: ' + e.message)
+				}else{
+					throw new Error('TxClient:MsgUpdateDenom:Send Could not broadcast Tx: '+ e.message)
 				}
 			}
 		},
+		
 		async MsgCreateDenom({ rootGetters }, { value }) {
 			try {
 				const client=initClient(rootGetters)
@@ -246,6 +233,19 @@ export default {
 					throw new Error('TxClient:MsgCreateDenom:Init Could not initialize signing client. Wallet is required.')
 				} else{
 					throw new Error('TxClient:MsgCreateDenom:Create Could not create message: ' + e.message)
+				}
+			}
+		},
+		async MsgUpdateDenom({ rootGetters }, { value }) {
+			try {
+				const client=initClient(rootGetters)
+				const msg = await client.G4AlentertainmentG4AlchainDenomfactory.tx.msgUpdateDenom({value})
+				return msg
+			} catch (e) {
+				if (e == MissingWalletError) {
+					throw new Error('TxClient:MsgUpdateDenom:Init Could not initialize signing client. Wallet is required.')
+				} else{
+					throw new Error('TxClient:MsgUpdateDenom:Create Could not create message: ' + e.message)
 				}
 			}
 		},
