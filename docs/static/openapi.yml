@@ -70828,6 +70828,8 @@ definitions:
     type: object
   g4alentertainment.g4alchain.assetfactory.MsgMintNftResponse:
     type: object
+  g4alentertainment.g4alchain.assetfactory.MsgTransferNftResponse:
+    type: object
   g4alentertainment.g4alchain.assetfactory.MsgUpdateClassResponse:
     type: object
   g4alentertainment.g4alchain.assetfactory.MsgUpdateNftResponse:

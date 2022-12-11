@@ -13,6 +13,7 @@ export interface MsgCreateClass {
   description: string;
   uri: string;
   uriHash: string;
+  /** TODO google.prototype.Any */
   data: string;
 }
 
@@ -27,6 +28,7 @@ export interface MsgUpdateClass {
   description: string;
   uri: string;
   uriHash: string;
+  /** TODO google.prototype.Any */
   data: string;
 }
 
@@ -35,10 +37,10 @@ export interface MsgUpdateClassResponse {
 
 export interface MsgMintNft {
   creator: string;
-  project: string;
   symbol: string;
   uri: string;
   uriHash: string;
+  /** TODO google.prototype.Any */
   data: string;
   receiver: string;
 }
@@ -52,6 +54,7 @@ export interface MsgUpdateNft {
   id: string;
   uri: string;
   uriHash: string;
+  /** TODO google.prototype.Any */
   data: string;
 }
 
@@ -409,7 +412,7 @@ export const MsgUpdateClassResponse = {
 };
 
 function createBaseMsgMintNft(): MsgMintNft {
-  return { creator: "", project: "", symbol: "", uri: "", uriHash: "", data: "", receiver: "" };
+  return { creator: "", symbol: "", uri: "", uriHash: "", data: "", receiver: "" };
 }
 
 export const MsgMintNft = {
@@ -417,23 +420,20 @@ export const MsgMintNft = {
     if (message.creator !== "") {
       writer.uint32(10).string(message.creator);
     }
-    if (message.project !== "") {
-      writer.uint32(18).string(message.project);
-    }
     if (message.symbol !== "") {
-      writer.uint32(26).string(message.symbol);
+      writer.uint32(18).string(message.symbol);
     }
     if (message.uri !== "") {
-      writer.uint32(34).string(message.uri);
+      writer.uint32(26).string(message.uri);
     }
     if (message.uriHash !== "") {
-      writer.uint32(42).string(message.uriHash);
+      writer.uint32(34).string(message.uriHash);
     }
     if (message.data !== "") {
-      writer.uint32(50).string(message.data);
+      writer.uint32(42).string(message.data);
     }
     if (message.receiver !== "") {
-      writer.uint32(58).string(message.receiver);
+      writer.uint32(50).string(message.receiver);
     }
     return writer;
   },
@@ -449,21 +449,18 @@ export const MsgMintNft = {
           message.creator = reader.string();
           break;
         case 2:
-          message.project = reader.string();
-          break;
-        case 3:
           message.symbol = reader.string();
           break;
-        case 4:
+        case 3:
           message.uri = reader.string();
           break;
-        case 5:
+        case 4:
           message.uriHash = reader.string();
           break;
-        case 6:
+        case 5:
           message.data = reader.string();
           break;
-        case 7:
+        case 6:
           message.receiver = reader.string();
           break;
         default:
@@ -477,7 +474,6 @@ export const MsgMintNft = {
   fromJSON(object: any): MsgMintNft {
     return {
       creator: isSet(object.creator) ? String(object.creator) : "",
-      project: isSet(object.project) ? String(object.project) : "",
       symbol: isSet(object.symbol) ? String(object.symbol) : "",
       uri: isSet(object.uri) ? String(object.uri) : "",
       uriHash: isSet(object.uriHash) ? String(object.uriHash) : "",
@@ -489,7 +485,6 @@ export const MsgMintNft = {
   toJSON(message: MsgMintNft): unknown {
     const obj: any = {};
     message.creator !== undefined && (obj.creator = message.creator);
-    message.project !== undefined && (obj.project = message.project);
     message.symbol !== undefined && (obj.symbol = message.symbol);
     message.uri !== undefined && (obj.uri = message.uri);
     message.uriHash !== undefined && (obj.uriHash = message.uriHash);
@@ -501,7 +496,6 @@ export const MsgMintNft = {
   fromPartial<I extends Exact<DeepPartial<MsgMintNft>, I>>(object: I): MsgMintNft {
     const message = createBaseMsgMintNft();
     message.creator = object.creator ?? "";
-    message.project = object.project ?? "";
     message.symbol = object.symbol ?? "";
     message.uri = object.uri ?? "";
     message.uriHash = object.uriHash ?? "";

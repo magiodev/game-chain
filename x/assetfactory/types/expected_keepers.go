@@ -1,6 +1,8 @@
 package types
 
 import (
+	gametypes "github.com/G4AL-Entertainment/g4al-chain/x/game/types"
+	permissiontypes "github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/cosmos/cosmos-sdk/x/nft"
@@ -8,10 +10,12 @@ import (
 
 type PermissionKeeper interface {
 	// Methods imported from permission should be defined here
+	GetDeveloper(ctx sdk.Context, address string) (val permissiontypes.Developer, found bool)
 }
 
 type GameKeeper interface {
 	// Methods imported from game should be defined here
+	GetProject(ctx sdk.Context, symbol string) (val gametypes.Project, found bool)
 }
 
 type NftKeeper interface {

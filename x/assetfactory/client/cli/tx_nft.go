@@ -14,16 +14,15 @@ var _ = strconv.Itoa(0)
 
 func CmdMintNft() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "mint-nft [project] [symbol] [uri] [uri-hash] [data] [receiver]",
+		Use:   "mint-nft [symbol] [uri] [uri-hash] [data] [receiver]",
 		Short: "Broadcast message mint-nft",
-		Args:  cobra.ExactArgs(6),
+		Args:  cobra.ExactArgs(5),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argProject := args[0]
-			argSymbol := args[1]
-			argUri := args[2]
-			argUriHash := args[3]
-			argData := args[4]
-			argReceiver := args[5]
+			argSymbol := args[0]
+			argUri := args[1]
+			argUriHash := args[2]
+			argData := args[3]
+			argReceiver := args[4]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -32,7 +31,6 @@ func CmdMintNft() *cobra.Command {
 
 			msg := types.NewMsgMintNft(
 				clientCtx.GetFromAddress().String(),
-				argProject,
 				argSymbol,
 				argUri,
 				argUriHash,

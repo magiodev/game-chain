@@ -83,25 +83,20 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
 	}
 
+	// TODO consider delegates removal also
 	// appending new delegate values to valFound.Delegate
 	for _, delegate := range msg.Delegate {
 		bech32, err := sdk.AccAddressFromBech32(delegate)
-		if err == nil {
+		if err == nil { // TODO fix this, is not preventing invalid addresses to be appended
 			valFound.Delegate = append(valFound.Delegate, bech32.String())
 		}
 	}
 
-	var project = types.Project{
-		Creator:     valFound.Creator,
-		Symbol:      valFound.Symbol,
-		Name:        msg.Name,
-		Description: msg.Description,
-		Delegate:    valFound.Delegate, // updated values
-		CreatedAt:   valFound.CreatedAt,
-		UpdatedAt:   int32(ctx.BlockHeight()),
-	}
+	valFound.Name = msg.Name
+	valFound.Description = msg.Description
+	valFound.UpdatedAt = int32(ctx.BlockHeight())
 
-	k.SetProject(ctx, project)
+	k.SetProject(ctx, valFound)
 
 	return &types.MsgUpdateProjectResponse{}, nil
 }

@@ -28,7 +28,7 @@ message MsgCreateClass {
   string description = 7;
   string uri = 8;
   string uri_hash = 9;
-  string data = 10;
+  string data = 10; // TODO google.prototype.Any
 }
 message MsgCreateClassResponse {}
 
@@ -41,19 +41,17 @@ message MsgUpdateClass {
   string description = 5;
   string uri = 6;
   string uri_hash = 7;
-  string data = 8;
-
+  string data = 8; // TODO google.prototype.Any
 }
 message MsgUpdateClassResponse {}
 
 message MsgMintNft {
   string creator = 1;
-  string project = 2;
-  string symbol = 3;
-  string uri = 4;
-  string uriHash = 5;
-  string data = 6;
-  string receiver = 7;
+  string symbol = 2;
+  string uri = 3;
+  string uriHash = 4;
+  string data = 5; // TODO google.prototype.Any
+  string receiver = 6;
 }
 
 message MsgMintNftResponse {
@@ -65,7 +63,7 @@ message MsgUpdateNft {
   string id = 3;
   string uri = 4;
   string uriHash = 5;
-  string data = 6;
+  string data = 6; // TODO google.prototype.Any
 }
 
 message MsgUpdateNftResponse {

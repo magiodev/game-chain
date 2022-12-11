@@ -21,6 +21,7 @@ import { Module as CosmosStakingV1Beta1, msgTypes as CosmosStakingV1Beta1MsgType
 import { Module as CosmosTxV1Beta1, msgTypes as CosmosTxV1Beta1MsgTypes } from './cosmos.tx.v1beta1'
 import { Module as CosmosUpgradeV1Beta1, msgTypes as CosmosUpgradeV1Beta1MsgTypes } from './cosmos.upgrade.v1beta1'
 import { Module as CosmosVestingV1Beta1, msgTypes as CosmosVestingV1Beta1MsgTypes } from './cosmos.vesting.v1beta1'
+import { Module as G4AlentertainmentG4AlchainAssetfactory, msgTypes as G4AlentertainmentG4AlchainAssetfactoryMsgTypes } from './g4alentertainment.g4alchain.assetfactory'
 import { Module as G4AlentertainmentG4AlchainDenomfactory, msgTypes as G4AlentertainmentG4AlchainDenomfactoryMsgTypes } from './g4alentertainment.g4alchain.denomfactory'
 import { Module as G4AlentertainmentG4AlchainG4Alchain, msgTypes as G4AlentertainmentG4AlchainG4AlchainMsgTypes } from './g4alentertainment.g4alchain.g4alchain'
 import { Module as G4AlentertainmentG4AlchainGame, msgTypes as G4AlentertainmentG4AlchainGameMsgTypes } from './g4alentertainment.g4alchain.game'
@@ -34,7 +35,7 @@ import { Module as IbcCoreConnectionV1, msgTypes as IbcCoreConnectionV1MsgTypes 
 
 
 const Client = IgniteClient.plugin([
-    CosmosAuthV1Beta1, CosmosAuthzV1Beta1, CosmosBankV1Beta1, CosmosBaseTendermintV1Beta1, CosmosCrisisV1Beta1, CosmosDistributionV1Beta1, CosmosEvidenceV1Beta1, CosmosFeegrantV1Beta1, CosmosGovV1, CosmosGovV1Beta1, CosmosGroupV1, CosmosMintV1Beta1, CosmosNftV1Beta1, CosmosParamsV1Beta1, CosmosSlashingV1Beta1, CosmosStakingV1Beta1, CosmosTxV1Beta1, CosmosUpgradeV1Beta1, CosmosVestingV1Beta1, G4AlentertainmentG4AlchainDenomfactory, G4AlentertainmentG4AlchainG4Alchain, G4AlentertainmentG4AlchainGame, G4AlentertainmentG4AlchainPermission, IbcApplicationsInterchainAccountsControllerV1, IbcApplicationsInterchainAccountsHostV1, IbcApplicationsTransferV1, IbcCoreChannelV1, IbcCoreClientV1, IbcCoreConnectionV1
+    CosmosAuthV1Beta1, CosmosAuthzV1Beta1, CosmosBankV1Beta1, CosmosBaseTendermintV1Beta1, CosmosCrisisV1Beta1, CosmosDistributionV1Beta1, CosmosEvidenceV1Beta1, CosmosFeegrantV1Beta1, CosmosGovV1, CosmosGovV1Beta1, CosmosGroupV1, CosmosMintV1Beta1, CosmosNftV1Beta1, CosmosParamsV1Beta1, CosmosSlashingV1Beta1, CosmosStakingV1Beta1, CosmosTxV1Beta1, CosmosUpgradeV1Beta1, CosmosVestingV1Beta1, G4AlentertainmentG4AlchainAssetfactory, G4AlentertainmentG4AlchainDenomfactory, G4AlentertainmentG4AlchainG4Alchain, G4AlentertainmentG4AlchainGame, G4AlentertainmentG4AlchainPermission, IbcApplicationsInterchainAccountsControllerV1, IbcApplicationsInterchainAccountsHostV1, IbcApplicationsTransferV1, IbcCoreChannelV1, IbcCoreClientV1, IbcCoreConnectionV1
 ]);
 
 const registry = new Registry([
@@ -57,6 +58,7 @@ const registry = new Registry([
   ...CosmosTxV1Beta1MsgTypes,
   ...CosmosUpgradeV1Beta1MsgTypes,
   ...CosmosVestingV1Beta1MsgTypes,
+  ...G4AlentertainmentG4AlchainAssetfactoryMsgTypes,
   ...G4AlentertainmentG4AlchainDenomfactoryMsgTypes,
   ...G4AlentertainmentG4AlchainG4AlchainMsgTypes,
   ...G4AlentertainmentG4AlchainGameMsgTypes,
