@@ -1,0 +1,88 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.permission;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "g4alchain/permission/params.proto";
+import "g4alchain/permission/administrator.proto";
+import "g4alchain/permission/developer.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/permission/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/permission/params";
+  }
+  // Queries a Administrator by index.
+	rpc Administrator(QueryGetAdministratorRequest) returns (QueryGetAdministratorResponse) {
+		option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/permission/administrator/{address}";
+	}
+
+	// Queries a list of Administrator items.
+	rpc AdministratorAll(QueryAllAdministratorRequest) returns (QueryAllAdministratorResponse) {
+		option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/permission/administrator";
+	}
+
+// Queries a Developer by index.
+	rpc Developer(QueryGetDeveloperRequest) returns (QueryGetDeveloperResponse) {
+		option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/permission/developer/{address}";
+	}
+
+	// Queries a list of Developer items.
+	rpc DeveloperAll(QueryAllDeveloperRequest) returns (QueryAllDeveloperResponse) {
+		option (google.api.http).get = "/G4AL-Entertainment/g4al-chain/permission/developer";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetAdministratorRequest {
+	  string address = 1;
+
+}
+
+message QueryGetAdministratorResponse {
+	Administrator administrator = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllAdministratorRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllAdministratorResponse {
+	repeated Administrator administrator = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+message QueryGetDeveloperRequest {
+	  string address = 1;
+
+}
+
+message QueryGetDeveloperResponse {
+	Developer developer = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllDeveloperRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllDeveloperResponse {
+	repeated Developer developer = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

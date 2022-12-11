@@ -14,9 +14,9 @@ validators:
     bonded: "100000000uggt"
 genesis:
   app_state:
-    #permission:
-    #  params:
-    #    genesisAdmin: "g4al1f7e3s7jayfk3nfnxcv08myguvf522f2e00cxuy"
+    permission:
+      params:
+        genesisAdministrator: "g4al1f7e3s7jayfk3nfnxcv08myguvf522f2e00cxuy"
     staking:
       params:
         bond_denom: "uggt"
