@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/nft"
 
@@ -54,9 +55,9 @@ func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*t
 		return nil, err
 	}
 
-	toUpdate, found := k.nftKeeper.GetNFT(ctx, msg.Symbol, msg.Id)
-	if !found {
-		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "nftID not found (%s)", msg.Id)
+	toUpdate, error := tryGetNft(ctx, k, msg.Symbol, msg.Id)
+	if error != nil {
+		return nil, error
 	}
 
 	// Treating msg.Data any value
@@ -143,30 +144,50 @@ func validateBurnNft(ctx sdk.Context, k msgServer, msg *types.MsgBurnNft) error 
 	if err != nil {
 		return err
 	}
+
 	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
 	if err != nil {
 		return err
 	}
-	return nil // TODO
+
+	_, error := tryGetNft(ctx, k, msg.Symbol, msg.Id)
+	if error != nil {
+		return error
+	}
+
+	return nil
 }
 
 func validateUpdateNft(ctx sdk.Context, k msgServer, msg *types.MsgUpdateNft) error {
+
 	err := validateDeveloper(ctx, k, msg.Creator)
 	if err != nil {
 		return err
 	}
+
 	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
 	if err != nil {
 		return err
 	}
-	// TODO validate data and params
+
 	return nil
 }
 
 func validateTransferNft(ctx sdk.Context, k msgServer, msg *types.MsgTransferNft) error {
-	// TODO validate is owner of nft, not project
+	// Check if NFT exists
+	_, error := tryGetNft(ctx, k, msg.Symbol, msg.Id)
+	if error != nil {
+		return error
+	}
+
+	// Check if nft owner is msg owner
+	owner := k.nftKeeper.GetOwner(ctx, msg.Symbol, msg.Id)
+	if owner.String() != msg.Creator {
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "nft owner is not msg creator")
+	}
+
 	// TODO validate allowance (see x/authz if can help with nfts?) (or maybe skip ownership if developer. but not delegate?)
-	return nil // TODO
+	return nil
 }
 
 func validateDeveloper(ctx sdk.Context, k msgServer, creator string) error {
@@ -187,16 +208,19 @@ func validateProjectOwnershipOrDelegateByClassId(ctx sdk.Context, k msgServer, c
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/nft (%s)", symbol)
 	}
+
 	// check on map to what project is associated with
 	classMapFound, found := k.GetClass(ctx, classFound.Symbol)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", symbol)
 	}
+
 	// Checking project existing and related to this game developer or delegate
 	project, found := k.gameKeeper.GetProject(ctx, classMapFound.Project)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", classMapFound.Project)
 	}
+
 	// Check if msg.Creator included in valFound.Delegate
 	isDelegate := false
 	for _, del := range project.Delegate {
@@ -210,4 +234,12 @@ func validateProjectOwnershipOrDelegateByClassId(ctx sdk.Context, k msgServer, c
 		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
 	}
 	return nil
+}
+
+func tryGetNft(ctx sdk.Context, k msgServer, symbol string, id string) (nft.NFT, error) {
+	toUpdate, found := k.nftKeeper.GetNFT(ctx, symbol, id)
+	if !found {
+		return nft.NFT{}, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "nftID not found (%s)", id)
+	}
+	return toUpdate, nil
 }

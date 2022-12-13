@@ -16,7 +16,7 @@ func NewMsgCreateClass(
 	creator string,
 	symbol string,
 	project string,
-	maxSupply int32,
+	maxSupply uint64,
 	canChangeMaxSupply bool,
 	name string,
 	description string,
@@ -73,7 +73,7 @@ var _ sdk.Msg = &MsgUpdateClass{}
 func NewMsgUpdateClass(
 	creator string,
 	symbol string,
-	maxSupply int32,
+	maxSupply uint64,
 	name string,
 	description string,
 	uri string,

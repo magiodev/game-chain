@@ -22,7 +22,7 @@ message MsgCreateClass {
   string symbol = 2;
 
   string project = 3;
-  int32 maxSupply = 4;
+  uint64 maxSupply = 4;
   bool canChangeMaxSupply = 5;
   string name = 6;
   string description = 7;
@@ -36,7 +36,7 @@ message MsgUpdateClass {
   string creator = 1;
   string symbol = 2;
 
-  int32 maxSupply = 3;
+  uint64 maxSupply = 3;
   string name = 4;
   string description = 5;
   string uri = 6;

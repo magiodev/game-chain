@@ -6,7 +6,7 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/typ
 message Class {
   string symbol = 1; 
   string project = 2; 
-  int32 maxSupply = 3; 
+  uint64 maxSupply = 3; 
   bool canChangeMaxSupply = 4; 
   string creator = 5;
 }
