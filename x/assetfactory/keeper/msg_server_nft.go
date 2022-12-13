@@ -24,12 +24,18 @@ func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types
 		return nil, err
 	}
 
+	// Treating msg.Data any value
+	msgData, err := StringToAny(msg.Data)
+	if err != nil {
+		return nil, err
+	}
+
 	toMint := nft.NFT{
 		ClassId: msg.Symbol,
 		Id:      string(k.nftKeeper.GetTotalSupply(ctx, msg.Symbol)), // check conversion
 		Uri:     msg.Uri,
 		UriHash: msg.UriHash,
-		//Data: msg.Data, // TODO
+		Data:    msgData,
 	}
 
 	err = k.nftKeeper.Mint(ctx, toMint, bech32)
@@ -53,9 +59,15 @@ func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*t
 		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "nftID not found (%s)", msg.Id)
 	}
 
+	// Treating msg.Data any value
+	msgData, err := StringToAny(msg.Data)
+	if err != nil {
+		return nil, err
+	}
+
 	toUpdate.Uri = msg.Uri
 	toUpdate.UriHash = msg.UriHash
-	//toUpdate.Data = msg.Data / /TODO string to types.Any
+	toUpdate.Data = msgData
 
 	err = k.nftKeeper.Update(ctx, toUpdate)
 	if err != nil {

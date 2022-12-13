@@ -2,8 +2,10 @@ package keeper
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes/wrappers"
 
 	"github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types"
+	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/nft"
@@ -37,7 +39,12 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 		CanChangeMaxSupply: msg.CanChangeMaxSupply,
 	}
 
-	// TODO NFT workflow
+	// Treating msg.Data any value
+	msgData, err := StringToAny(msg.Data)
+	if err != nil {
+		return nil, err
+	}
+
 	var nftClass = nft.Class{
 		Id:          msg.Symbol,
 		Name:        msg.Name,
@@ -45,9 +52,9 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 		Description: msg.Description,
 		Uri:         msg.Uri,
 		UriHash:     msg.UriHash,
-		//Data:        msg.Data,
+		Data:        msgData,
 	}
-	err := k.nftKeeper.SaveClass(ctx, nftClass)
+	err = k.nftKeeper.SaveClass(ctx, nftClass)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "class creation has not occurred")
 	}
@@ -71,7 +78,7 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
 	}
 
-	// Checks if the the msg creator is the same as the current owner
+	// Checks if the msg creator is the same as the current owner
 	if msg.Creator != valFound.Creator {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
@@ -87,4 +94,14 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 	k.SetClass(ctx, class)
 
 	return &types.MsgUpdateClassResponse{}, nil
+}
+
+// StringToAny TODO check if working properly
+func StringToAny(data string) (*codectypes.Any, error) {
+	sv := &wrappers.StringValue{Value: data}
+	msgData, err := codectypes.NewAnyWithValue(sv)
+	if err != nil {
+		return msgData, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "data not valid")
+	}
+	return msgData, nil
 }
