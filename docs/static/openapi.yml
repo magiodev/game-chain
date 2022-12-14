@@ -70920,7 +70920,13 @@ definitions:
         type: boolean
       creator:
         type: string
+  g4alentertainment.g4alchain.denomfactory.MsgBurnDenomResponse:
+    type: object
   g4alentertainment.g4alchain.denomfactory.MsgCreateDenomResponse:
+    type: object
+  g4alentertainment.g4alchain.denomfactory.MsgMintDenomResponse:
+    type: object
+  g4alentertainment.g4alchain.denomfactory.MsgTransferDenomResponse:
     type: object
   g4alentertainment.g4alchain.denomfactory.MsgUpdateDenomResponse:
     type: object

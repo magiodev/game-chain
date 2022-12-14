@@ -7,8 +7,8 @@ import (
 )
 
 const (
-	SymbolMinLength      = 8
-	SymbolMaxLength      = 30
+	SymbolMinLength      = 3
+	SymbolMaxLength      = 20
 	NameMinLength        = 8
 	NameMaxLength        = 30
 	DescriptionMinLength = 10

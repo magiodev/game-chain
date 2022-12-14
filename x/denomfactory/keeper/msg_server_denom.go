@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"cosmossdk.io/math"
 	"github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -18,7 +19,7 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	if err != nil {
 		return nil, err
 	}
-	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Symbol)
+	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Project)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +68,7 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	if err != nil {
 		return nil, err
 	}
-	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Symbol)
+	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Project)
 	if err != nil {
 		return nil, err
 	}
@@ -127,9 +128,68 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	return &types.MsgUpdateDenomResponse{}, nil
 }
 
-// TODO mintDenom() to user
-// TODO burnDenom() from user considering approval /authz module
-// TODO	SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
+func (k msgServer) MintDenom(goCtx context.Context, msg *types.MsgMintDenom) (*types.MsgMintDenomResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// Validate
+	err := validateDeveloper(ctx, k, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
+	denom, found := k.GetDenom(ctx, msg.Symbol)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "denom not find")
+	}
+
+	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, denom.Project)
+	if err != nil {
+		return nil, err
+	}
+
+	// Minting coins with x/bank module
+	coin := sdk.NewCoin(msg.Symbol, math.NewInt(int64(msg.Amount)))
+	err = k.bankKeeper.MintCoins(ctx, "denomfactory", sdk.NewCoins(coin))
+	if err != nil {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "mint has not occurred")
+	}
+	// Sending minted amount from module to receiver
+	err = k.bankKeeper.SendCoinsFromModuleToAccount(ctx, "denomfactory", sdk.AccAddress(msg.Receiver), sdk.NewCoins(coin))
+	if err != nil {
+		return nil, err
+	}
+	return &types.MsgMintDenomResponse{}, nil
+}
+
+func (k msgServer) BurnDenom(goCtx context.Context, msg *types.MsgBurnDenom) (*types.MsgBurnDenomResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// Sending minted amount from module to receiver
+	coin := sdk.NewCoin(msg.Symbol, math.NewInt(int64(msg.Amount)))
+	err := k.bankKeeper.SendCoinsFromAccountToModule(ctx, sdk.AccAddress(msg.Creator), "denomfactory", sdk.NewCoins(coin))
+	if err != nil {
+		return nil, err
+	}
+	// Burning transferred amount from module
+	err = k.bankKeeper.BurnCoins(ctx, "denomfactory", sdk.NewCoins())
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgBurnDenomResponse{}, nil
+}
+
+func (k msgServer) TransferDenom(goCtx context.Context, msg *types.MsgTransferDenom) (*types.MsgTransferDenomResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	// Transferring coins
+	coin := sdk.NewCoin(msg.Symbol, math.NewInt(int64(msg.Amount)))
+	err := k.bankKeeper.SendCoins(ctx, sdk.AccAddress(msg.Creator), sdk.AccAddress(msg.Receiver), sdk.NewCoins(coin))
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgTransferDenomResponse{}, nil
+}
 
 // Private Methods
 
