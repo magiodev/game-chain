@@ -11,7 +11,7 @@ import (
 
 func CmdCreateDenom() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-denom [symbol] [project] [max-supply] [can-change-max-supply] [name] [description] [precision] [uri] [uri_hash]",
+		Use:   "create-denom [symbol] [project] [max-supply] [can-change-max-supply] [name] [description] [uri] [uri_hash]",
 		Short: "Create a new Denom",
 		Args:  cobra.ExactArgs(9),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -30,10 +30,6 @@ func CmdCreateDenom() *cobra.Command {
 			}
 			argName := args[4]
 			argDescription := args[5]
-			argPrecision, err := cast.ToUint32E(args[6])
-			if err != nil {
-				return err
-			}
 			argUri := args[7]
 			argUriHash := args[8]
 
@@ -50,7 +46,6 @@ func CmdCreateDenom() *cobra.Command {
 				argCanChangeMaxSupply,
 				argName,
 				argDescription,
-				argPrecision,
 				argUri,
 				argUriHash,
 			)

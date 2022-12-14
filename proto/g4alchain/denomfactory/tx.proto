@@ -25,9 +25,8 @@ message MsgCreateDenom {
   bool canChangeMaxSupply = 5;
   string name = 6;
   string description = 7;
-  uint32 precision = 8;
-  string uri = 9;
-  string uri_hash = 10;
+  string uri = 8;
+  string uri_hash = 9;
 
 }
 message MsgCreateDenomResponse {}

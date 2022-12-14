@@ -23,7 +23,6 @@ func NewMsgCreateDenom(
 	canChangeMaxSupply bool,
 	name string,
 	description string,
-	precision uint32,
 	uri string,
 	uri_hash string,
 
@@ -36,7 +35,6 @@ func NewMsgCreateDenom(
 		CanChangeMaxSupply: canChangeMaxSupply,
 		Name:               name,
 		Description:        description,
-		Precision:          precision,
 		Uri:                uri,
 		UriHash:            uri_hash,
 	}

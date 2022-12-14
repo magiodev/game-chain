@@ -25,7 +25,7 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	}
 
 	// Check if input texts meet requirements
-	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name, msg.Precision)
+	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	}
 
 	// Set metadata for Denom
-	SetCoinMetadata(ctx, k, symbol, msg.Name, msg.Description, msg.Precision)
+	SetCoinMetadata(ctx, k, symbol, msg.Name, msg.Description)
 
 	k.SetDenom(
 		ctx,
@@ -104,24 +104,15 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "metadata for denom not found")
 	}
-	precision := uint32(0)
-	// foreach denomUnit, looking for the base one
-	for _, denomUnit := range existingMetadata.DenomUnits {
-		// if matches the base one
-		if denomUnit.Denom == existingMetadata.Base {
-			precision = denomUnit.Exponent
-			break
-		}
-	}
 
 	// Check if input texts meet requirements
-	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name, precision)
+	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
 
 	// Set metadata for Denom
-	SetCoinMetadata(ctx, k, existingMetadata.Symbol, msg.Name, msg.Description, precision)
+	SetCoinMetadata(ctx, k, existingMetadata.Symbol, msg.Name, msg.Description)
 
 	k.SetDenom(ctx, denom)
 
@@ -193,23 +184,27 @@ func (k msgServer) TransferDenom(goCtx context.Context, msg *types.MsgTransferDe
 
 // Private Methods
 
-func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, description string, precision uint32) {
-	// TODO check exponent assign, consider limiting only to fixed number of decimals for all the denoms created
+func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, description string) {
 	// Creating metadata
+
+	// baseUnit (no alias)
 	var baseDenomUnit = banktypes.DenomUnit{
 		Denom:    symbol,
-		Exponent: precision,
+		Exponent: 6,
 	}
+	// milliUnit
 	var milliDenomUnit = banktypes.DenomUnit{
 		Denom:    "m" + symbol,
-		Exponent: uint32(3),
+		Exponent: 3,
 	}
 	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
+	// microUnit
 	var microDenomUnit = banktypes.DenomUnit{
 		Denom:    "u" + symbol,
 		Exponent: 0,
 	}
 	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
+
 	// Creating bank.Metadata object
 	var metadata = banktypes.Metadata{
 		Description: description,
@@ -218,10 +213,11 @@ func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, d
 		Name:        name,
 		Symbol:      symbol,
 	}
+	// Pushing denomUnits to Metadata
 	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)
 	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit)
 	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit)
-	// Set metadata
+	// Set metadata object
 	k.bankKeeper.SetDenomMetaData(ctx, metadata)
 }
 
@@ -259,7 +255,7 @@ func validateProjectOwnershipOrDelegateByProject(ctx sdk.Context, k msgServer, c
 	return nil
 }
 
-func validateArgsDenom(symbol string, description string, name string, precision uint32) error {
+func validateArgsDenom(symbol string, description string, name string) error {
 	if len(symbol) < SymbolMinLength {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
 	}
@@ -277,12 +273,6 @@ func validateArgsDenom(symbol string, description string, name string, precision
 	}
 	if len(description) > DescriptionMaxLength {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
-	}
-	if precision < PrecisionMinValue {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "precision is needed at least %d value", PrecisionMinValue)
-	}
-	if precision > PrecisionMaxValue {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "precision is needed at most %d value", PrecisionMaxValue)
 	}
 	return nil
 }
