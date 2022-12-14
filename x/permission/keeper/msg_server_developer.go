@@ -10,8 +10,9 @@ import (
 func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDeveloper) (*types.MsgCreateDeveloperResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if err := validateCreateDeveloper(ctx, k, msg); err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	err := k.ValidateAdministrator(ctx, msg.Address)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if the value already exists
@@ -41,8 +42,9 @@ func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDe
 func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDeveloper) (*types.MsgUpdateDeveloperResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	if err := validateUpdateDeveloper(ctx, k, msg); err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+	err := k.ValidateAdministrator(ctx, msg.Address)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if the value exists
@@ -65,30 +67,4 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 	k.SetDeveloper(ctx, developer)
 
 	return &types.MsgUpdateDeveloperResponse{}, nil
-}
-
-// Private Methods
-
-func validateUpdateDeveloper(ctx sdk.Context, k msgServer, msg *types.MsgUpdateDeveloper) error {
-	// Checking administrator role
-	val, found := k.GetAdministrator(ctx, msg.Creator)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid administrator address (%s)", msg.Creator)
-	}
-	if val.Blocked {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "administrator address blocked (%s)", msg.Creator)
-	}
-	return nil
-}
-
-func validateCreateDeveloper(ctx sdk.Context, k msgServer, msg *types.MsgCreateDeveloper) error {
-	// Checking administrator role
-	val, found := k.GetAdministrator(ctx, msg.Creator)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "invalid administrator address (%s)", msg.Creator)
-	}
-	if val.Blocked {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "administrator address blocked (%s)", msg.Creator)
-	}
-	return nil
 }

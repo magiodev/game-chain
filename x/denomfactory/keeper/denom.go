@@ -4,6 +4,7 @@ import (
 	"github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 )
 
 const (
@@ -69,4 +70,41 @@ func (k Keeper) GetAllDenom(ctx sdk.Context) (list []types.Denom) {
 	}
 
 	return
+}
+
+func (k Keeper) SetCoinMetadata(ctx sdk.Context, symbol string, name string, description string) {
+	// Creating metadata
+
+	// baseUnit (no alias)
+	var baseDenomUnit = banktypes.DenomUnit{
+		Denom:    symbol,
+		Exponent: 6,
+	}
+	// milliUnit
+	var milliDenomUnit = banktypes.DenomUnit{
+		Denom:    "m" + symbol,
+		Exponent: 3,
+	}
+	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
+	// microUnit
+	var microDenomUnit = banktypes.DenomUnit{
+		Denom:    "u" + symbol,
+		Exponent: 0,
+	}
+	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
+
+	// Creating bank.Metadata object
+	var metadata = banktypes.Metadata{
+		Description: description,
+		Base:        symbol,
+		Display:     name,
+		Name:        name,
+		Symbol:      symbol,
+	}
+	// Pushing denomUnits to Metadata
+	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)
+	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit)
+	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit)
+	// Set metadata object
+	k.bankKeeper.SetDenomMetaData(ctx, metadata)
 }

@@ -3,29 +3,27 @@ package keeper
 import (
 	"context"
 	"cosmossdk.io/math"
+	"github.com/G4AL-Entertainment/g4al-chain/utils"
 	"github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"regexp"
-	"strings"
 )
 
 func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom) (*types.MsgCreateDenomResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Validate
-	err := validateDeveloper(ctx, k, msg.Creator)
+	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Project)
+	err = k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
 	if err != nil {
 		return nil, err
 	}
 
 	// Check if input texts meet requirements
-	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name)
+	err = k.ValidateArgsDenom(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +38,7 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	}
 
 	// Regex first of all as we strip characters
-	symbol := regExSymbol(msg.Symbol)
+	symbol := utils.RegExSymbol(msg.Symbol)
 
 	var denom = types.Denom{
 		Creator:            msg.Creator,
@@ -51,7 +49,7 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	}
 
 	// Set metadata for Denom
-	SetCoinMetadata(ctx, k, symbol, msg.Name, msg.Description)
+	k.SetCoinMetadata(ctx, symbol, msg.Name, msg.Description)
 
 	k.SetDenom(
 		ctx,
@@ -64,11 +62,11 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Validate
-	err := validateDeveloper(ctx, k, msg.Creator)
+	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Project)
+	err = k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
 	if err != nil {
 		return nil, err
 	}
@@ -106,13 +104,13 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	}
 
 	// Check if input texts meet requirements
-	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name)
+	err = k.ValidateArgsDenom(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
 
 	// Set metadata for Denom
-	SetCoinMetadata(ctx, k, existingMetadata.Symbol, msg.Name, msg.Description)
+	k.SetCoinMetadata(ctx, existingMetadata.Symbol, msg.Name, msg.Description)
 
 	k.SetDenom(ctx, denom)
 
@@ -123,7 +121,7 @@ func (k msgServer) MintDenom(goCtx context.Context, msg *types.MsgMintDenom) (*t
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	// Validate
-	err := validateDeveloper(ctx, k, msg.Creator)
+	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +130,7 @@ func (k msgServer) MintDenom(goCtx context.Context, msg *types.MsgMintDenom) (*t
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "denom not find")
 	}
 
-	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, denom.Project)
+	err = k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, denom.Project)
 	if err != nil {
 		return nil, err
 	}
@@ -180,105 +178,4 @@ func (k msgServer) TransferDenom(goCtx context.Context, msg *types.MsgTransferDe
 	}
 
 	return &types.MsgTransferDenomResponse{}, nil
-}
-
-// Private Methods
-
-func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, description string) {
-	// Creating metadata
-
-	// baseUnit (no alias)
-	var baseDenomUnit = banktypes.DenomUnit{
-		Denom:    symbol,
-		Exponent: 6,
-	}
-	// milliUnit
-	var milliDenomUnit = banktypes.DenomUnit{
-		Denom:    "m" + symbol,
-		Exponent: 3,
-	}
-	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
-	// microUnit
-	var microDenomUnit = banktypes.DenomUnit{
-		Denom:    "u" + symbol,
-		Exponent: 0,
-	}
-	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
-
-	// Creating bank.Metadata object
-	var metadata = banktypes.Metadata{
-		Description: description,
-		Base:        symbol,
-		Display:     name,
-		Name:        name,
-		Symbol:      symbol,
-	}
-	// Pushing denomUnits to Metadata
-	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)
-	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit)
-	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit)
-	// Set metadata object
-	k.bankKeeper.SetDenomMetaData(ctx, metadata)
-}
-
-func validateDeveloper(ctx sdk.Context, k msgServer, creator string) error {
-	// Checking developer role
-	val, found := k.permissionKeeper.GetDeveloper(ctx, creator)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator invalid developer address (%s)", creator)
-	}
-	if val.Blocked {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator developer address blocked (%s)", creator)
-	}
-	return nil
-}
-
-func validateProjectOwnershipOrDelegateByProject(ctx sdk.Context, k msgServer, creator string, symbol string) error {
-	// Checking project existing and related to this game developer or delegate
-	project, found := k.gameKeeper.GetProject(ctx, symbol)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", symbol)
-	}
-
-	// Check if msg.Creator included in valFound.Delegate
-	isDelegate := false
-	for _, del := range project.Delegate {
-		if del == creator {
-			isDelegate = true
-			break
-		}
-	}
-	// Checks if the msg creator is the same as the current owner
-	if creator != project.Creator && !isDelegate {
-		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
-	}
-	return nil
-}
-
-func validateArgsDenom(symbol string, description string, name string) error {
-	if len(symbol) < SymbolMinLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
-	}
-	if len(symbol) > SymbolMaxLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and can contain at most %d characters", SymbolMaxLength)
-	}
-	if len(name) < NameMinLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and must contain at least %d characters", NameMinLength)
-	}
-	if len(name) > NameMaxLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and can contain at most %d characters", NameMaxLength)
-	}
-	if len(description) < DescriptionMinLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at least %d characters", DescriptionMinLength)
-	}
-	if len(description) > DescriptionMaxLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
-	}
-	return nil
-}
-
-func regExSymbol(symbol string) string {
-	reg, _ := regexp.Compile("([^\\w])")                       // leaving only words meaning azAZ09 and _ without spaces
-	symbol = strings.ToLower(reg.ReplaceAllString(symbol, "")) // toLower
-	return symbol
 }
