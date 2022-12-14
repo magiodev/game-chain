@@ -198,16 +198,16 @@ func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, d
 	// Creating metadata
 	var baseDenomUnit = banktypes.DenomUnit{
 		Denom:    symbol,
-		Exponent: 0,
+		Exponent: precision,
 	}
 	var milliDenomUnit = banktypes.DenomUnit{
 		Denom:    "m" + symbol,
-		Exponent: precision - uint32(3),
+		Exponent: uint32(3),
 	}
 	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
 	var microDenomUnit = banktypes.DenomUnit{
 		Denom:    "u" + symbol,
-		Exponent: precision,
+		Exponent: 0,
 	}
 	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
 	// Creating bank.Metadata object
