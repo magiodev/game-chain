@@ -209,6 +209,7 @@ func validateArgsDenom(symbol string, description string, name string, precision
 	if len(description) > DescriptionMaxLength {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
 	}
+	// TODO consider restrict to a certain fixed amount of exponent/precision
 	if precision < PrecisionMinValue {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "precision is needed at least %d value", PrecisionMinValue)
 	}
