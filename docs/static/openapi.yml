@@ -34177,8 +34177,8 @@ paths:
                     project:
                       type: string
                     maxSupply:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: uint64
                     canChangeMaxSupply:
                       type: boolean
                     creator:
@@ -34306,8 +34306,8 @@ paths:
                   project:
                     type: string
                   maxSupply:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: uint64
                   canChangeMaxSupply:
                     type: boolean
                   creator:
@@ -70914,8 +70914,8 @@ definitions:
       project:
         type: string
       maxSupply:
-        type: integer
-        format: int32
+        type: string
+        format: uint64
       canChangeMaxSupply:
         type: boolean
       creator:
@@ -70940,8 +70940,8 @@ definitions:
             project:
               type: string
             maxSupply:
-              type: integer
-              format: int32
+              type: string
+              format: uint64
             canChangeMaxSupply:
               type: boolean
             creator:
@@ -70983,8 +70983,8 @@ definitions:
           project:
             type: string
           maxSupply:
-            type: integer
-            format: int32
+            type: string
+            format: uint64
           canChangeMaxSupply:
             type: boolean
           creator:

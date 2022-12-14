@@ -18,11 +18,11 @@ message MsgCreateDenom {
   string symbol = 2;
 
   string project = 3;
-  int32 maxSupply = 4;
+  uint64 maxSupply = 4;
   bool canChangeMaxSupply = 5;
   string name = 6;
   string description = 7;
-  int32 precision = 8;
+  uint32 precision = 8;
   string uri = 9;
   string uri_hash = 10;
 
@@ -34,7 +34,7 @@ message MsgUpdateDenom {
   string symbol = 2;
 
   string project = 3;
-  int32 maxSupply = 4;
+  uint64 maxSupply = 4;
   string name = 5;
   string description = 6;
   string uri = 7;

@@ -103,40 +103,51 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "metadata for denom not found")
 	}
-	//existingMetadata.Base // TODO use this as baseDenomString
-	//existingMetadata.DenomUnits // TODO loop this to take proper value
-	//TODO use properValue.Precision
+	precision := uint32(0)
+	// foreach denomUnit, looking for the base one
+	for _, denomUnit := range existingMetadata.DenomUnits {
+		// if matches the base one
+		if denomUnit.Denom == existingMetadata.Base {
+			precision = denomUnit.Exponent
+			break
+		}
+	}
 
 	// Check if input texts meet requirements
-	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name, 6) // TODO de-hardcode this
+	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name, precision)
 	if err != nil {
 		return nil, err
 	}
 
 	// Set metadata for Denom
-	SetCoinMetadata(ctx, k, existingMetadata.Symbol, msg.Name, msg.Description, 6) // TODO de-hardcode this
+	SetCoinMetadata(ctx, k, existingMetadata.Symbol, msg.Name, msg.Description, precision)
 
 	k.SetDenom(ctx, denom)
 
 	return &types.MsgUpdateDenomResponse{}, nil
 }
 
+// TODO mintDenom() to user
+// TODO burnDenom() from user considering approval /authz module
+// TODO	SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error
+
 // Private Methods
 
-func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, description string, precision int32) {
-	// Creating metadata TODO check exponent assign, consider limiting only to fixed number of decimals for all the denoms created
+func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, description string, precision uint32) {
+	// TODO check exponent assign, consider limiting only to fixed number of decimals for all the denoms created
+	// Creating metadata
 	var baseDenomUnit = banktypes.DenomUnit{
 		Denom:    symbol,
 		Exponent: 0,
 	}
 	var milliDenomUnit = banktypes.DenomUnit{
 		Denom:    "m" + symbol,
-		Exponent: uint32(precision) - 3, // TODO check
+		Exponent: precision - uint32(3),
 	}
 	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
 	var microDenomUnit = banktypes.DenomUnit{
 		Denom:    "u" + symbol,
-		Exponent: uint32(precision),
+		Exponent: precision,
 	}
 	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
 	// Creating bank.Metadata object
@@ -147,14 +158,12 @@ func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, d
 		Name:        name,
 		Symbol:      symbol,
 	}
-	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)  // TODO check if & reference is correct
-	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit) // TODO check if & reference is correct
-	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit) // TODO check if & reference is correct
+	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)
+	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit)
+	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit)
 	// Set metadata
 	k.bankKeeper.SetDenomMetaData(ctx, metadata)
 }
-
-// Private Methods
 
 func validateDeveloper(ctx sdk.Context, k msgServer, creator string) error {
 	// Checking developer role
@@ -190,7 +199,7 @@ func validateProjectOwnershipOrDelegateByProject(ctx sdk.Context, k msgServer, c
 	return nil
 }
 
-func validateArgsDenom(symbol string, description string, name string, precision int32) error {
+func validateArgsDenom(symbol string, description string, name string, precision uint32) error {
 	if len(symbol) < SymbolMinLength {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
 	}
@@ -223,7 +232,3 @@ func regExSymbol(symbol string) string {
 	symbol = strings.ToLower(reg.ReplaceAllString(symbol, "")) // toLower
 	return symbol
 }
-
-// TODO mintDenom() to user
-// TODO burnDenom() from user considering approval /authz module
-// TODO	SendCoins(ctx sdk.Context, fromAddr sdk.AccAddress, toAddr sdk.AccAddress, amt sdk.Coins) error

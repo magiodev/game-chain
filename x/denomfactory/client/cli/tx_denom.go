@@ -20,7 +20,7 @@ func CmdCreateDenom() *cobra.Command {
 
 			// Get value arguments
 			argProject := args[1]
-			argMaxSupply, err := cast.ToInt32E(args[2])
+			argMaxSupply, err := cast.ToUint64E(args[2])
 			if err != nil {
 				return err
 			}
@@ -30,7 +30,7 @@ func CmdCreateDenom() *cobra.Command {
 			}
 			argName := args[4]
 			argDescription := args[5]
-			argPrecision, err := cast.ToInt32E(args[6])
+			argPrecision, err := cast.ToUint32E(args[6])
 			if err != nil {
 				return err
 			}
@@ -77,7 +77,7 @@ func CmdUpdateDenom() *cobra.Command {
 
 			// Get value arguments
 			argProject := args[1]
-			argMaxSupply, err := cast.ToInt32E(args[2])
+			argMaxSupply, err := cast.ToUint64E(args[2])
 			if err != nil {
 				return err
 			}
