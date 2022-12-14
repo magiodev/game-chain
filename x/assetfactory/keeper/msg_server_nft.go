@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/nft"
 
@@ -12,14 +13,17 @@ import (
 func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types.MsgMintNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validation wrapper function
-	err := validateMintNft(ctx, k, msg)
+	// Validate
+	err := validateDeveloper(ctx, k, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-
-	// Validating receiver account as Bech32 address
-	bech32, err := sdk.AccAddressFromBech32(msg.Receiver)
+	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+	// Max supply validation
+	err = validateMaxSupply(ctx, k, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -38,6 +42,11 @@ func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types
 		Data:    msgData,
 	}
 
+	// Validating receiver account as Bech32 address
+	bech32, err := sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return nil, err
+	}
 	err = k.nftKeeper.Mint(ctx, toMint, bech32)
 	if err != nil {
 		return nil, err
@@ -49,7 +58,12 @@ func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types
 func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*types.MsgUpdateNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateUpdateNft(ctx, k, msg)
+	err := validateDeveloper(ctx, k, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
+
+	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +94,12 @@ func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*t
 func (k msgServer) BurnNft(goCtx context.Context, msg *types.MsgBurnNft) (*types.MsgBurnNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateBurnNft(ctx, k, msg)
+	err := validateDeveloper(ctx, k, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
+
+	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +115,7 @@ func (k msgServer) BurnNft(goCtx context.Context, msg *types.MsgBurnNft) (*types
 func (k msgServer) TransferNft(goCtx context.Context, msg *types.MsgTransferNft) (*types.MsgTransferNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateTransferNft(ctx, k, msg)
+	err := validateNftOwnershipOrAllowance(ctx, k, msg)
 	if err != nil {
 		return nil, err
 	}
@@ -114,59 +133,34 @@ func (k msgServer) TransferNft(goCtx context.Context, msg *types.MsgTransferNft)
 	return &types.MsgTransferNftResponse{}, nil
 }
 
-func validateMintNft(ctx sdk.Context, k msgServer, msg *types.MsgMintNft) error {
-	err := validateDeveloper(ctx, k, msg.Creator)
-	if err != nil {
-		return err
-	}
-	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
-	if err != nil {
-		return err
-	}
+// Private Methods
+
+func validateMaxSupply(ctx sdk.Context, k msgServer, symbol string) error {
 	// check on map to what project is associated with TODO this is repeated, remove
-	class, found := k.GetClass(ctx, msg.Symbol)
+	class, found := k.GetClass(ctx, symbol)
 	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", msg.Symbol)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", symbol)
 	}
 	// Validate maxSupply only if not 0
 	if class.MaxSupply != 0 {
 		// If the current total supply is already equal (or higher just in case, but should do not happen)
 		if k.nftKeeper.GetTotalSupply(ctx, class.Symbol) >= uint64(class.MaxSupply) {
-			return sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "max supply already reached for class (%s)", msg.Symbol)
+			return sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "max supply already reached for class (%s)", symbol)
 		}
 	}
 	return nil
 }
 
-func validateBurnNft(ctx sdk.Context, k msgServer, msg *types.MsgBurnNft) error {
-	err := validateDeveloper(ctx, k, msg.Creator)
-	if err != nil {
-		return err
+func validateNftOwnershipOrAllowance(ctx sdk.Context, k msgServer, msg *types.MsgTransferNft) error {
+	// Check if nft owner is msg owner
+	owner := k.nftKeeper.GetOwner(ctx, msg.Symbol, msg.Id)
+	if owner.String() != msg.Creator {
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "nft owner is not msg creator")
 	}
-	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
-	if err != nil {
-		return err
-	}
-	return nil // TODO
-}
 
-func validateUpdateNft(ctx sdk.Context, k msgServer, msg *types.MsgUpdateNft) error {
-	err := validateDeveloper(ctx, k, msg.Creator)
-	if err != nil {
-		return err
-	}
-	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
-	if err != nil {
-		return err
-	}
-	// TODO validate data and params
-	return nil
-}
-
-func validateTransferNft(ctx sdk.Context, k msgServer, msg *types.MsgTransferNft) error {
-	// TODO validate is owner of nft, not project
 	// TODO validate allowance (see x/authz if can help with nfts?) (or maybe skip ownership if developer. but not delegate?)
-	return nil // TODO
+
+	return nil
 }
 
 func validateDeveloper(ctx sdk.Context, k msgServer, creator string) error {
@@ -187,16 +181,19 @@ func validateProjectOwnershipOrDelegateByClassId(ctx sdk.Context, k msgServer, c
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/nft (%s)", symbol)
 	}
+
 	// check on map to what project is associated with
 	classMapFound, found := k.GetClass(ctx, classFound.Symbol)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", symbol)
 	}
+
 	// Checking project existing and related to this game developer or delegate
 	project, found := k.gameKeeper.GetProject(ctx, classMapFound.Project)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", classMapFound.Project)
 	}
+
 	// Check if msg.Creator included in valFound.Delegate
 	isDelegate := false
 	for _, del := range project.Delegate {

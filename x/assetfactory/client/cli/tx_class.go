@@ -20,7 +20,7 @@ func CmdCreateClass() *cobra.Command {
 
 			// Get value arguments
 			argProject := args[1]
-			argMaxSupply, err := cast.ToInt32E(args[2])
+			argMaxSupply, err := cast.ToUint64E(args[2])
 			if err != nil {
 				return err
 			}
@@ -73,7 +73,7 @@ func CmdUpdateClass() *cobra.Command {
 			indexSymbol := args[0]
 
 			// Get value arguments
-			argMaxSupply, err := cast.ToInt32E(args[1])
+			argMaxSupply, err := cast.ToUint64E(args[1])
 			if err != nil {
 				return err
 			}

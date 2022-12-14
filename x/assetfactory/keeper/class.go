@@ -6,6 +6,15 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+const (
+	SymbolMinLength      = 8
+	SymbolMaxLength      = 30
+	NameMinLength        = 8
+	NameMaxLength        = 30
+	DescriptionMinLength = 10
+	DescriptionMaxLength = 250
+)
+
 // SetClass set a specific class in the store from its index
 func (k Keeper) SetClass(ctx sdk.Context, class types.Class) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ClassKeyPrefix))
