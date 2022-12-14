@@ -13,14 +13,17 @@ import (
 func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types.MsgMintNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validation wrapper function
-	err := validateMintNft(ctx, k, msg)
+	// Validate
+	err := validateDeveloper(ctx, k, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-
-	// Validating receiver account as Bech32 address
-	bech32, err := sdk.AccAddressFromBech32(msg.Receiver)
+	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+	// Max supply validation
+	err = validateMaxSupply(ctx, k, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -39,6 +42,11 @@ func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types
 		Data:    msgData,
 	}
 
+	// Validating receiver account as Bech32 address
+	bech32, err := sdk.AccAddressFromBech32(msg.Receiver)
+	if err != nil {
+		return nil, err
+	}
 	err = k.nftKeeper.Mint(ctx, toMint, bech32)
 	if err != nil {
 		return nil, err
@@ -50,14 +58,19 @@ func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types
 func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*types.MsgUpdateNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateUpdateNft(ctx, k, msg)
+	err := validateDeveloper(ctx, k, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
 
-	toUpdate, error := tryGetNft(ctx, k, msg.Symbol, msg.Id)
-	if error != nil {
-		return nil, error
+	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
+	toUpdate, found := k.nftKeeper.GetNFT(ctx, msg.Symbol, msg.Id)
+	if !found {
+		return nil, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "nftID not found (%s)", msg.Id)
 	}
 
 	// Treating msg.Data any value
@@ -81,7 +94,12 @@ func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*t
 func (k msgServer) BurnNft(goCtx context.Context, msg *types.MsgBurnNft) (*types.MsgBurnNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateBurnNft(ctx, k, msg)
+	err := validateDeveloper(ctx, k, msg.Creator)
+	if err != nil {
+		return nil, err
+	}
+
+	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +115,7 @@ func (k msgServer) BurnNft(goCtx context.Context, msg *types.MsgBurnNft) (*types
 func (k msgServer) TransferNft(goCtx context.Context, msg *types.MsgTransferNft) (*types.MsgTransferNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateTransferNft(ctx, k, msg)
+	err := validateNftOwnershipOrAllowance(ctx, k, msg)
 	if err != nil {
 		return nil, err
 	}
@@ -115,71 +133,25 @@ func (k msgServer) TransferNft(goCtx context.Context, msg *types.MsgTransferNft)
 	return &types.MsgTransferNftResponse{}, nil
 }
 
-func validateMintNft(ctx sdk.Context, k msgServer, msg *types.MsgMintNft) error {
-	err := validateDeveloper(ctx, k, msg.Creator)
-	if err != nil {
-		return err
-	}
-	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
-	if err != nil {
-		return err
-	}
+// Private Methods
+
+func validateMaxSupply(ctx sdk.Context, k msgServer, symbol string) error {
 	// check on map to what project is associated with TODO this is repeated, remove
-	class, found := k.GetClass(ctx, msg.Symbol)
+	class, found := k.GetClass(ctx, symbol)
 	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", msg.Symbol)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", symbol)
 	}
 	// Validate maxSupply only if not 0
 	if class.MaxSupply != 0 {
 		// If the current total supply is already equal (or higher just in case, but should do not happen)
 		if k.nftKeeper.GetTotalSupply(ctx, class.Symbol) >= uint64(class.MaxSupply) {
-			return sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "max supply already reached for class (%s)", msg.Symbol)
+			return sdkerrors.Wrapf(sdkerrors.ErrUnauthorized, "max supply already reached for class (%s)", symbol)
 		}
 	}
 	return nil
 }
 
-func validateBurnNft(ctx sdk.Context, k msgServer, msg *types.MsgBurnNft) error {
-	err := validateDeveloper(ctx, k, msg.Creator)
-	if err != nil {
-		return err
-	}
-
-	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
-	if err != nil {
-		return err
-	}
-
-	_, error := tryGetNft(ctx, k, msg.Symbol, msg.Id)
-	if error != nil {
-		return error
-	}
-
-	return nil
-}
-
-func validateUpdateNft(ctx sdk.Context, k msgServer, msg *types.MsgUpdateNft) error {
-
-	err := validateDeveloper(ctx, k, msg.Creator)
-	if err != nil {
-		return err
-	}
-
-	err = validateProjectOwnershipOrDelegateByClassId(ctx, k, msg.Creator, msg.Symbol)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func validateTransferNft(ctx sdk.Context, k msgServer, msg *types.MsgTransferNft) error {
-	// Check if NFT exists
-	_, error := tryGetNft(ctx, k, msg.Symbol, msg.Id)
-	if error != nil {
-		return error
-	}
-
+func validateNftOwnershipOrAllowance(ctx sdk.Context, k msgServer, msg *types.MsgTransferNft) error {
 	// Check if nft owner is msg owner
 	owner := k.nftKeeper.GetOwner(ctx, msg.Symbol, msg.Id)
 	if owner.String() != msg.Creator {
@@ -187,6 +159,7 @@ func validateTransferNft(ctx sdk.Context, k msgServer, msg *types.MsgTransferNft
 	}
 
 	// TODO validate allowance (see x/authz if can help with nfts?) (or maybe skip ownership if developer. but not delegate?)
+
 	return nil
 }
 
@@ -234,12 +207,4 @@ func validateProjectOwnershipOrDelegateByClassId(ctx sdk.Context, k msgServer, c
 		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
 	}
 	return nil
-}
-
-func tryGetNft(ctx sdk.Context, k msgServer, symbol string, id string) (nft.NFT, error) {
-	toUpdate, found := k.nftKeeper.GetNFT(ctx, symbol, id)
-	if !found {
-		return nft.NFT{}, sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "nftID not found (%s)", id)
-	}
-	return toUpdate, nil
 }

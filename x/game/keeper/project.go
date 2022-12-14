@@ -6,6 +6,15 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+const (
+	SymbolMinLength      = 8
+	SymbolMaxLength      = 30
+	NameMinLength        = 8
+	NameMaxLength        = 30
+	DescriptionMinLength = 10
+	DescriptionMaxLength = 250
+)
+
 // SetProject set a specific project in the store from its index
 func (k Keeper) SetProject(ctx sdk.Context, project types.Project) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.ProjectKeyPrefix))

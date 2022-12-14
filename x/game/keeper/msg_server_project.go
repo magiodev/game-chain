@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"github.com/G4AL-Entertainment/g4al-chain/x/game/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -13,16 +12,18 @@ import (
 func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProject) (*types.MsgCreateProjectResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateCreateProject(ctx, k, msg)
+	err := validateDeveloper(ctx, k, msg)
 	if err != nil {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	// Regex first of all as we strip characters
-	symbol, err := regExSymbol(msg.Symbol)
+	err = validateArgsProject(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
+
+	// Regex first of all as we strip characters
+	symbol := regExSymbol(msg.Symbol)
 
 	// Check if the value already exists
 	_, isFound := k.GetProject(
@@ -55,8 +56,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	// Skipping role policy validation as we use Ownership or Delegate array.string
 
-	// Regex first of all as we strip characters
-	symbol, err := regExSymbol(msg.Symbol)
+	err := validateArgsProject(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 	// Check if the value exists
 	valFound, isFound := k.GetProject(
 		ctx,
-		symbol,
+		regExSymbol(msg.Symbol), // regEx applied,  TODO consider that maybe here to update is not required, as we do not allow changing symbol
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -103,7 +103,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 // Private Methods
 
-func validateCreateProject(ctx sdk.Context, k msgServer, msg *types.MsgCreateProject) error {
+func validateDeveloper(ctx sdk.Context, k msgServer, msg *types.MsgCreateProject) error {
 	// Checking administrator role
 	val, found := k.permissionKeeper.GetDeveloper(ctx, msg.Creator)
 	if !found {
@@ -115,11 +115,30 @@ func validateCreateProject(ctx sdk.Context, k msgServer, msg *types.MsgCreatePro
 	return nil
 }
 
-func regExSymbol(symbol string) (string, error) {
+func regExSymbol(symbol string) string {
 	reg, _ := regexp.Compile("([^\\w])")                       // leaving only words meaning azAZ09 and _ without spaces
 	symbol = strings.ToLower(reg.ReplaceAllString(symbol, "")) // toLower
-	if len(symbol) < 8 {
-		return "", sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("symbol must be at least 8 digits: (%s)", symbol)) // TODO remove "" as return value
+	return symbol
+}
+
+func validateArgsProject(symbol string, description string, name string) error {
+	if len(symbol) < SymbolMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
 	}
-	return symbol, nil
+	if len(symbol) > SymbolMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and can contain at most %d characters", SymbolMaxLength)
+	}
+	if len(name) < NameMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and must contain at least %d characters", NameMinLength)
+	}
+	if len(name) > NameMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and can contain at most %d characters", NameMaxLength)
+	}
+	if len(description) < DescriptionMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at least %d characters", DescriptionMinLength)
+	}
+	if len(description) > DescriptionMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
+	}
+	return nil
 }

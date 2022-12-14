@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"fmt"
 	"github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -14,9 +13,20 @@ import (
 func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom) (*types.MsgCreateDenomResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateCreateDenom(ctx, k, msg)
+	// Validate
+	err := validateDeveloper(ctx, k, msg.Creator)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		return nil, err
+	}
+	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
+	// Check if input texts meet requirements
+	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name, msg.Precision)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if the value already exists
@@ -28,15 +38,8 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	if msg.Precision < 6 || msg.Precision > 18 {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "precision must be a number between 6 and 18")
-	}
-
 	// Regex first of all as we strip characters
-	symbol, err := regExSymbol(msg.Symbol)
-	if err != nil {
-		return nil, err
-	}
+	symbol := regExSymbol(msg.Symbol)
 
 	var denom = types.Denom{
 		Creator:            msg.Creator,
@@ -46,41 +49,8 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 		CanChangeMaxSupply: msg.CanChangeMaxSupply,
 	}
 
-	// Creating sdk.Coin
-	//coin := sdk.NewCoin(denom.Symbol, math.NewInt(int64(0))) // improve this conversion
-	// Minting coins with x/bank module
-	//err = k.bankKeeper.MintCoins(ctx, "denomfactory", sdk.NewCoins(coin))
-	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "mint has not occurred")
-	}
-	// Creating metadata's dependencies
-	var baseDenomUnit = banktypes.DenomUnit{
-		Denom:    denom.Symbol,
-		Exponent: 0,
-	}
-	var milliDenomUnit = banktypes.DenomUnit{
-		Denom:    "m" + denom.Symbol,
-		Exponent: uint32(msg.Precision) - 3, // TODO check
-	}
-	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+denom.Symbol)
-	var microDenomUnit = banktypes.DenomUnit{
-		Denom:    "u" + denom.Symbol,
-		Exponent: uint32(msg.Precision),
-	}
-	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+denom.Symbol)
-	// Creating bank.Metadata object
-	var metadata = banktypes.Metadata{
-		Description: msg.Description,
-		Base:        denom.Symbol,
-		Display:     msg.Name,
-		Name:        msg.Name,
-		Symbol:      denom.Symbol,
-	}
-	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)  // TODO check if & reference is correct
-	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit) // TODO check if & reference is correct
-	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit) // TODO check if & reference is correct
-	// Set metadata
-	k.bankKeeper.SetDenomMetaData(ctx, metadata)
+	// Set metadata for Denom
+	SetCoinMetadata(ctx, k, symbol, msg.Name, msg.Description, msg.Precision)
 
 	k.SetDenom(
 		ctx,
@@ -92,9 +62,14 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom) (*types.MsgUpdateDenomResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := validateUpdateDenom(ctx, k, msg)
+	// Validate
+	err := validateDeveloper(ctx, k, msg.Creator)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
+		return nil, err
+	}
+	err = validateProjectOwnershipOrDelegateByProject(ctx, k, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check if the value exists
@@ -106,7 +81,7 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
 	}
 
-	// Checks if the the msg creator is the same as the current owner
+	// Checks if the msg creator is the same as the current owner
 	if msg.Creator != valFound.Creator {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
@@ -123,7 +98,23 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 		CanChangeMaxSupply: valFound.CanChangeMaxSupply,
 	}
 
-	// TODO implement metadata getting and setting here to update Name,Description, Uri, UriHash
+	// Getting existing metadata
+	var existingMetadata, found = k.bankKeeper.GetDenomMetaData(ctx, valFound.Symbol)
+	if !found {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "metadata for denom not found")
+	}
+	//existingMetadata.Base // TODO use this as baseDenomString
+	//existingMetadata.DenomUnits // TODO loop this to take proper value
+	//TODO use properValue.Precision
+
+	// Check if input texts meet requirements
+	err = validateArgsDenom(msg.Symbol, msg.Description, msg.Name, 6) // TODO de-hardcode this
+	if err != nil {
+		return nil, err
+	}
+
+	// Set metadata for Denom
+	SetCoinMetadata(ctx, k, existingMetadata.Symbol, msg.Name, msg.Description, 6) // TODO de-hardcode this
 
 	k.SetDenom(ctx, denom)
 
@@ -132,77 +123,105 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 
 // Private Methods
 
-func validateCreateDenom(ctx sdk.Context, k msgServer, msg *types.MsgCreateDenom) error {
+func SetCoinMetadata(ctx sdk.Context, k msgServer, symbol string, name string, description string, precision int32) {
+	// Creating metadata TODO check exponent assign, consider limiting only to fixed number of decimals for all the denoms created
+	var baseDenomUnit = banktypes.DenomUnit{
+		Denom:    symbol,
+		Exponent: 0,
+	}
+	var milliDenomUnit = banktypes.DenomUnit{
+		Denom:    "m" + symbol,
+		Exponent: uint32(precision) - 3, // TODO check
+	}
+	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
+	var microDenomUnit = banktypes.DenomUnit{
+		Denom:    "u" + symbol,
+		Exponent: uint32(precision),
+	}
+	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
+	// Creating bank.Metadata object
+	var metadata = banktypes.Metadata{
+		Description: description,
+		Base:        symbol,
+		Display:     name,
+		Name:        name,
+		Symbol:      symbol,
+	}
+	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)  // TODO check if & reference is correct
+	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit) // TODO check if & reference is correct
+	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit) // TODO check if & reference is correct
+	// Set metadata
+	k.bankKeeper.SetDenomMetaData(ctx, metadata)
+}
+
+// Private Methods
+
+func validateDeveloper(ctx sdk.Context, k msgServer, creator string) error {
 	// Checking developer role
-	val, found := k.permissionKeeper.GetDeveloper(ctx, msg.Creator)
+	val, found := k.permissionKeeper.GetDeveloper(ctx, creator)
 	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator invalid developer address (%s)", msg.Creator)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator invalid developer address (%s)", creator)
 	}
 	if val.Blocked {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator developer address blocked (%s)", msg.Creator)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator developer address blocked (%s)", creator)
 	}
+	return nil
+}
 
+func validateProjectOwnershipOrDelegateByProject(ctx sdk.Context, k msgServer, creator string, symbol string) error {
 	// Checking project existing and related to this game developer or delegate
-	project, found := k.gameKeeper.GetProject(ctx, msg.Project)
+	project, found := k.gameKeeper.GetProject(ctx, symbol)
 	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", msg.Project)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", symbol)
 	}
 
 	// Check if msg.Creator included in valFound.Delegate
 	isDelegate := false
 	for _, del := range project.Delegate {
-		if del == msg.Creator {
+		if del == creator {
 			isDelegate = true
 			break
 		}
 	}
-
 	// Checks if the msg creator is the same as the current owner
-	if msg.Creator != project.Creator && !isDelegate {
+	if creator != project.Creator && !isDelegate {
 		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
 	}
 	return nil
 }
 
-func validateUpdateDenom(ctx sdk.Context, k msgServer, msg *types.MsgUpdateDenom) error {
-	// Checking administrator role
-	val, found := k.permissionKeeper.GetDeveloper(ctx, msg.Creator)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator invalid developer address (%s)", msg.Creator)
+func validateArgsDenom(symbol string, description string, name string, precision int32) error {
+	if len(symbol) < SymbolMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
 	}
-	if val.Blocked {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator developer address blocked (%s)", msg.Creator)
+	if len(symbol) > SymbolMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and can contain at most %d characters", SymbolMaxLength)
 	}
-
-	// Checking project existing and related to this game developer or delegate
-	project, found := k.gameKeeper.GetProject(ctx, msg.Project)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", msg.Project)
+	if len(name) < NameMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and must contain at least %d characters", NameMinLength)
 	}
-
-	// Check if msg.Creator included in valFound.Delegate
-	isDelegate := false
-	for _, del := range project.Delegate {
-		if del == msg.Creator {
-			isDelegate = true
-			break
-		}
+	if len(name) > NameMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and can contain at most %d characters", NameMaxLength)
 	}
-
-	// Checks if the msg creator is the same as the current owner
-	if msg.Creator != project.Creator && !isDelegate {
-		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
+	if len(description) < DescriptionMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at least %d characters", DescriptionMinLength)
+	}
+	if len(description) > DescriptionMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
+	}
+	if precision < PrecisionMinValue {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "precision is needed at least %d value", PrecisionMinValue)
+	}
+	if precision > PrecisionMaxValue {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "precision is needed at most %d value", PrecisionMaxValue)
 	}
 	return nil
 }
 
-func regExSymbol(symbol string) (string, error) {
+func regExSymbol(symbol string) string {
 	reg, _ := regexp.Compile("([^\\w])")                       // leaving only words meaning azAZ09 and _ without spaces
 	symbol = strings.ToLower(reg.ReplaceAllString(symbol, "")) // toLower
-	if len(symbol) < 3 {
-		return "", sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, fmt.Sprintf("symbol must be at least 8 digits: (%s)", symbol)) // TODO remove "" as return value
-	}
-	return symbol, nil
+	return symbol
 }
 
 // TODO mintDenom() to user

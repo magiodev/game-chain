@@ -12,24 +12,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/nft"
 )
 
-type Constants struct {
-	MinDescriptionLength int
-	MaxDescriptionLength int
-	MinNameLength        int
-	MaxNameLength        int
-	MinSymbolLength      int
-	MaxSymbolLength      int
-}
-
-var Consts Constants = Constants{
-	MinDescriptionLength: 0,
-	MaxDescriptionLength: 0,
-	MinNameLength:        0,
-	MaxNameLength:        0,
-	MinSymbolLength:      0,
-	MaxSymbolLength:      0,
-}
-
 func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass) (*types.MsgCreateClassResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
@@ -62,7 +44,7 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 	}
 
 	// Check if input texts meet requirements
-	err := ValidateInputTextClass(msg.Symbol, msg.Description, msg.Name)
+	err := validateArgsClass(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +101,7 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	err := ValidateInputTextClass(msg.Symbol, msg.Description, msg.Name)
+	err := validateArgsClass(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -147,26 +129,24 @@ func StringToAny(data string) (*codectypes.Any, error) {
 	return msgData, nil
 }
 
-func ValidateInputTextClass(symbol string, description string, name string) error {
-	if len(symbol) < Consts.MinSymbolLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", Consts.MinSymbolLength)
+func validateArgsClass(symbol string, description string, name string) error {
+	if len(symbol) < SymbolMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
 	}
-	if len(symbol) > Consts.MaxSymbolLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and can contain at most %d characters", Consts.MaxSymbolLength)
+	if len(symbol) > SymbolMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and can contain at most %d characters", SymbolMaxLength)
 	}
-
-	if len(description) < Consts.MinDescriptionLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at least %d characters", Consts.MinDescriptionLength)
+	if len(name) < NameMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and must contain at least %d characters", NameMinLength)
 	}
-	if len(description) > Consts.MaxDescriptionLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", Consts.MaxDescriptionLength)
+	if len(name) > NameMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and can contain at most %d characters", NameMaxLength)
 	}
-
-	if len(name) < Consts.MinNameLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and must contain at least %d characters", Consts.MinNameLength)
+	if len(description) < DescriptionMinLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at least %d characters", DescriptionMinLength)
 	}
-	if len(name) > Consts.MaxNameLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and can contain at most %d characters", Consts.MaxNameLength)
+	if len(description) > DescriptionMaxLength {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
 	}
 	return nil
 }

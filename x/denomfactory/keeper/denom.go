@@ -6,6 +6,17 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
+const (
+	SymbolMinLength      = 8
+	SymbolMaxLength      = 30
+	NameMinLength        = 8
+	NameMaxLength        = 30
+	DescriptionMinLength = 10
+	DescriptionMaxLength = 250
+	PrecisionMinValue    = 6
+	PrecisionMaxValue    = 18
+)
+
 // SetDenom set a specific denom in the store from its index
 func (k Keeper) SetDenom(ctx sdk.Context, denom types.Denom) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DenomKeyPrefix))
