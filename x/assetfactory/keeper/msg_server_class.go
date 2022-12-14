@@ -58,10 +58,10 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 	}
 
 	// Treating msg.Data any value
-	msgData, err := StringToAny(msg.Data)
-	if err != nil {
-		return nil, err
-	}
+	//msgData, err := StringToAny(msg.Data)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	var nftClass = nft.Class{
 		Id:          msg.Symbol,
@@ -70,7 +70,7 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 		Description: msg.Description,
 		Uri:         msg.Uri,
 		UriHash:     msg.UriHash,
-		Data:        msgData,
+		//Data:        msgData,
 	}
 	err = k.nftKeeper.SaveClass(ctx, nftClass)
 	if err != nil {
@@ -119,7 +119,6 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 	return &types.MsgUpdateClassResponse{}, nil
 }
 
-// StringToAny TODO check if working properly
 func StringToAny(data string) (*codectypes.Any, error) {
 	sv := &wrappers.StringValue{Value: data}
 	msgData, err := codectypes.NewAnyWithValue(sv)

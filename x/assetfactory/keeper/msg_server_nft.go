@@ -29,17 +29,17 @@ func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types
 	}
 
 	// Treating msg.Data any value
-	msgData, err := StringToAny(msg.Data)
-	if err != nil {
-		return nil, err
-	}
+	//msgData, err := StringToAny(msg.Data)
+	//if err != nil {
+	//	return nil, err
+	//}
 
 	toMint := nft.NFT{
 		ClassId: msg.Symbol,
 		Id:      string(k.nftKeeper.GetTotalSupply(ctx, msg.Symbol)), // check conversion
 		Uri:     msg.Uri,
 		UriHash: msg.UriHash,
-		Data:    msgData,
+		//Data:    msgData,
 	}
 
 	// Validating receiver account as Bech32 address
