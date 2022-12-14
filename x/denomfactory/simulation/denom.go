@@ -99,3 +99,57 @@ func SimulateMsgUpdateDenom(
 		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
+
+func SimulateMsgMintDenom(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		simAccount, _ := simtypes.RandomAcc(r, accs)
+		msg := &types.MsgMintDenom{
+			Creator: simAccount.Address.String(),
+		}
+
+		// TODO: Handling the MintDenom simulation
+
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "MintDenom simulation not implemented"), nil, nil
+	}
+}
+
+func SimulateMsgBurnDenom(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		simAccount, _ := simtypes.RandomAcc(r, accs)
+		msg := &types.MsgBurnDenom{
+			Creator: simAccount.Address.String(),
+		}
+
+		// TODO: Handling the BurnDenom simulation
+
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "BurnDenom simulation not implemented"), nil, nil
+	}
+}
+
+func SimulateMsgTransferDenom(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		simAccount, _ := simtypes.RandomAcc(r, accs)
+		msg := &types.MsgTransferDenom{
+			Creator: simAccount.Address.String(),
+		}
+
+		// TODO: Handling the TransferDenom simulation
+
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "TransferDenom simulation not implemented"), nil, nil
+	}
+}

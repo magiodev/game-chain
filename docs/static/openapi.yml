@@ -34177,8 +34177,8 @@ paths:
                     project:
                       type: string
                     maxSupply:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: uint64
                     canChangeMaxSupply:
                       type: boolean
                     creator:
@@ -34306,8 +34306,8 @@ paths:
                   project:
                     type: string
                   maxSupply:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: uint64
                   canChangeMaxSupply:
                     type: boolean
                   creator:
@@ -70914,13 +70914,19 @@ definitions:
       project:
         type: string
       maxSupply:
-        type: integer
-        format: int32
+        type: string
+        format: uint64
       canChangeMaxSupply:
         type: boolean
       creator:
         type: string
+  g4alentertainment.g4alchain.denomfactory.MsgBurnDenomResponse:
+    type: object
   g4alentertainment.g4alchain.denomfactory.MsgCreateDenomResponse:
+    type: object
+  g4alentertainment.g4alchain.denomfactory.MsgMintDenomResponse:
+    type: object
+  g4alentertainment.g4alchain.denomfactory.MsgTransferDenomResponse:
     type: object
   g4alentertainment.g4alchain.denomfactory.MsgUpdateDenomResponse:
     type: object
@@ -70940,8 +70946,8 @@ definitions:
             project:
               type: string
             maxSupply:
-              type: integer
-              format: int32
+              type: string
+              format: uint64
             canChangeMaxSupply:
               type: boolean
             creator:
@@ -70983,8 +70989,8 @@ definitions:
           project:
             type: string
           maxSupply:
-            type: integer
-            format: int32
+            type: string
+            format: uint64
           canChangeMaxSupply:
             type: boolean
           creator:

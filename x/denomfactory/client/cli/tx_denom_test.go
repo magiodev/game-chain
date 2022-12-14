@@ -2,6 +2,8 @@ package cli_test
 
 import (
 	"fmt"
+	"github.com/spf13/cobra"
+	"reflect"
 	"strconv"
 	"testing"
 
@@ -120,6 +122,54 @@ func TestUpdateDenom(t *testing.T) {
 				var resp sdk.TxResponse
 				require.NoError(t, ctx.Codec.UnmarshalJSON(out.Bytes(), &resp))
 				require.Equal(t, tc.code, resp.Code)
+			}
+		})
+	}
+}
+
+func TestCmdMintDenom(t *testing.T) {
+	tests := []struct {
+		name string
+		want *cobra.Command
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := cli.CmdMintDenom(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CmdMintDenom() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCmdBurnDenom(t *testing.T) {
+	tests := []struct {
+		name string
+		want *cobra.Command
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := cli.CmdBurnDenom(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CmdBurnDenom() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestCmdTransferDenom(t *testing.T) {
+	tests := []struct {
+		name string
+		want *cobra.Command
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := cli.CmdTransferDenom(); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("CmdTransferDenom() = %v, want %v", got, tt.want)
 			}
 		})
 	}

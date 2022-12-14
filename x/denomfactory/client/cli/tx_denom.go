@@ -11,7 +11,7 @@ import (
 
 func CmdCreateDenom() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-denom [symbol] [project] [max-supply] [can-change-max-supply] [name] [description] [precision] [uri] [uri_hash]",
+		Use:   "create-denom [symbol] [project] [max-supply] [can-change-max-supply] [name] [description] [uri] [uri_hash]",
 		Short: "Create a new Denom",
 		Args:  cobra.ExactArgs(9),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -20,7 +20,7 @@ func CmdCreateDenom() *cobra.Command {
 
 			// Get value arguments
 			argProject := args[1]
-			argMaxSupply, err := cast.ToInt32E(args[2])
+			argMaxSupply, err := cast.ToUint64E(args[2])
 			if err != nil {
 				return err
 			}
@@ -30,10 +30,6 @@ func CmdCreateDenom() *cobra.Command {
 			}
 			argName := args[4]
 			argDescription := args[5]
-			argPrecision, err := cast.ToInt32E(args[6])
-			if err != nil {
-				return err
-			}
 			argUri := args[7]
 			argUriHash := args[8]
 
@@ -50,7 +46,6 @@ func CmdCreateDenom() *cobra.Command {
 				argCanChangeMaxSupply,
 				argName,
 				argDescription,
-				argPrecision,
 				argUri,
 				argUriHash,
 			)
@@ -77,7 +72,7 @@ func CmdUpdateDenom() *cobra.Command {
 
 			// Get value arguments
 			argProject := args[1]
-			argMaxSupply, err := cast.ToInt32E(args[2])
+			argMaxSupply, err := cast.ToUint64E(args[2])
 			if err != nil {
 				return err
 			}
@@ -100,6 +95,112 @@ func CmdUpdateDenom() *cobra.Command {
 				argDescription,
 				argUri,
 				argUriHash,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdMintDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "mint-denom [symbol] [amount] [receiver]",
+		Short: "Broadcast message mint-denom",
+		Args:  cobra.ExactArgs(3),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			argSymbol := args[0]
+			argAmount, err := cast.ToUint64E(args[1])
+			if err != nil {
+				return err
+			}
+			argReceiver := args[2]
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgMintDenom(
+				clientCtx.GetFromAddress().String(),
+				argSymbol,
+				argAmount,
+				argReceiver,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdBurnDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "burn-denom [symbol] [amount]",
+		Short: "Broadcast message burn-denom",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			argSymbol := args[0]
+			argAmount, err := cast.ToUint64E(args[1])
+			if err != nil {
+				return err
+			}
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgBurnDenom(
+				clientCtx.GetFromAddress().String(),
+				argSymbol,
+				argAmount,
+			)
+			if err := msg.ValidateBasic(); err != nil {
+				return err
+			}
+			return tx.GenerateOrBroadcastTxCLI(clientCtx, cmd.Flags(), msg)
+		},
+	}
+
+	flags.AddTxFlagsToCmd(cmd)
+
+	return cmd
+}
+
+func CmdTransferDenom() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "transfer-denom [symbol] [amount] [receiver]",
+		Short: "Broadcast message transfer-denom",
+		Args:  cobra.ExactArgs(3),
+		RunE: func(cmd *cobra.Command, args []string) (err error) {
+			argSymbol := args[0]
+			argAmount, err := cast.ToUint64E(args[1])
+			if err != nil {
+				return err
+			}
+			argReceiver := args[2]
+
+			clientCtx, err := client.GetClientTxContext(cmd)
+			if err != nil {
+				return err
+			}
+
+			msg := types.NewMsgTransferDenom(
+				clientCtx.GetFromAddress().String(),
+				argSymbol,
+				argAmount,
+				argReceiver,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err

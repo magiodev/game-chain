@@ -32,6 +32,18 @@ const (
 	// TODO: Determine the simulation weight value
 	defaultWeightMsgUpdateDenom int = 100
 
+	opWeightMsgMintDenom = "op_weight_msg_mint_denom"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgMintDenom int = 100
+
+	opWeightMsgBurnDenom = "op_weight_msg_burn_denom"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgBurnDenom int = 100
+
+	opWeightMsgTransferDenom = "op_weight_msg_transfer_denom"
+	// TODO: Determine the simulation weight value
+	defaultWeightMsgTransferDenom int = 100
+
 	// this line is used by starport scaffolding # simapp/module/const
 )
 
@@ -97,6 +109,39 @@ func (am AppModule) WeightedOperations(simState module.SimulationState) []simtyp
 	operations = append(operations, simulation.NewWeightedOperation(
 		weightMsgUpdateDenom,
 		denomfactorysimulation.SimulateMsgUpdateDenom(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgMintDenom int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgMintDenom, &weightMsgMintDenom, nil,
+		func(_ *rand.Rand) {
+			weightMsgMintDenom = defaultWeightMsgMintDenom
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgMintDenom,
+		denomfactorysimulation.SimulateMsgMintDenom(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgBurnDenom int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgBurnDenom, &weightMsgBurnDenom, nil,
+		func(_ *rand.Rand) {
+			weightMsgBurnDenom = defaultWeightMsgBurnDenom
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgBurnDenom,
+		denomfactorysimulation.SimulateMsgBurnDenom(am.accountKeeper, am.bankKeeper, am.keeper),
+	))
+
+	var weightMsgTransferDenom int
+	simState.AppParams.GetOrGenerate(simState.Cdc, opWeightMsgTransferDenom, &weightMsgTransferDenom, nil,
+		func(_ *rand.Rand) {
+			weightMsgTransferDenom = defaultWeightMsgTransferDenom
+		},
+	)
+	operations = append(operations, simulation.NewWeightedOperation(
+		weightMsgTransferDenom,
+		denomfactorysimulation.SimulateMsgTransferDenom(am.accountKeeper, am.bankKeeper, am.keeper),
 	))
 
 	// this line is used by starport scaffolding # simapp/module/operation
