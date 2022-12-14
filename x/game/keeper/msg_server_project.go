@@ -16,7 +16,7 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, err.Error())
 	}
 
-	err = ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
+	err = k.ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -55,7 +55,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	// Skipping role policy validation as we use Ownership or Delegate array.string
 
-	err := ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
+	err := k.ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}

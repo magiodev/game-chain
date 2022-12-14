@@ -2,7 +2,7 @@ package keeper
 
 import sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-func ValidateArgsProject(symbol string, description string, name string) error {
+func (k Keeper) ValidateArgsProject(symbol string, description string, name string) error {
 	if len(symbol) < SymbolMinLength {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
 	}

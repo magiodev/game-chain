@@ -4,7 +4,6 @@ import (
 	"github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
 
 // SetDeveloper set a specific developer in the store from its index
@@ -61,16 +60,4 @@ func (k Keeper) GetAllDeveloper(ctx sdk.Context) (list []types.Developer) {
 	}
 
 	return
-}
-
-func (k Keeper) ValidateDeveloper(ctx sdk.Context, creator string) error {
-	// Checking developer role
-	val, found := k.GetDeveloper(ctx, creator)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator invalid developer address (%s)", creator)
-	}
-	if val.Blocked {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "creator developer address blocked (%s)", creator)
-	}
-	return nil
 }
