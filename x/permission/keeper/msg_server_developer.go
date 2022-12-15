@@ -38,10 +38,13 @@ func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDe
 		developer,
 	)
 
-	ctx.EventManager().EmitTypedEvent(&types.EventCreateDeveloper{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCreateDeveloper{
 		Address: msg.Address,
 		Creator: msg.Creator,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.MsgCreateDeveloperResponse{}, nil
 }
@@ -73,11 +76,14 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 
 	k.SetDeveloper(ctx, developer)
 
-	ctx.EventManager().EmitTypedEvent(&types.EventUpdateDeveloper{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventUpdateDeveloper{
 		Address: msg.Address,
 		Blocked: msg.Blocked,
 		Creator: msg.Creator,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.MsgUpdateDeveloperResponse{}, nil
 }
