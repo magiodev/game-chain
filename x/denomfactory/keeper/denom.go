@@ -72,7 +72,7 @@ func (k Keeper) GetAllDenom(ctx sdk.Context) (list []types.Denom) {
 	return
 }
 
-func (k Keeper) SetCoinMetadata(ctx sdk.Context, symbol string, name string, description string) {
+func (k Keeper) SetMetadata(ctx sdk.Context, symbol string, name string, description string) {
 	// Creating Metadata object
 	var metadata = banktypes.Metadata{
 		Base:        "u" + symbol,
