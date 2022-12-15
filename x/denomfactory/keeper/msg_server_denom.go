@@ -41,7 +41,7 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	}
 
 	// Check if existing only in bankKeeper state (GGT case)
-	_, found := k.bankKeeper.GetDenomMetaData(ctx, symbol)
+	_, found := k.bankKeeper.GetDenomMetaData(ctx, "u"+symbol)
 	if found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index already set in bank")
 	}

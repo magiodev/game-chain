@@ -35,12 +35,11 @@ message MsgUpdateDenom {
   string creator = 1;
   string symbol = 2;
 
-  string project = 3;
-  uint64 maxSupply = 4;
-  string name = 5;
-  string description = 6;
-  string uri = 7;
-  string uri_hash = 8;
+  uint64 maxSupply = 3;
+  string name = 4;
+  string description = 5;
+  string uri = 6;
+  string uri_hash =7;
 }
 message MsgUpdateDenomResponse {}
 
