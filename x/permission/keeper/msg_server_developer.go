@@ -39,7 +39,6 @@ func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDe
 		developer,
 	)
 
-	// TODO: EVENTS
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			EventTypeCreateDeveloper,
@@ -78,7 +77,6 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 
 	k.SetDeveloper(ctx, developer)
 
-	// TODO: EVENTS
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			EventTypeUpdateDeveloper,

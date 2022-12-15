@@ -39,8 +39,6 @@ func (k msgServer) CreateAdministrator(goCtx context.Context, msg *types.MsgCrea
 		administrator,
 	)
 
-	// TODO: EVENTS
-
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			EventTypeCreateAdministrator,
@@ -82,7 +80,6 @@ func (k msgServer) UpdateAdministrator(goCtx context.Context, msg *types.MsgUpda
 
 	k.SetAdministrator(ctx, administrator)
 
-	// TODO: EVENTS
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			EventTypeUpdateAdministrator,

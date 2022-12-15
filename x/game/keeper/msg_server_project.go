@@ -50,7 +50,6 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		project,
 	)
 
-	// TODO: EVENTS
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			EventTypeCreateProject,
@@ -111,7 +110,6 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	k.SetProject(ctx, valFound)
 
-	// TODO: EVENTS
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
 			EventTypeUpdateProject,
