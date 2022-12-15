@@ -6,7 +6,7 @@ accounts:
   - name: bob
     mnemonic: inquiry proud host flat tent position shoot choice damage north absent enlist question skate position segment renew bird caution wing whip apart hero alter
     coins: [ "100000000uggt" ]
-  - name: magiodev
+  - name: admin
     mnemonic: sauce story wash have cement rib keep grid senior float soda beyond train blood accuse dad situate rely reveal shove sudden bulk deal dumb
     coins: [ "100000000uggt" ]
 validators:
