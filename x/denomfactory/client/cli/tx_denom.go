@@ -13,7 +13,7 @@ func CmdCreateDenom() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-denom [symbol] [project] [max-supply] [can-change-max-supply] [name] [description] [uri] [uri_hash]",
 		Short: "Create a new Denom",
-		Args:  cobra.ExactArgs(9),
+		Args:  cobra.ExactArgs(8),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexSymbol := args[0]
@@ -30,8 +30,8 @@ func CmdCreateDenom() *cobra.Command {
 			}
 			argName := args[4]
 			argDescription := args[5]
-			argUri := args[7]
-			argUriHash := args[8]
+			argUri := args[6]
+			argUriHash := args[7]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
