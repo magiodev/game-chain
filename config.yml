@@ -28,12 +28,12 @@ genesis:
   app_state:
     denomfactory:
       params:
-        genesisDenomSymbol: "ggt"
-        genesisDenomName: "Game Gold Token"
-        genesisDenomDescription: "The G4AL Chain governance coin."
+        denom_symbol: "ggt"
+        denom_name: "Game Gold Token"
+        denom_description: "The G4AL Chain governance coin."
     permission:
       params:
-        genesisAdministrator: "g4al1f7e3s7jayfk3nfnxcv08myguvf522f2e00cxuy"
+        genesis_administrator: "g4al1f7e3s7jayfk3nfnxcv08myguvf522f2e00cxuy"
     staking:
       params:
         bond_denom: "uggt"

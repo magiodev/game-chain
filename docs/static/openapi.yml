@@ -34351,11 +34351,11 @@ paths:
                 description: params holds all the parameters of this module.
                 type: object
                 properties:
-                  genesisDenomSymbol:
+                  denom_symbol:
                     type: string
-                  genesisDenomName:
+                  denom_name:
                     type: string
-                  genesisDenomDescription:
+                  denom_description:
                     type: string
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
@@ -35024,7 +35024,7 @@ paths:
                 description: params holds all the parameters of this module.
                 type: object
                 properties:
-                  genesisAdministrator:
+                  genesis_administrator:
                     type: string
             description: >-
               QueryParamsResponse is response type for the Query/Params RPC
@@ -70940,11 +70940,11 @@ definitions:
   g4alentertainment.g4alchain.denomfactory.Params:
     type: object
     properties:
-      genesisDenomSymbol:
+      denom_symbol:
         type: string
-      genesisDenomName:
+      denom_name:
         type: string
-      genesisDenomDescription:
+      denom_description:
         type: string
     description: Params defines the parameters for the module.
   g4alentertainment.g4alchain.denomfactory.QueryAllDenomResponse:
@@ -71016,11 +71016,11 @@ definitions:
         description: params holds all the parameters of this module.
         type: object
         properties:
-          genesisDenomSymbol:
+          denom_symbol:
             type: string
-          genesisDenomName:
+          denom_name:
             type: string
-          genesisDenomDescription:
+          denom_description:
             type: string
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   g4alentertainment.g4alchain.g4alchain.Params:
@@ -71185,7 +71185,7 @@ definitions:
   g4alentertainment.g4alchain.permission.Params:
     type: object
     properties:
-      genesisAdministrator:
+      genesis_administrator:
         type: string
     description: Params defines the parameters for the module.
   g4alentertainment.g4alchain.permission.QueryAllAdministratorResponse:
@@ -71323,7 +71323,7 @@ definitions:
         description: params holds all the parameters of this module.
         type: object
         properties:
-          genesisAdministrator:
+          genesis_administrator:
             type: string
     description: QueryParamsResponse is response type for the Query/Params RPC method.
   ibc.applications.interchain_accounts.controller.v1.Params:
