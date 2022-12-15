@@ -24,6 +24,14 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 			panic("could not claim port capability: " + err.Error())
 		}
 	}
+
+	// Set Governance Coin metadata
+	k.SetMetadata(ctx,
+		genState.Params.GetGenesisDenomSymbol(),
+		genState.Params.GetGenesisDenomName(),
+		genState.Params.GetGenesisDenomDescription(),
+	)
+
 	k.SetParams(ctx, genState.Params)
 }
 
