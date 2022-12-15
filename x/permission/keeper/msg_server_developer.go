@@ -2,6 +2,8 @@ package keeper
 
 import (
 	"context"
+	"strconv"
+
 	"github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -10,7 +12,7 @@ import (
 func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDeveloper) (*types.MsgCreateDeveloperResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.ValidateAdministrator(ctx, msg.Address)
+	err := k.ValidateAdministrator(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
@@ -36,13 +38,23 @@ func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDe
 		ctx,
 		developer,
 	)
+
+	// TODO: EVENTS
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			EventTypeCreateDeveloper,
+			sdk.NewAttribute(DeveloperAttribute, msg.Address),
+			sdk.NewAttribute(AttributeKeyDeveloperCreator, msg.Creator),
+		),
+	)
+
 	return &types.MsgCreateDeveloperResponse{}, nil
 }
 
 func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDeveloper) (*types.MsgUpdateDeveloperResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.ValidateAdministrator(ctx, msg.Address)
+	err := k.ValidateAdministrator(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
@@ -65,6 +77,16 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 	}
 
 	k.SetDeveloper(ctx, developer)
+
+	// TODO: EVENTS
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			EventTypeUpdateDeveloper,
+			sdk.NewAttribute(DeveloperAttribute, msg.Address),
+			sdk.NewAttribute(DeveloperBlockedAttribute, strconv.FormatBool(msg.Blocked)),
+			sdk.NewAttribute(AttributeKeyDeveloperCreator, msg.Creator),
+		),
+	)
 
 	return &types.MsgUpdateDeveloperResponse{}, nil
 }

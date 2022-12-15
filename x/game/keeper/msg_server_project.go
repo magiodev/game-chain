@@ -2,7 +2,9 @@ package keeper
 
 import (
 	"context"
+
 	"github.com/G4AL-Entertainment/g4al-chain/utils"
+
 	"github.com/G4AL-Entertainment/g4al-chain/x/game/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -47,6 +49,18 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		ctx,
 		project,
 	)
+
+	// TODO: EVENTS
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			EventTypeCreateProject,
+			sdk.NewAttribute(AttributeKeyProjectSymbol, msg.Symbol),
+			sdk.NewAttribute(AttributeKeyProjectName, msg.Name),
+			sdk.NewAttribute(AttributeKeyProjectDescription, msg.Description),
+			sdk.NewAttribute(AttributeKeyProjectCreator, msg.Creator),
+		),
+	)
+
 	return &types.MsgCreateProjectResponse{}, nil
 }
 
@@ -96,6 +110,17 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 	valFound.UpdatedAt = int32(ctx.BlockHeight())
 
 	k.SetProject(ctx, valFound)
+
+	// TODO: EVENTS
+	ctx.EventManager().EmitEvent(
+		sdk.NewEvent(
+			EventTypeUpdateProject,
+			sdk.NewAttribute(AttributeKeyProjectSymbol, msg.Symbol),
+			sdk.NewAttribute(AttributeKeyProjectName, msg.Name),
+			sdk.NewAttribute(AttributeKeyProjectDescription, msg.Description),
+			sdk.NewAttribute(AttributeKeyProjectCreator, msg.Creator),
+		),
+	)
 
 	return &types.MsgUpdateProjectResponse{}, nil
 }
