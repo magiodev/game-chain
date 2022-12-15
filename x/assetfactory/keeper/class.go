@@ -4,6 +4,8 @@ import (
 	"github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types"
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	"github.com/cosmos/cosmos-sdk/x/nft"
 )
 
 const (
@@ -69,4 +71,28 @@ func (k Keeper) GetAllClass(ctx sdk.Context) (list []types.Class) {
 	}
 
 	return
+}
+
+// SaveClass saves x/nft class
+func (k msgServer) SaveClass(ctx sdk.Context, symbol string, name string, description string, uri string, uriHash string, data string) error {
+	// Treating msg.Data any value
+	//msgData, err := StringToAny(msg.Data)
+	//if err != nil {
+	//	return nil, err
+	//}
+
+	var nftClass = nft.Class{
+		Id:          symbol,
+		Name:        name,
+		Symbol:      symbol,
+		Description: description,
+		Uri:         uri,
+		UriHash:     uriHash,
+		//Data:        msgData,
+	}
+	err := k.nftKeeper.SaveClass(ctx, nftClass)
+	if err != nil {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "class creation has not occurred")
+	}
+	return nil
 }
