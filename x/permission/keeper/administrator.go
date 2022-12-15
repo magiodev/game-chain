@@ -6,14 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-const (
-	EventTypeCreateAdministrator     = "Create"
-	EventTypeUpdateAdministrator     = "Update"
-	AdministratorAttribute           = "administrator"
-	AdministratorBlockedAttribute    = "blocked"
-	AttributeKeyAdministratorCreator = "creator"
-)
-
 // SetAdministrator set a specific administrator in the store from its index
 func (k Keeper) SetAdministrator(ctx sdk.Context, administrator types.Administrator) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.AdministratorKeyPrefix))

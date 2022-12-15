@@ -50,15 +50,12 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		project,
 	)
 
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			EventTypeCreateProject,
-			sdk.NewAttribute(AttributeKeyProjectSymbol, msg.Symbol),
-			sdk.NewAttribute(AttributeKeyProjectName, msg.Name),
-			sdk.NewAttribute(AttributeKeyProjectDescription, msg.Description),
-			sdk.NewAttribute(AttributeKeyProjectCreator, msg.Creator),
-		),
-	)
+	ctx.EventManager().EmitTypedEvent(&types.EventCreate{
+		Symbol:      msg.Symbol,
+		Name:        msg.Name,
+		Description: msg.Description,
+		Creator:     msg.Creator,
+	})
 
 	return &types.MsgCreateProjectResponse{}, nil
 }
@@ -110,15 +107,12 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	k.SetProject(ctx, valFound)
 
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			EventTypeUpdateProject,
-			sdk.NewAttribute(AttributeKeyProjectSymbol, msg.Symbol),
-			sdk.NewAttribute(AttributeKeyProjectName, msg.Name),
-			sdk.NewAttribute(AttributeKeyProjectDescription, msg.Description),
-			sdk.NewAttribute(AttributeKeyProjectCreator, msg.Creator),
-		),
-	)
+	ctx.EventManager().EmitTypedEvent(&types.EventUpdate{
+		Symbol:      msg.Symbol,
+		Name:        msg.Name,
+		Description: msg.Description,
+		Creator:     msg.Creator,
+	})
 
 	return &types.MsgUpdateProjectResponse{}, nil
 }

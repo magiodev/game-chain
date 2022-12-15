@@ -1,0 +1,26 @@
+syntax = "proto3";
+package g4alentertainment.g4alchain.permission;
+
+option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/permission/types";
+
+message EventCreateDeveloper {
+    string address       = 1;
+    string creator       = 2;
+}
+
+message EventUpdateDeveloper {
+    string address       = 1;
+    bool blocked         = 2;
+    string creator       = 3;
+}
+
+message EventCreateAdministrator {
+    string address       = 1;
+    string creator       = 2;
+}
+
+message EventUpdateAdministrator {
+    string address       = 1;
+    bool blocked         = 2;
+    string creator       = 3;
+}

@@ -2,7 +2,6 @@ package keeper
 
 import (
 	"context"
-	"strconv"
 
 	"github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -39,13 +38,10 @@ func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDe
 		developer,
 	)
 
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			EventTypeCreateDeveloper,
-			sdk.NewAttribute(DeveloperAttribute, msg.Address),
-			sdk.NewAttribute(AttributeKeyDeveloperCreator, msg.Creator),
-		),
-	)
+	ctx.EventManager().EmitTypedEvent(&types.EventCreateDeveloper{
+		Address: msg.Address,
+		Creator: msg.Creator,
+	})
 
 	return &types.MsgCreateDeveloperResponse{}, nil
 }
@@ -77,14 +73,11 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 
 	k.SetDeveloper(ctx, developer)
 
-	ctx.EventManager().EmitEvent(
-		sdk.NewEvent(
-			EventTypeUpdateDeveloper,
-			sdk.NewAttribute(DeveloperAttribute, msg.Address),
-			sdk.NewAttribute(DeveloperBlockedAttribute, strconv.FormatBool(msg.Blocked)),
-			sdk.NewAttribute(AttributeKeyDeveloperCreator, msg.Creator),
-		),
-	)
+	ctx.EventManager().EmitTypedEvent(&types.EventUpdateDeveloper{
+		Address: msg.Address,
+		Blocked: msg.Blocked,
+		Creator: msg.Creator,
+	})
 
 	return &types.MsgUpdateDeveloperResponse{}, nil
 }

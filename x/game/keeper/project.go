@@ -13,13 +13,6 @@ const (
 	NameMaxLength        = 30
 	DescriptionMinLength = 10
 	DescriptionMaxLength = 250
-
-	EventTypeCreateProject         = "Create"
-	EventTypeUpdateProject         = "Update"
-	AttributeKeyProjectSymbol      = "symbol"
-	AttributeKeyProjectName        = "name"
-	AttributeKeyProjectDescription = "description"
-	AttributeKeyProjectCreator     = "creator"
 )
 
 // SetProject set a specific project in the store from its index

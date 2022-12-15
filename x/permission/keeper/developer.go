@@ -6,14 +6,6 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-const (
-	EventTypeCreateDeveloper     = "Create"
-	EventTypeUpdateDeveloper     = "Update"
-	DeveloperAttribute           = "developer"
-	DeveloperBlockedAttribute    = "blocked"
-	AttributeKeyDeveloperCreator = "creator"
-)
-
 // SetDeveloper set a specific developer in the store from its index
 func (k Keeper) SetDeveloper(ctx sdk.Context, developer types.Developer) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(types.DeveloperKeyPrefix))
