@@ -76,7 +76,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 	// Check if the value exists
 	valFound, isFound := k.GetProject(
 		ctx,
-		utils.RegExSymbol(msg.Symbol), // regEx applied,  TODO consider that maybe here to update is not required, as we do not allow changing symbol
+		msg.Symbol,
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
