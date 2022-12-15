@@ -50,12 +50,15 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		project,
 	)
 
-	ctx.EventManager().EmitTypedEvent(&types.EventCreate{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCreate{
 		Symbol:      msg.Symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
 		Creator:     msg.Creator,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.MsgCreateProjectResponse{}, nil
 }
@@ -73,7 +76,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 	// Check if the value exists
 	valFound, isFound := k.GetProject(
 		ctx,
-		utils.RegExSymbol(msg.Symbol), // regEx applied,  TODO consider that maybe here to update is not required, as we do not allow changing symbol
+		msg.Symbol,
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
@@ -107,12 +110,15 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	k.SetProject(ctx, valFound)
 
-	ctx.EventManager().EmitTypedEvent(&types.EventUpdate{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventUpdate{
 		Symbol:      msg.Symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
 		Creator:     msg.Creator,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.MsgUpdateProjectResponse{}, nil
 }

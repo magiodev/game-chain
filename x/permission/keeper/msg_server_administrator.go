@@ -38,10 +38,13 @@ func (k msgServer) CreateAdministrator(goCtx context.Context, msg *types.MsgCrea
 		administrator,
 	)
 
-	ctx.EventManager().EmitTypedEvent(&types.EventCreateAdministrator{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCreateAdministrator{
 		Address: msg.Address,
 		Creator: msg.Creator,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.MsgCreateAdministratorResponse{}, nil
 }
@@ -76,11 +79,14 @@ func (k msgServer) UpdateAdministrator(goCtx context.Context, msg *types.MsgUpda
 
 	k.SetAdministrator(ctx, administrator)
 
-	ctx.EventManager().EmitTypedEvent(&types.EventUpdateAdministrator{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventUpdateAdministrator{
 		Address: msg.Address,
 		Blocked: msg.Blocked,
 		Creator: msg.Creator,
 	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.MsgUpdateAdministratorResponse{}, nil
 }

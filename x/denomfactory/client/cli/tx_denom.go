@@ -13,7 +13,7 @@ func CmdCreateDenom() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-denom [symbol] [project] [max-supply] [can-change-max-supply] [name] [description] [uri] [uri_hash]",
 		Short: "Create a new Denom",
-		Args:  cobra.ExactArgs(9),
+		Args:  cobra.ExactArgs(8),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexSymbol := args[0]
@@ -30,8 +30,8 @@ func CmdCreateDenom() *cobra.Command {
 			}
 			argName := args[4]
 			argDescription := args[5]
-			argUri := args[7]
-			argUriHash := args[8]
+			argUri := args[6]
+			argUriHash := args[7]
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -63,7 +63,7 @@ func CmdCreateDenom() *cobra.Command {
 
 func CmdUpdateDenom() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-denom [symbol] [project] [max-supply] [name] [description] [uri] [uri_hash]",
+		Use:   "update-denom [symbol] [max-supply] [name] [description] [uri] [uri_hash]",
 		Short: "Update a Denom",
 		Args:  cobra.ExactArgs(7),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
@@ -71,8 +71,7 @@ func CmdUpdateDenom() *cobra.Command {
 			indexSymbol := args[0]
 
 			// Get value arguments
-			argProject := args[1]
-			argMaxSupply, err := cast.ToUint64E(args[2])
+			argMaxSupply, err := cast.ToUint64E(args[1])
 			if err != nil {
 				return err
 			}
@@ -81,15 +80,14 @@ func CmdUpdateDenom() *cobra.Command {
 			if err != nil {
 				return err
 			}
-			argName := args[3]
-			argDescription := args[4]
-			argUri := args[5]
-			argUriHash := args[6]
+			argName := args[2]
+			argDescription := args[3]
+			argUri := args[4]
+			argUriHash := args[5]
 
 			msg := types.NewMsgUpdateDenom(
 				clientCtx.GetFromAddress().String(),
 				indexSymbol,
-				argProject,
 				argMaxSupply,
 				argName,
 				argDescription,

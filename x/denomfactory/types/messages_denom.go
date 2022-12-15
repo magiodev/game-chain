@@ -74,7 +74,6 @@ var _ sdk.Msg = &MsgUpdateDenom{}
 func NewMsgUpdateDenom(
 	creator string,
 	symbol string,
-	project string,
 	maxSupply uint64,
 	name string,
 	description string,
@@ -85,7 +84,6 @@ func NewMsgUpdateDenom(
 	return &MsgUpdateDenom{
 		Creator:     creator,
 		Symbol:      symbol,
-		Project:     project,
 		MaxSupply:   maxSupply,
 		Name:        name,
 		Description: description,

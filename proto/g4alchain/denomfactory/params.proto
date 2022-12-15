@@ -8,5 +8,8 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/typ
 // Params defines the parameters for the module.
 message Params {
   option (gogoproto.goproto_stringer) = false;
-  
+
+  string genesisDenomSymbol = 1 [(gogoproto.moretags) = "yaml:\"genesis_denom_symbol\""];
+  string genesisDenomName = 2 [(gogoproto.moretags) = "yaml:\"genesis_denom_name\""];
+  string genesisDenomDescription= 3 [(gogoproto.moretags) = "yaml:\"genesis_denom_description\""];
 }
