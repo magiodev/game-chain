@@ -104,9 +104,11 @@ func (k Keeper) SetCoinMetadata(ctx sdk.Context, symbol string, name string, des
 		//URIHash: "",
 	}
 	// Pushing denomUnits to Metadata
-	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit)
-	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit)
-	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)
+	metadata.DenomUnits = append(metadata.DenomUnits,
+		&microDenomUnit,
+		&milliDenomUnit,
+		&baseDenomUnit,
+	)
 	// Set metadata object
 	k.bankKeeper.SetDenomMetaData(ctx, metadata)
 }
