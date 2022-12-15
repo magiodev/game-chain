@@ -3,10 +3,7 @@ package keeper
 import (
 	"context"
 
-	"github.com/golang/protobuf/ptypes/wrappers"
-
 	"github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types"
-	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/x/nft"
@@ -15,24 +12,15 @@ import (
 func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass) (*types.MsgCreateClassResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Checks if the msg creator is a developer
-	_, isDevFound := k.permissionKeeper.GetDeveloper(ctx, msg.Creator)
-	if !isDevFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "caller is not a developer")
+	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
+	if err != nil {
+		return nil, err
 	}
 
-	// Checks if game exists
-	game, isGameFound := k.gameKeeper.GetProject(ctx, msg.Project)
-	if !isGameFound {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "game does not exist")
+	err = k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
+	if err != nil {
+		return nil, err
 	}
-
-	// Checks if masg creator is the game creator
-	if game.Creator != msg.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "game does not exist")
-	}
-
-	// Parameter validation
 
 	// Check if the value already exists
 	_, isFound := k.GetClass(
@@ -44,7 +32,7 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 	}
 
 	// Check if input texts meet requirements
-	err := validateArgsClass(msg.Symbol, msg.Description, msg.Name)
+	err = k.ValidateArgsClass(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +89,7 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
 	}
 
-	err := validateArgsClass(msg.Symbol, msg.Description, msg.Name)
+	err := k.ValidateArgsClass(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -117,35 +105,4 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 	k.SetClass(ctx, class)
 
 	return &types.MsgUpdateClassResponse{}, nil
-}
-
-func StringToAny(data string) (*codectypes.Any, error) {
-	sv := &wrappers.StringValue{Value: data}
-	msgData, err := codectypes.NewAnyWithValue(sv)
-	if err != nil {
-		return msgData, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "data not valid")
-	}
-	return msgData, nil
-}
-
-func validateArgsClass(symbol string, description string, name string) error {
-	if len(symbol) < SymbolMinLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and must contain at least %d characters", SymbolMinLength)
-	}
-	if len(symbol) > SymbolMaxLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "symbol is needed and can contain at most %d characters", SymbolMaxLength)
-	}
-	if len(name) < NameMinLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and must contain at least %d characters", NameMinLength)
-	}
-	if len(name) > NameMaxLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "name is needed and can contain at most %d characters", NameMaxLength)
-	}
-	if len(description) < DescriptionMinLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at least %d characters", DescriptionMinLength)
-	}
-	if len(description) > DescriptionMaxLength {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
-	}
-	return nil
 }

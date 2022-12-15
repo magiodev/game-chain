@@ -12,18 +12,16 @@ import (
 
 type PermissionKeeper interface {
 	GetDeveloper(ctx sdk.Context, address string) (val permissiontypes.Developer, found bool)
-	// Methods imported from permission should be defined here
+	ValidateDeveloper(ctx sdk.Context, address string) error
 }
 
 type GameKeeper interface {
 	GetProject(ctx sdk.Context, symbol string) (val gametypes.Project, found bool)
-	// Methods imported from game should be defined here
 }
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
 type AccountKeeper interface {
 	GetAccount(ctx sdk.Context, addr sdk.AccAddress) types.AccountI
-	// Methods imported from account should be defined here
 }
 
 // BankKeeper defines the expected interface needed to retrieve account balances.

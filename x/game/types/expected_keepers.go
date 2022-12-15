@@ -9,6 +9,7 @@ import (
 type PermissionKeeper interface {
 	// Methods imported from permission should be defined here
 	GetDeveloper(ctx sdk.Context, address string) (val permissiontypes.Developer, found bool)
+	ValidateDeveloper(ctx sdk.Context, address string) error
 }
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)
