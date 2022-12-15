@@ -75,36 +75,38 @@ func (k Keeper) GetAllDenom(ctx sdk.Context) (list []types.Denom) {
 func (k Keeper) SetCoinMetadata(ctx sdk.Context, symbol string, name string, description string) {
 	// Creating metadata
 
-	// baseUnit (no alias)
-	var baseDenomUnit = banktypes.DenomUnit{
-		Denom:    symbol,
-		Exponent: 6,
-	}
-	// milliUnit
-	var milliDenomUnit = banktypes.DenomUnit{
-		Denom:    "m" + symbol,
-		Exponent: 3,
-	}
-	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
 	// microUnit
 	var microDenomUnit = banktypes.DenomUnit{
 		Denom:    "u" + symbol,
 		Exponent: 0,
 	}
 	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
+	// milliUnit
+	var milliDenomUnit = banktypes.DenomUnit{
+		Denom:    "m" + symbol,
+		Exponent: 3,
+	}
+	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
+	// baseUnit (no alias)
+	var baseDenomUnit = banktypes.DenomUnit{
+		Denom:    symbol,
+		Exponent: 6,
+	}
 
 	// Creating bank.Metadata object
 	var metadata = banktypes.Metadata{
-		Description: description,
-		Base:        symbol,
-		Display:     name,
-		Name:        name,
+		Base:        "u" + symbol,
+		Display:     symbol,
 		Symbol:      symbol,
+		Name:        name,
+		Description: description,
+		//URI: "",
+		//URIHash: "",
 	}
 	// Pushing denomUnits to Metadata
-	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)
-	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit)
 	metadata.DenomUnits = append(metadata.DenomUnits, &microDenomUnit)
+	metadata.DenomUnits = append(metadata.DenomUnits, &milliDenomUnit)
+	metadata.DenomUnits = append(metadata.DenomUnits, &baseDenomUnit)
 	// Set metadata object
 	k.bankKeeper.SetDenomMetaData(ctx, metadata)
 }
