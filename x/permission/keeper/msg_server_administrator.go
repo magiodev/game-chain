@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+
 	"github.com/G4AL-Entertainment/g4al-chain/x/permission/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -36,6 +37,12 @@ func (k msgServer) CreateAdministrator(goCtx context.Context, msg *types.MsgCrea
 		ctx,
 		administrator,
 	)
+
+	ctx.EventManager().EmitTypedEvent(&types.EventCreateAdministrator{
+		Address: msg.Address,
+		Creator: msg.Creator,
+	})
+
 	return &types.MsgCreateAdministratorResponse{}, nil
 }
 
@@ -68,6 +75,12 @@ func (k msgServer) UpdateAdministrator(goCtx context.Context, msg *types.MsgUpda
 	}
 
 	k.SetAdministrator(ctx, administrator)
+
+	ctx.EventManager().EmitTypedEvent(&types.EventUpdateAdministrator{
+		Address: msg.Address,
+		Blocked: msg.Blocked,
+		Creator: msg.Creator,
+	})
 
 	return &types.MsgUpdateAdministratorResponse{}, nil
 }
