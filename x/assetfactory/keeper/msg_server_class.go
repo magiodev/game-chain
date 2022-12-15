@@ -6,7 +6,6 @@ import (
 	"github.com/G4AL-Entertainment/g4al-chain/x/assetfactory/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	"github.com/cosmos/cosmos-sdk/x/nft"
 )
 
 func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass) (*types.MsgCreateClassResponse, error) {
@@ -45,30 +44,15 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 		CanChangeMaxSupply: msg.CanChangeMaxSupply,
 	}
 
-	// Treating msg.Data any value
-	//msgData, err := StringToAny(msg.Data)
-	//if err != nil {
-	//	return nil, err
-	//}
-
-	var nftClass = nft.Class{
-		Id:          msg.Symbol,
-		Name:        msg.Name,
-		Symbol:      msg.Symbol,
-		Description: msg.Description,
-		Uri:         msg.Uri,
-		UriHash:     msg.UriHash,
-		//Data:        msgData,
-	}
-	err = k.nftKeeper.SaveClass(ctx, nftClass)
+	// Set the x/nft class
+	err = k.SaveClass(ctx, msg.Symbol, msg.Name, msg.Description, msg.Uri, msg.UriHash, msg.Data)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "class creation has not occurred")
+		return nil, err
 	}
 
-	k.SetClass(
-		ctx,
-		class,
-	)
+	// Set this module's map, not x/nft
+	k.SetClass(ctx, class)
+
 	return &types.MsgCreateClassResponse{}, nil
 }
 
@@ -94,15 +78,23 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 		return nil, err
 	}
 
-	var class = types.Class{
-		Creator:   msg.Creator,
-		Symbol:    msg.Symbol,
-		MaxSupply: msg.MaxSupply,
+	// If CanChangeMaxSupply we allow editing MaxSupply
+	if valFound.CanChangeMaxSupply {
+		currentTotalSupply := k.nftKeeper.GetTotalSupply(ctx, valFound.Symbol)
+		if currentTotalSupply > msg.MaxSupply {
+			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "total supply already exceeds the new maxSupply")
+		}
+		valFound.MaxSupply = msg.MaxSupply
 	}
 
-	//TODO metadata workflow
+	// Set the x/nft class
+	err = k.SaveClass(ctx, valFound.Symbol, msg.Name, msg.Description, msg.Uri, msg.UriHash, msg.Data)
+	if err != nil {
+		return nil, err
+	}
 
-	k.SetClass(ctx, class)
+	// Set this module's map, not x/nft
+	k.SetClass(ctx, valFound)
 
 	return &types.MsgUpdateClassResponse{}, nil
 }
