@@ -2,16 +2,28 @@ version: 1
 accounts:
   - name: alice
     mnemonic: skirt useless suggest trophy donate sister patch enrich size business need bleak spend damp truck coffee bring where educate ecology craft velvet grace tumble
-    coins: [ "200000000uggt" ]
+    coins: [ "2000000000000000uggt" ]
   - name: bob
     mnemonic: inquiry proud host flat tent position shoot choice damage north absent enlist question skate position segment renew bird caution wing whip apart hero alter
-    coins: [ "100000000uggt" ]
+    coins: [ "2000000000000000uggt" ]
   - name: admin
     mnemonic: sauce story wash have cement rib keep grid senior float soda beyond train blood accuse dad situate rely reveal shove sudden bulk deal dumb
-    coins: [ "100000000uggt" ]
+    coins: [ "2000000000000000uggt" ]
+  - name: test1
+    coins: [ "1000000000000000uggt" ]
+  - name: test2
+    coins: [ "1000000000000000uggt" ]
+  - name: test3
+    coins: [ "1000000000000000uggt" ]
+  - name: test4
+    coins: [ "1000000000000000uggt" ]
 validators:
   - name: alice
-    bonded: "100000000uggt"
+    bonded: "1000000000000000uggt"
+  - name: bob
+    bonded: "1000000000000000uggt"
+  - name: admin
+    bonded: "1000000000000000uggt"
 genesis:
   app_state:
     permission:
