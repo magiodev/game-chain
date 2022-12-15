@@ -84,7 +84,7 @@ func (k msgServer) UpdateAdministrator(goCtx context.Context, msg *types.MsgUpda
 		sdk.NewEvent(
 			EventTypeUpdateAdministrator,
 			sdk.NewAttribute(AdministratorAttribute, admin.Address),
-			sdk.NewAttribute(AdministratorValueAttribute, strconv.FormatBool(msg.Blocked)),
+			sdk.NewAttribute(AdministratorBlockedAttribute, strconv.FormatBool(msg.Blocked)),
 			sdk.NewAttribute(AttributeKeyAdministratorCreator, msg.Creator),
 		),
 	)

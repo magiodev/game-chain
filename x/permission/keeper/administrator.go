@@ -10,7 +10,7 @@ const (
 	EventTypeCreateAdministrator     = "Create"
 	EventTypeUpdateAdministrator     = "Update"
 	AdministratorAttribute           = "administrator"
-	AdministratorValueAttribute      = "value"
+	AdministratorBlockedAttribute    = "blocked"
 	AttributeKeyAdministratorCreator = "creator"
 )
 
