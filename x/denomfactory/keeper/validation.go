@@ -33,13 +33,11 @@ func (k Keeper) ValidateProjectOwnershipOrDelegateByDenom(ctx sdk.Context, creat
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of denom not found x/nft (%s)", symbol)
 	}
-
 	// check on map to what project is associated with
 	denomMapFound, found := k.GetDenom(ctx, denomFound.Symbol)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of denom not found x/assetfactory (%s)", symbol)
 	}
-
 	// Check delegate
 	err := k.gameKeeper.ValidateProjectOwnershipOrDelegateByProject(ctx, creator, denomMapFound.Project)
 	if err != nil {

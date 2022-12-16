@@ -72,9 +72,7 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProject) (*types.MsgUpdateProjectResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Ignoring developer role, as ownership/delegation rule
-
-	// Check delegate
+	// Validate only ownership and delegate, not developer role
 	err := k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err

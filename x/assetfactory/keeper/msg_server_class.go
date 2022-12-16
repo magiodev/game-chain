@@ -11,11 +11,11 @@ import (
 func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass) (*types.MsgCreateClassResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// Validate is developer and ownership or project, delegates are prevented
 	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-
 	err = k.gameKeeper.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
 	if err != nil {
 		return nil, err

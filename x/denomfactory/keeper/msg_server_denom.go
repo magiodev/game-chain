@@ -12,7 +12,7 @@ import (
 func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom) (*types.MsgCreateDenomResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validate
+	// Validate is Developer, we want only developers (not delegat) to create
 	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
@@ -67,12 +67,8 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom) (*types.MsgUpdateDenomResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validate
-	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
-	if err != nil {
-		return nil, err
-	}
-	err = k.ValidateProjectOwnershipOrDelegateByDenom(ctx, msg.Creator, msg.Symbol)
+	// Validate, we use only ownership and delegate role sipping developer policy
+	err := k.ValidateProjectOwnershipOrDelegateByDenom(ctx, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -118,16 +114,13 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 func (k msgServer) MintDenom(goCtx context.Context, msg *types.MsgMintDenom) (*types.MsgMintDenomResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validate
-	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
-	if err != nil {
-		return nil, err
-	}
+	// Validate existing
 	denom, found := k.GetDenom(ctx, msg.Symbol)
 	if !found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "denom not find")
 	}
-	err = k.ValidateProjectOwnershipOrDelegateByDenom(ctx, msg.Creator, denom.Symbol)
+	// Validate ownership or delegate, not developer role
+	err := k.ValidateProjectOwnershipOrDelegateByDenom(ctx, msg.Creator, denom.Symbol)
 	if err != nil {
 		return nil, err
 	}
