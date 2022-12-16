@@ -39,13 +39,8 @@ func (k Keeper) ValidateProjectOwnershipOrDelegateByClassId(ctx sdk.Context, cre
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", symbol)
 	}
-	// Checking project existing and related to this game developer or delegate
-	project, found := k.gameKeeper.GetProject(ctx, classMapFound.Project)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", classMapFound.Project)
-	}
 	// Check delegate
-	err := k.gameKeeper.ValidateDelegate(creator, project)
+	err := k.gameKeeper.ValidateProjectOwnershipOrDelegateByProject(ctx, creator, classMapFound.Project)
 	if err != nil {
 		return err
 	}
@@ -53,7 +48,7 @@ func (k Keeper) ValidateProjectOwnershipOrDelegateByClassId(ctx sdk.Context, cre
 }
 
 func (k Keeper) ValidateMaxSupply(ctx sdk.Context, symbol string) error {
-	// check on map to what project is associated with TODO this is repeated, remove
+	// check on map to what project is associated with
 	class, found := k.GetClass(ctx, symbol)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of classID not found x/assetfactory (%s)", symbol)

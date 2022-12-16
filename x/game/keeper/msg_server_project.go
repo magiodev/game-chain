@@ -35,6 +35,12 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
+	// Validating that string[] addresses are Bech32 compliant
+	err = k.ValidateDelegateIsValid(msg.Delegate)
+	if err != nil {
+		return nil, err
+	}
+
 	var project = types.Project{
 		Creator:     msg.Creator,
 		Symbol:      symbol,
