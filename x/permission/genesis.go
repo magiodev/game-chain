@@ -18,7 +18,6 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	}
 	// this line is used by starport scaffolding # genesis/module/init
 
-	// TODO consider if this is good practice, maybe using genState.AdministratorList is the correct thing to do?
 	if len(k.GetAllAdministrator(ctx)) == 0 {
 		bech32, err := sdk.AccAddressFromBech32(genState.Params.GetGenesisAdministrator())
 		if err != nil {
