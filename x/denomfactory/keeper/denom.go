@@ -75,7 +75,7 @@ func (k Keeper) GetAllDenom(ctx sdk.Context) (list []types.Denom) {
 func (k Keeper) SetMetadata(ctx sdk.Context, symbol string, name string, description string) {
 	// Creating Metadata object
 	var metadata = banktypes.Metadata{
-		Base:        "u" + symbol,
+		Base:        SymbolToMicroUnit(symbol),
 		Display:     symbol,
 		Symbol:      symbol,
 		Name:        name,
@@ -88,13 +88,13 @@ func (k Keeper) SetMetadata(ctx sdk.Context, symbol string, name string, descrip
 
 	// microUnit
 	var microDenomUnit = banktypes.DenomUnit{
-		Denom:    "u" + symbol,
+		Denom:    SymbolToMicroUnit(symbol),
 		Exponent: 0,
 	}
 	microDenomUnit.Aliases = append(microDenomUnit.Aliases, "micro"+symbol)
 	// milliUnit
 	var milliDenomUnit = banktypes.DenomUnit{
-		Denom:    "m" + symbol,
+		Denom:    SymbolToMilliUnit(symbol),
 		Exponent: 3,
 	}
 	milliDenomUnit.Aliases = append(milliDenomUnit.Aliases, "milli"+symbol)
@@ -113,4 +113,12 @@ func (k Keeper) SetMetadata(ctx sdk.Context, symbol string, name string, descrip
 
 	// Set metadata object
 	k.bankKeeper.SetDenomMetaData(ctx, metadata)
+}
+
+func SymbolToMicroUnit(symbol string) string {
+	return "u" + symbol
+}
+
+func SymbolToMilliUnit(symbol string) string {
+	return "m" + symbol
 }

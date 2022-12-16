@@ -34,21 +34,21 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	// Check if the value already exists in map
 	_, isFound := k.GetDenom(
 		ctx,
-		symbol,
+		SymbolToMicroUnit(symbol),
 	)
 	if isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set in map")
 	}
 
 	// Check if existing only in bankKeeper state (GGT case)
-	_, found := k.bankKeeper.GetDenomMetaData(ctx, "u"+symbol)
+	_, found := k.bankKeeper.GetDenomMetaData(ctx, SymbolToMicroUnit(symbol))
 	if found {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index already set in bank")
 	}
 
 	var denom = types.Denom{
 		Creator:            msg.Creator,
-		Symbol:             symbol,
+		Symbol:             SymbolToMicroUnit(symbol),
 		Project:            msg.Project,
 		MaxSupply:          msg.MaxSupply,
 		CanChangeMaxSupply: msg.CanChangeMaxSupply,
@@ -98,7 +98,7 @@ func (k msgServer) UpdateDenom(goCtx context.Context, msg *types.MsgUpdateDenom)
 	if valFound.CanChangeMaxSupply {
 		currentTotalSupply := k.bankKeeper.GetSupply(ctx, valFound.Symbol)
 		if currentTotalSupply.Amount.Uint64() > msg.MaxSupply {
-			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "total supply already exceeds the new maxSupply")
+			return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "current total supply already exceeds the new maxSupply")
 		}
 		valFound.MaxSupply = msg.MaxSupply
 	}

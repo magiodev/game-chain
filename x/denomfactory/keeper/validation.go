@@ -31,10 +31,10 @@ func (k Keeper) ValidateProjectOwnershipOrDelegateByDenom(ctx sdk.Context, creat
 	// Checking if symbol/classID exists via x/nft
 	denomFound, found := k.bankKeeper.GetDenomMetaData(ctx, symbol)
 	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of denom not found x/nft (%s)", symbol)
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of denom not found x/bank (%s)", symbol)
 	}
 	// check on map to what project is associated with
-	denomMapFound, found := k.GetDenom(ctx, denomFound.Symbol)
+	denomMapFound, found := k.GetDenom(ctx, denomFound.Base)
 	if !found {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "symbol of denom not found x/assetfactory (%s)", symbol)
 	}
