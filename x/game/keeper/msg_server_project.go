@@ -35,10 +35,13 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	// Validating that string[] addresses are Bech32 compliant
-	err = k.ValidateDelegateIsValid(msg.Delegate)
-	if err != nil {
-		return nil, err
+	var validDelegate []string
+	for _, delegate := range msg.Delegate {
+		// Validating that string[] addresses are Bech32 compliant
+		bech32, err := sdk.AccAddressFromBech32(delegate)
+		if err == nil {
+			validDelegate = append(validDelegate, bech32.String())
+		}
 	}
 
 	var project = types.Project{
@@ -46,7 +49,7 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		Symbol:      symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
-		Delegate:    msg.Delegate,
+		Delegate:    validDelegate,
 		CreatedAt:   int32(ctx.BlockHeight()),
 		UpdatedAt:   int32(ctx.BlockHeight()),
 	}
@@ -94,7 +97,11 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	// appending new delegate values to valFound.Delegate
 	for _, delegate := range msg.Delegate {
-		valFound.Delegate = append(valFound.Delegate, sdk.AccAddress(delegate).String())
+		// Validating that string[] addresses are Bech32 compliant
+		bech32, err := sdk.AccAddressFromBech32(delegate)
+		if err == nil {
+			valFound.Delegate = append(valFound.Delegate, bech32.String())
+		}
 	}
 
 	valFound.Name = msg.Name

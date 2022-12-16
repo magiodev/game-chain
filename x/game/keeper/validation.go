@@ -48,14 +48,3 @@ func (k Keeper) ValidateProjectOwnershipOrDelegateByProject(ctx sdk.Context, cre
 	}
 	return nil
 }
-
-func (k Keeper) ValidateDelegateIsValid(delegate []string) error {
-	// Validate Delegate array contains Bech32 stringAddresses
-	for _, delegate := range delegate {
-		_, err := sdk.AccAddressFromBech32(delegate)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
