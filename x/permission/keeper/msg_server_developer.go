@@ -28,8 +28,8 @@ func (k msgServer) CreateDeveloper(goCtx context.Context, msg *types.MsgCreateDe
 	var developer = types.Developer{
 		Creator:   msg.Creator,
 		Address:   msg.Address,
-		CreatedAt: int32(ctx.BlockHeight()),
-		UpdatedAt: int32(ctx.BlockHeight()),
+		CreatedAt: ctx.BlockHeight(),
+		UpdatedAt: ctx.BlockHeight(),
 		Blocked:   false,
 	}
 
@@ -70,7 +70,7 @@ func (k msgServer) UpdateDeveloper(goCtx context.Context, msg *types.MsgUpdateDe
 		Creator:   dev.Creator,
 		Address:   dev.Address,
 		CreatedAt: dev.CreatedAt,
-		UpdatedAt: int32(ctx.BlockHeight()),
+		UpdatedAt: ctx.BlockHeight(),
 		Blocked:   msg.Blocked,
 	}
 

@@ -50,8 +50,8 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		Name:        msg.Name,
 		Description: msg.Description,
 		Delegate:    validDelegate,
-		CreatedAt:   int32(ctx.BlockHeight()),
-		UpdatedAt:   int32(ctx.BlockHeight()),
+		CreatedAt:   ctx.BlockHeight(),
+		UpdatedAt:   ctx.BlockHeight(),
 	}
 
 	k.SetProject(
@@ -106,7 +106,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	valFound.Name = msg.Name
 	valFound.Description = msg.Description
-	valFound.UpdatedAt = int32(ctx.BlockHeight())
+	valFound.UpdatedAt = ctx.BlockHeight()
 
 	k.SetProject(ctx, valFound)
 

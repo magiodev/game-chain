@@ -34480,11 +34480,11 @@ paths:
                     creator:
                       type: string
                     createdAt:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: int64
                     updatedAt:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: int64
               pagination:
                 type: object
                 properties:
@@ -34616,11 +34616,11 @@ paths:
                   creator:
                     type: string
                   createdAt:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: int64
                   updatedAt:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: int64
         default:
           description: An unexpected error response.
           schema:
@@ -34664,11 +34664,11 @@ paths:
                     address:
                       type: string
                     createdAt:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: int64
                     updatedAt:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: int64
                     blocked:
                       type: boolean
                     creator:
@@ -34794,11 +34794,11 @@ paths:
                   address:
                     type: string
                   createdAt:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: int64
                   updatedAt:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: int64
                   blocked:
                     type: boolean
                   creator:
@@ -34846,11 +34846,11 @@ paths:
                     address:
                       type: string
                     createdAt:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: int64
                     updatedAt:
-                      type: integer
-                      format: int32
+                      type: string
+                      format: int64
                     blocked:
                       type: boolean
                     creator:
@@ -34976,11 +34976,11 @@ paths:
                   address:
                     type: string
                   createdAt:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: int64
                   updatedAt:
-                    type: integer
-                    format: int32
+                    type: string
+                    format: int64
                   blocked:
                     type: boolean
                   creator:
@@ -71056,11 +71056,11 @@ definitions:
       creator:
         type: string
       createdAt:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       updatedAt:
-        type: integer
-        format: int32
+        type: string
+        format: int64
   g4alentertainment.g4alchain.game.QueryAllProjectResponse:
     type: object
     properties:
@@ -71082,11 +71082,11 @@ definitions:
             creator:
               type: string
             createdAt:
-              type: integer
-              format: int32
+              type: string
+              format: int64
             updatedAt:
-              type: integer
-              format: int32
+              type: string
+              format: int64
       pagination:
         type: object
         properties:
@@ -71132,11 +71132,11 @@ definitions:
           creator:
             type: string
           createdAt:
-            type: integer
-            format: int32
+            type: string
+            format: int64
           updatedAt:
-            type: integer
-            format: int32
+            type: string
+            format: int64
   g4alentertainment.g4alchain.game.QueryParamsResponse:
     type: object
     properties:
@@ -71150,11 +71150,11 @@ definitions:
       address:
         type: string
       createdAt:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       updatedAt:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       blocked:
         type: boolean
       creator:
@@ -71165,11 +71165,11 @@ definitions:
       address:
         type: string
       createdAt:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       updatedAt:
-        type: integer
-        format: int32
+        type: string
+        format: int64
       blocked:
         type: boolean
       creator:
@@ -71199,11 +71199,11 @@ definitions:
             address:
               type: string
             createdAt:
-              type: integer
-              format: int32
+              type: string
+              format: int64
             updatedAt:
-              type: integer
-              format: int32
+              type: string
+              format: int64
             blocked:
               type: boolean
             creator:
@@ -71245,11 +71245,11 @@ definitions:
             address:
               type: string
             createdAt:
-              type: integer
-              format: int32
+              type: string
+              format: int64
             updatedAt:
-              type: integer
-              format: int32
+              type: string
+              format: int64
             blocked:
               type: boolean
             creator:
@@ -71289,11 +71289,11 @@ definitions:
           address:
             type: string
           createdAt:
-            type: integer
-            format: int32
+            type: string
+            format: int64
           updatedAt:
-            type: integer
-            format: int32
+            type: string
+            format: int64
           blocked:
             type: boolean
           creator:
@@ -71307,11 +71307,11 @@ definitions:
           address:
             type: string
           createdAt:
-            type: integer
-            format: int32
+            type: string
+            format: int64
           updatedAt:
-            type: integer
-            format: int32
+            type: string
+            format: int64
           blocked:
             type: boolean
           creator:

@@ -20,8 +20,8 @@ message MsgCreateAdministrator {
   string creator = 1;
   string address = 2;
 
-  int32 createdAt = 3;
-  int32 updatedAt = 4;
+  int64 createdAt = 3;
+  int64 updatedAt = 4;
   bool blocked = 5;
 }
 message MsgCreateAdministratorResponse {}
@@ -30,8 +30,8 @@ message MsgUpdateAdministrator {
   string creator = 1;
   string address = 2;
 
-  int32 createdAt = 3;
-  int32 updatedAt = 4;
+  int64 createdAt = 3;
+  int64 updatedAt = 4;
   bool blocked = 5;
 }
 message MsgUpdateAdministratorResponse {}
@@ -40,8 +40,8 @@ message MsgCreateDeveloper {
   string creator = 1;
   string address = 2;
 
-  int32 createdAt = 3;
-  int32 updatedAt = 4;
+  int64 createdAt = 3;
+  int64 updatedAt = 4;
   bool blocked = 5;
 }
 message MsgCreateDeveloperResponse {}
@@ -50,8 +50,8 @@ message MsgUpdateDeveloper {
   string creator = 1;
   string address = 2;
 
-  int32 createdAt = 3;
-  int32 updatedAt = 4;
+  int64 createdAt = 3;
+  int64 updatedAt = 4;
   bool blocked = 5;
 }
 message MsgUpdateDeveloperResponse {}
