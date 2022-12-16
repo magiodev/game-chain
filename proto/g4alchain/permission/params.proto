@@ -9,5 +9,5 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/permission/types
 message Params {
   option (gogoproto.goproto_stringer) = false;
   
-  string genesisAdministrator = 1 [(gogoproto.moretags) = "yaml:\"genesis_administrator\""];
+  string genesis_administrator = 1 [(gogoproto.moretags) = "yaml:\"genesis_administrator\""];
 }

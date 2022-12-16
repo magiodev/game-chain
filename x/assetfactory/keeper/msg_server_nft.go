@@ -12,12 +12,8 @@ import (
 func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types.MsgMintNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Validate
-	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
-	if err != nil {
-		return nil, err
-	}
-	err = k.ValidateProjectOwnershipOrDelegateByClassId(ctx, msg.Creator, msg.Symbol)
+	// Validate ownership or delegate, not developer role
+	err := k.ValidateProjectOwnershipOrDelegateByClassId(ctx, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -53,12 +49,8 @@ func (k msgServer) MintNft(goCtx context.Context, msg *types.MsgMintNft) (*types
 func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*types.MsgUpdateNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
-	if err != nil {
-		return nil, err
-	}
-
-	err = k.ValidateProjectOwnershipOrDelegateByClassId(ctx, msg.Creator, msg.Symbol)
+	// Validate only ownership and delegate, not developer role
+	err := k.ValidateProjectOwnershipOrDelegateByClassId(ctx, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -89,12 +81,8 @@ func (k msgServer) UpdateNft(goCtx context.Context, msg *types.MsgUpdateNft) (*t
 func (k msgServer) BurnNft(goCtx context.Context, msg *types.MsgBurnNft) (*types.MsgBurnNftResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
-	if err != nil {
-		return nil, err
-	}
-
-	err = k.ValidateProjectOwnershipOrDelegateByClassId(ctx, msg.Creator, msg.Symbol)
+	// Validate only ownership and delegate, not developer role
+	err := k.ValidateProjectOwnershipOrDelegateByClassId(ctx, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}

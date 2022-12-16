@@ -35,12 +35,21 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
+	var validDelegate []string
+	for _, delegate := range msg.Delegate {
+		// Validating that string[] addresses are Bech32 compliant
+		bech32, err := sdk.AccAddressFromBech32(delegate)
+		if err == nil {
+			validDelegate = append(validDelegate, bech32.String())
+		}
+	}
+
 	var project = types.Project{
 		Creator:     msg.Creator,
 		Symbol:      symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
-		Delegate:    msg.Delegate,
+		Delegate:    validDelegate,
 		CreatedAt:   int32(ctx.BlockHeight()),
 		UpdatedAt:   int32(ctx.BlockHeight()),
 	}
@@ -50,7 +59,7 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		project,
 	)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCreate{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCreateProject{
 		Symbol:      msg.Symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
@@ -66,9 +75,13 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProject) (*types.MsgUpdateProjectResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Skipping role policy validation as we use Ownership or Delegate array.string
+	// Validate only ownership and delegate, not developer role
+	err := k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
 
-	err := k.ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
+	err = k.ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -82,24 +95,11 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
 	}
 
-	// Check if msg.Creator included in valFound.Delegate
-	isDelegate := false
-	for _, del := range valFound.Delegate {
-		if del == msg.Creator {
-			isDelegate = true
-			break
-		}
-	}
-	// Checks if the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator && !isDelegate {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
-	}
-
-	// TODO consider delegates removal also
 	// appending new delegate values to valFound.Delegate
 	for _, delegate := range msg.Delegate {
+		// Validating that string[] addresses are Bech32 compliant
 		bech32, err := sdk.AccAddressFromBech32(delegate)
-		if err == nil { // TODO fix this, is not preventing invalid addresses to be appended
+		if err == nil {
 			valFound.Delegate = append(valFound.Delegate, bech32.String())
 		}
 	}
@@ -110,7 +110,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	k.SetProject(ctx, valFound)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventUpdate{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCreateProject{
 		Symbol:      msg.Symbol,
 		Name:        msg.Name,
 		Description: msg.Description,

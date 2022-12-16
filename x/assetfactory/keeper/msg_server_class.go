@@ -11,12 +11,12 @@ import (
 func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass) (*types.MsgCreateClassResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// Validate is developer and ownership or project, delegates are prevented
 	err := k.permissionKeeper.ValidateDeveloper(ctx, msg.Creator)
 	if err != nil {
 		return nil, err
 	}
-
-	err = k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
+	err = k.gameKeeper.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
 	if err != nil {
 		return nil, err
 	}
@@ -59,6 +59,18 @@ func (k msgServer) CreateClass(goCtx context.Context, msg *types.MsgCreateClass)
 func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass) (*types.MsgUpdateClassResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
+	// Validate developer owner or delegate
+	err := k.ValidateProjectOwnershipOrDelegateByClassId(ctx, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
+	// Validate input args
+	err = k.ValidateArgsClass(msg.Symbol, msg.Description, msg.Name)
+	if err != nil {
+		return nil, err
+	}
+
 	// Check if the value exists
 	valFound, isFound := k.GetClass(
 		ctx,
@@ -66,16 +78,6 @@ func (k msgServer) UpdateClass(goCtx context.Context, msg *types.MsgUpdateClass)
 	)
 	if !isFound {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
-	}
-
-	// Checks if the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner")
-	}
-
-	err := k.ValidateArgsClass(msg.Symbol, msg.Description, msg.Name)
-	if err != nil {
-		return nil, err
 	}
 
 	// If CanChangeMaxSupply we allow editing MaxSupply

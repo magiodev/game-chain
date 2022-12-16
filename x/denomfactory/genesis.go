@@ -27,9 +27,9 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 	// Set Governance Coin metadata
 	k.SetMetadata(ctx,
-		genState.Params.GetGenesisDenomSymbol(),
-		genState.Params.GetGenesisDenomName(),
-		genState.Params.GetGenesisDenomDescription(),
+		genState.Params.GetDenomSymbol(),
+		genState.Params.GetDenomName(),
+		genState.Params.GetDenomDescription(),
 	)
 
 	k.SetParams(ctx, genState.Params)

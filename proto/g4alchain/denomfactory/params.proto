@@ -9,7 +9,7 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/denomfactory/typ
 message Params {
   option (gogoproto.goproto_stringer) = false;
 
-  string genesisDenomSymbol = 1 [(gogoproto.moretags) = "yaml:\"genesis_denom_symbol\""];
-  string genesisDenomName = 2 [(gogoproto.moretags) = "yaml:\"genesis_denom_name\""];
-  string genesisDenomDescription= 3 [(gogoproto.moretags) = "yaml:\"genesis_denom_description\""];
+  string denom_symbol = 1 [(gogoproto.moretags) = "yaml:\"genesis_denom_symbol\""];
+  string denom_name = 2 [(gogoproto.moretags) = "yaml:\"genesis_denom_name\""];
+  string denom_description= 3 [(gogoproto.moretags) = "yaml:\"genesis_denom_description\""];
 }
