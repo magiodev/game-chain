@@ -17,6 +17,8 @@ type PermissionKeeper interface {
 
 type GameKeeper interface {
 	GetProject(ctx sdk.Context, symbol string) (val gametypes.Project, found bool)
+	ValidateDelegate(creator string, project gametypes.Project) error
+	ValidateProjectOwnershipOrDelegateByProject(ctx sdk.Context, creator string, symbol string) error
 }
 
 // AccountKeeper defines the expected account keeper used for simulations (noalias)

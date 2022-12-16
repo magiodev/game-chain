@@ -27,28 +27,6 @@ func (k Keeper) ValidateArgsDenom(symbol string, description string, name string
 	return nil
 }
 
-func (k Keeper) ValidateProjectOwnershipOrDelegateByProject(ctx sdk.Context, creator string, symbol string) error {
-	// Checking project existing and related to this game developer or delegate
-	project, found := k.gameKeeper.GetProject(ctx, symbol)
-	if !found {
-		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", symbol)
-	}
-
-	// Check if msg.Creator included in valFound.Delegate
-	isDelegate := false
-	for _, del := range project.Delegate {
-		if del == creator {
-			isDelegate = true
-			break
-		}
-	}
-	// Checks if the msg creator is the same as the current owner
-	if creator != project.Creator && !isDelegate {
-		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
-	}
-	return nil
-}
-
 func (k Keeper) ValidateProjectOwnershipOrDelegateByDenom(ctx sdk.Context, creator string, symbol string) error {
 	// Checking if symbol/classID exists via x/nft
 	denomFound, found := k.bankKeeper.GetDenomMetaData(ctx, symbol)
@@ -68,17 +46,10 @@ func (k Keeper) ValidateProjectOwnershipOrDelegateByDenom(ctx sdk.Context, creat
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", denomMapFound.Project)
 	}
 
-	// Check if msg.Creator included in valFound.Delegate
-	isDelegate := false
-	for _, del := range project.Delegate {
-		if del == creator {
-			isDelegate = true
-			break
-		}
-	}
-	// Checks if the msg creator is the same as the current owner
-	if creator != project.Creator && !isDelegate {
-		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
+	// Check delegate
+	err := k.gameKeeper.ValidateDelegate(creator, project)
+	if err != nil {
+		return err
 	}
 	return nil
 }

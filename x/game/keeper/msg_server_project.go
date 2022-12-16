@@ -50,7 +50,7 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		project,
 	)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventCreate{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCreateProject{
 		Symbol:      msg.Symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
@@ -66,9 +66,15 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProject) (*types.MsgUpdateProjectResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// Skipping role policy validation as we use Ownership or Delegate array.string
+	// Ignoring developer role, as ownership/delegation rule
 
-	err := k.ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
+	// Check delegate
+	err := k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
+	err = k.ValidateArgsProject(msg.Symbol, msg.Description, msg.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -82,26 +88,9 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
 	}
 
-	// Check if msg.Creator included in valFound.Delegate
-	isDelegate := false
-	for _, del := range valFound.Delegate {
-		if del == msg.Creator {
-			isDelegate = true
-			break
-		}
-	}
-	// Checks if the msg creator is the same as the current owner
-	if msg.Creator != valFound.Creator && !isDelegate {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
-	}
-
-	// TODO consider delegates removal also
 	// appending new delegate values to valFound.Delegate
 	for _, delegate := range msg.Delegate {
-		bech32, err := sdk.AccAddressFromBech32(delegate)
-		if err == nil { // TODO fix this, is not preventing invalid addresses to be appended
-			valFound.Delegate = append(valFound.Delegate, bech32.String())
-		}
+		valFound.Delegate = append(valFound.Delegate, sdk.AccAddress(delegate).String())
 	}
 
 	valFound.Name = msg.Name
@@ -110,7 +99,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 
 	k.SetProject(ctx, valFound)
 
-	err = ctx.EventManager().EmitTypedEvent(&types.EventUpdate{
+	err = ctx.EventManager().EmitTypedEvent(&types.EventCreateProject{
 		Symbol:      msg.Symbol,
 		Name:        msg.Name,
 		Description: msg.Description,

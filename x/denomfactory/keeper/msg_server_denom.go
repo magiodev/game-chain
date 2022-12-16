@@ -17,7 +17,7 @@ func (k msgServer) CreateDenom(goCtx context.Context, msg *types.MsgCreateDenom)
 	if err != nil {
 		return nil, err
 	}
-	err = k.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
+	err = k.gameKeeper.ValidateProjectOwnershipOrDelegateByProject(ctx, msg.Creator, msg.Project)
 	if err != nil {
 		return nil, err
 	}

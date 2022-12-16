@@ -1,6 +1,10 @@
 package keeper
 
-import sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+import (
+	gametypes "github.com/G4AL-Entertainment/g4al-chain/x/game/types"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+)
 
 func (k Keeper) ValidateArgsProject(symbol string, description string, name string) error {
 	if len(symbol) < SymbolMinLength {
@@ -20,6 +24,37 @@ func (k Keeper) ValidateArgsProject(symbol string, description string, name stri
 	}
 	if len(description) > DescriptionMaxLength {
 		return sdkerrors.Wrapf(sdkerrors.ErrInvalidRequest, "description is needed and must contain at most %d characters", DescriptionMaxLength)
+	}
+	return nil
+}
+
+func (k Keeper) ValidateProjectOwnershipOrDelegateByProject(ctx sdk.Context, creator string, symbol string) error {
+	// Checking project existing and related to this game developer or delegate
+	project, found := k.GetProject(ctx, symbol)
+	if !found {
+		return sdkerrors.Wrapf(sdkerrors.ErrInvalidAddress, "project invalid symbol (%s)", symbol)
+	}
+
+	// Check delegate
+	err := k.ValidateDelegate(creator, project)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (k Keeper) ValidateDelegate(creator string, project gametypes.Project) error {
+	// Check if msg.Creator included in valFound.Delegate
+	isDelegate := false
+	for _, del := range project.Delegate {
+		if del == creator {
+			isDelegate = true
+			break
+		}
+	}
+	// Checks if the msg creator is the same as the current owner
+	if creator != project.Creator && !isDelegate {
+		return sdkerrors.Wrap(sdkerrors.ErrUnauthorized, "incorrect owner nor delegate address")
 	}
 	return nil
 }
