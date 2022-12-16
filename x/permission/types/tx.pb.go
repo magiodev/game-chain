@@ -30,8 +30,8 @@ const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 type MsgCreateAdministrator struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	CreatedAt int32  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt int32  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	CreatedAt int64  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt int64  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 	Blocked   bool   `protobuf:"varint,5,opt,name=blocked,proto3" json:"blocked,omitempty"`
 }
 
@@ -82,14 +82,14 @@ func (m *MsgCreateAdministrator) GetAddress() string {
 	return ""
 }
 
-func (m *MsgCreateAdministrator) GetCreatedAt() int32 {
+func (m *MsgCreateAdministrator) GetCreatedAt() int64 {
 	if m != nil {
 		return m.CreatedAt
 	}
 	return 0
 }
 
-func (m *MsgCreateAdministrator) GetUpdatedAt() int32 {
+func (m *MsgCreateAdministrator) GetUpdatedAt() int64 {
 	if m != nil {
 		return m.UpdatedAt
 	}
@@ -142,8 +142,8 @@ var xxx_messageInfo_MsgCreateAdministratorResponse proto.InternalMessageInfo
 type MsgUpdateAdministrator struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	CreatedAt int32  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt int32  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	CreatedAt int64  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt int64  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 	Blocked   bool   `protobuf:"varint,5,opt,name=blocked,proto3" json:"blocked,omitempty"`
 }
 
@@ -194,14 +194,14 @@ func (m *MsgUpdateAdministrator) GetAddress() string {
 	return ""
 }
 
-func (m *MsgUpdateAdministrator) GetCreatedAt() int32 {
+func (m *MsgUpdateAdministrator) GetCreatedAt() int64 {
 	if m != nil {
 		return m.CreatedAt
 	}
 	return 0
 }
 
-func (m *MsgUpdateAdministrator) GetUpdatedAt() int32 {
+func (m *MsgUpdateAdministrator) GetUpdatedAt() int64 {
 	if m != nil {
 		return m.UpdatedAt
 	}
@@ -254,8 +254,8 @@ var xxx_messageInfo_MsgUpdateAdministratorResponse proto.InternalMessageInfo
 type MsgCreateDeveloper struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	CreatedAt int32  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt int32  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	CreatedAt int64  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt int64  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 	Blocked   bool   `protobuf:"varint,5,opt,name=blocked,proto3" json:"blocked,omitempty"`
 }
 
@@ -306,14 +306,14 @@ func (m *MsgCreateDeveloper) GetAddress() string {
 	return ""
 }
 
-func (m *MsgCreateDeveloper) GetCreatedAt() int32 {
+func (m *MsgCreateDeveloper) GetCreatedAt() int64 {
 	if m != nil {
 		return m.CreatedAt
 	}
 	return 0
 }
 
-func (m *MsgCreateDeveloper) GetUpdatedAt() int32 {
+func (m *MsgCreateDeveloper) GetUpdatedAt() int64 {
 	if m != nil {
 		return m.UpdatedAt
 	}
@@ -366,8 +366,8 @@ var xxx_messageInfo_MsgCreateDeveloperResponse proto.InternalMessageInfo
 type MsgUpdateDeveloper struct {
 	Creator   string `protobuf:"bytes,1,opt,name=creator,proto3" json:"creator,omitempty"`
 	Address   string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
-	CreatedAt int32  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
-	UpdatedAt int32  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
+	CreatedAt int64  `protobuf:"varint,3,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+	UpdatedAt int64  `protobuf:"varint,4,opt,name=updatedAt,proto3" json:"updatedAt,omitempty"`
 	Blocked   bool   `protobuf:"varint,5,opt,name=blocked,proto3" json:"blocked,omitempty"`
 }
 
@@ -418,14 +418,14 @@ func (m *MsgUpdateDeveloper) GetAddress() string {
 	return ""
 }
 
-func (m *MsgUpdateDeveloper) GetCreatedAt() int32 {
+func (m *MsgUpdateDeveloper) GetCreatedAt() int64 {
 	if m != nil {
 		return m.CreatedAt
 	}
 	return 0
 }
 
-func (m *MsgUpdateDeveloper) GetUpdatedAt() int32 {
+func (m *MsgUpdateDeveloper) GetUpdatedAt() int64 {
 	if m != nil {
 		return m.UpdatedAt
 	}
@@ -500,7 +500,7 @@ var fileDescriptor_82914fe0b56a4e8c = []byte{
 	0x1d, 0x91, 0x8d, 0x11, 0x92, 0xe0, 0x62, 0x4f, 0x06, 0x09, 0xe7, 0x17, 0x49, 0x30, 0x2a, 0x30,
 	0x6a, 0x70, 0x06, 0xc1, 0xb8, 0x20, 0x99, 0xc4, 0x94, 0x94, 0xa2, 0xd4, 0xe2, 0x62, 0x09, 0x26,
 	0x88, 0x0c, 0x94, 0x2b, 0x24, 0xc3, 0xc5, 0x09, 0x56, 0x94, 0x9a, 0xe2, 0x58, 0x22, 0xc1, 0xac,
-	0xc0, 0xa8, 0xc1, 0x1a, 0x84, 0x10, 0x00, 0xc9, 0x96, 0x16, 0xa4, 0x40, 0x65, 0x59, 0x20, 0xb2,
+	0xc0, 0xa8, 0xc1, 0x1c, 0x84, 0x10, 0x00, 0xc9, 0x96, 0x16, 0xa4, 0x40, 0x65, 0x59, 0x20, 0xb2,
 	0x70, 0x01, 0x90, 0xa9, 0x49, 0x39, 0xf9, 0xc9, 0xd9, 0xa9, 0x29, 0x12, 0xac, 0x0a, 0x8c, 0x1a,
 	0x1c, 0x41, 0x30, 0xae, 0x92, 0x02, 0x97, 0x1c, 0x76, 0x37, 0x06, 0xa5, 0x16, 0x17, 0xe4, 0xe7,
 	0x15, 0xa7, 0xc2, 0xbc, 0x11, 0x0a, 0x36, 0x6c, 0x70, 0x7b, 0x03, 0x8b, 0x1b, 0xe1, 0xde, 0x98,
@@ -515,7 +515,7 @@ var fileDescriptor_82914fe0b56a4e8c = []byte{
 	0x1e, 0xcb, 0x31, 0xdc, 0x78, 0x2c, 0xc7, 0x10, 0x65, 0x9d, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4,
 	0x97, 0x9c, 0x9f, 0xab, 0xef, 0x6e, 0xe2, 0xe8, 0xa3, 0xeb, 0x8a, 0x6c, 0x91, 0x3e, 0xc8, 0x22,
 	0x5d, 0x48, 0xd1, 0x5e, 0x81, 0x52, 0x9b, 0x54, 0x16, 0xa4, 0x16, 0x27, 0xb1, 0x81, 0x4b, 0x76,
-	0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x67, 0xd2, 0x3d, 0x10, 0x72, 0x06, 0x00, 0x00,
+	0x63, 0x40, 0x00, 0x00, 0x00, 0xff, 0xff, 0x43, 0xff, 0x03, 0x9e, 0x72, 0x06, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1290,7 +1290,7 @@ func (m *MsgCreateAdministrator) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CreatedAt |= int32(b&0x7F) << shift
+				m.CreatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1309,7 +1309,7 @@ func (m *MsgCreateAdministrator) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.UpdatedAt |= int32(b&0x7F) << shift
+				m.UpdatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1512,7 +1512,7 @@ func (m *MsgUpdateAdministrator) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CreatedAt |= int32(b&0x7F) << shift
+				m.CreatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1531,7 +1531,7 @@ func (m *MsgUpdateAdministrator) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.UpdatedAt |= int32(b&0x7F) << shift
+				m.UpdatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1734,7 +1734,7 @@ func (m *MsgCreateDeveloper) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CreatedAt |= int32(b&0x7F) << shift
+				m.CreatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1753,7 +1753,7 @@ func (m *MsgCreateDeveloper) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.UpdatedAt |= int32(b&0x7F) << shift
+				m.UpdatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1956,7 +1956,7 @@ func (m *MsgUpdateDeveloper) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.CreatedAt |= int32(b&0x7F) << shift
+				m.CreatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
@@ -1975,7 +1975,7 @@ func (m *MsgUpdateDeveloper) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.UpdatedAt |= int32(b&0x7F) << shift
+				m.UpdatedAt |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

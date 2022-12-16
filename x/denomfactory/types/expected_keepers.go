@@ -27,7 +27,6 @@ type AccountKeeper interface {
 
 // BankKeeper defines the expected interface needed to retrieve account balances.
 type BankKeeper interface {
-	// TODO remove methods restricting to only essential ones, security flaws
 	keeper.SendKeeper
 	WithMintCoinsRestriction(keeper.MintingRestrictionFn) keeper.BaseKeeper
 

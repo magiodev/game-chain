@@ -28,8 +28,8 @@ func (k msgServer) CreateAdministrator(goCtx context.Context, msg *types.MsgCrea
 	var administrator = types.Administrator{
 		Creator:   msg.Creator,
 		Address:   msg.Address,
-		CreatedAt: int32(ctx.BlockHeight()),
-		UpdatedAt: int32(ctx.BlockHeight()),
+		CreatedAt: ctx.BlockHeight(),
+		UpdatedAt: ctx.BlockHeight(),
 		Blocked:   false,
 	}
 
@@ -73,7 +73,7 @@ func (k msgServer) UpdateAdministrator(goCtx context.Context, msg *types.MsgUpda
 		Creator:   admin.Creator,
 		Address:   admin.Address,
 		CreatedAt: admin.CreatedAt,
-		UpdatedAt: int32(ctx.BlockHeight()),
+		UpdatedAt: ctx.BlockHeight(),
 		Blocked:   msg.Blocked,
 	}
 

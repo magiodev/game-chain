@@ -5,8 +5,8 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/permission/types
 
 message Developer {
   string address = 1; 
-  int32 createdAt = 2; 
-  int32 updatedAt = 3; 
+  int64 createdAt = 2;
+  int64 updatedAt = 3;
   bool blocked = 4; 
   string creator = 5;
 }

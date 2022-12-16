@@ -27,8 +27,8 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 
 		k.SetAdministrator(ctx, types.Administrator{
 			Address:   bech32.String(),
-			CreatedAt: int32(ctx.BlockHeight()), // TODO check if int32 instead64 is fine, less digits!
-			UpdatedAt: int32(ctx.BlockHeight()), // TODO check if int32 instead64 is fine, less digits!
+			CreatedAt: ctx.BlockHeight(),
+			UpdatedAt: ctx.BlockHeight(),
 			Blocked:   false,
 			Creator:   bech32.String(),
 		})
