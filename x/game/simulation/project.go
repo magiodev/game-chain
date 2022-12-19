@@ -99,3 +99,39 @@ func SimulateMsgUpdateProject(
 		return simulation.GenAndDeliverTxWithRandFees(txCtx)
 	}
 }
+
+func SimulateMsgAddDelegate(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		simAccount, _ := simtypes.RandomAcc(r, accs)
+		msg := &types.MsgAddDelegate{
+			Creator: simAccount.Address.String(),
+		}
+
+		// TODO: Handling the AddDelegate simulation
+
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "AddDelegate simulation not implemented"), nil, nil
+	}
+}
+
+func SimulateMsgRemoveDelegate(
+	ak types.AccountKeeper,
+	bk types.BankKeeper,
+	k keeper.Keeper,
+) simtypes.Operation {
+	return func(r *rand.Rand, app *baseapp.BaseApp, ctx sdk.Context, accs []simtypes.Account, chainID string,
+	) (simtypes.OperationMsg, []simtypes.FutureOperation, error) {
+		simAccount, _ := simtypes.RandomAcc(r, accs)
+		msg := &types.MsgRemoveDelegate{
+			Creator: simAccount.Address.String(),
+		}
+
+		// TODO: Handling the RemoveDelegate simulation
+
+		return simtypes.NoOpMsg(types.ModuleName, msg.Type(), "RemoveDelegate simulation not implemented"), nil, nil
+	}
+}
