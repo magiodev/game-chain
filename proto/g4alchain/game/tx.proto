@@ -10,6 +10,8 @@ option go_package = "github.com/G4AL-Entertainment/g4al-chain/x/game/types";
 service Msg {
   rpc CreateProject(MsgCreateProject) returns (MsgCreateProjectResponse);
   rpc UpdateProject(MsgUpdateProject) returns (MsgUpdateProjectResponse);
+  rpc AddDelegate(MsgAddDelegate) returns (MsgAddDelegateResponse);
+  rpc RemoveDelegate(MsgRemoveDelegate) returns (MsgRemoveDelegateResponse);
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -19,7 +21,6 @@ message MsgCreateProject {
 
   string name = 3;
   string description = 4;
-  repeated string delegate = 5;
 }
 message MsgCreateProjectResponse {}
 
@@ -29,8 +30,25 @@ message MsgUpdateProject {
 
   string name = 3;
   string description = 4;
-  repeated string delegate = 5;
 }
 message MsgUpdateProjectResponse {}
+
+message MsgAddDelegate {
+  string creator = 1;
+  string symbol = 2;
+  repeated string delegate = 3;
+}
+
+message MsgAddDelegateResponse {
+}
+
+message MsgRemoveDelegate {
+  string creator = 1;
+  string symbol = 2;
+  repeated string delegate = 3;
+}
+
+message MsgRemoveDelegateResponse {
+}
 
 // this line is used by starport scaffolding # proto/tx/message

@@ -16,3 +16,15 @@ message EventUpdateProject {
     string description  = 3;
     string creator      = 4;
 }
+
+message EventAddDelegateProject {
+    string symbol               = 1;
+    repeated string delegate    = 2;
+    string creator              = 3;
+}
+
+message EventRemoveDelegateProject {
+    string symbol               = 1;
+    repeated string delegate    = 2;
+    string creator              = 3;
+}

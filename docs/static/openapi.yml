@@ -71033,7 +71033,11 @@ definitions:
         description: params holds all the parameters of this module.
         type: object
     description: QueryParamsResponse is response type for the Query/Params RPC method.
+  g4alentertainment.g4alchain.game.MsgAddDelegateResponse:
+    type: object
   g4alentertainment.g4alchain.game.MsgCreateProjectResponse:
+    type: object
+  g4alentertainment.g4alchain.game.MsgRemoveDelegateResponse:
     type: object
   g4alentertainment.g4alchain.game.MsgUpdateProjectResponse:
     type: object

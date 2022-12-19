@@ -6,14 +6,13 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
 	"github.com/spf13/cobra"
-	"strings"
 )
 
 func CmdCreateProject() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create-project [symbol] [name] [description] [delegate]",
+		Use:   "create-project [symbol] [name] [description]",
 		Short: "Create a new Project",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexSymbol := args[0]
@@ -21,7 +20,6 @@ func CmdCreateProject() *cobra.Command {
 			// Get value arguments
 			argName := args[1]
 			argDescription := args[2]
-			argDelegate := strings.Split(args[3], listSeparator)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -33,7 +31,6 @@ func CmdCreateProject() *cobra.Command {
 				indexSymbol,
 				argName,
 				argDescription,
-				argDelegate,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
@@ -49,9 +46,9 @@ func CmdCreateProject() *cobra.Command {
 
 func CmdUpdateProject() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "update-project [symbol] [name] [description] [delegate]",
+		Use:   "update-project [symbol] [name] [description]",
 		Short: "Update a Project",
-		Args:  cobra.ExactArgs(4),
+		Args:  cobra.ExactArgs(3),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
 			// Get indexes
 			indexSymbol := args[0]
@@ -59,7 +56,6 @@ func CmdUpdateProject() *cobra.Command {
 			// Get value arguments
 			argName := args[1]
 			argDescription := args[2]
-			argDelegate := strings.Split(args[3], listSeparator)
 
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -71,7 +67,6 @@ func CmdUpdateProject() *cobra.Command {
 				indexSymbol,
 				argName,
 				argDescription,
-				argDelegate,
 			)
 			if err := msg.ValidateBasic(); err != nil {
 				return err
