@@ -40,7 +40,6 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		Symbol:      symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
-		Delegate:    nil,
 		CreatedAt:   ctx.BlockHeight(),
 		UpdatedAt:   ctx.BlockHeight(),
 	}
@@ -108,7 +107,7 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 func (k msgServer) AddDelegate(goCtx context.Context, msg *types.MsgAddDelegate) (*types.MsgAddDelegateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.ValidateOwnership(ctx, msg.Creator, msg.Symbol)
+	err := k.ValidateProjectOwnershipByProject(ctx, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +149,7 @@ func (k msgServer) AddDelegate(goCtx context.Context, msg *types.MsgAddDelegate)
 func (k msgServer) RemoveDelegate(goCtx context.Context, msg *types.MsgRemoveDelegate) (*types.MsgRemoveDelegateResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	err := k.ValidateOwnership(ctx, msg.Creator, msg.Symbol)
+	err := k.ValidateProjectOwnershipByProject(ctx, msg.Creator, msg.Symbol)
 	if err != nil {
 		return nil, err
 	}

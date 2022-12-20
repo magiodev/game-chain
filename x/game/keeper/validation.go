@@ -49,7 +49,7 @@ func (k Keeper) ValidateProjectOwnershipOrDelegateByProject(ctx sdk.Context, cre
 	return nil
 }
 
-func (k Keeper) ValidateOwnership(ctx sdk.Context, creator string, symbol string) error {
+func (k Keeper) ValidateProjectOwnershipByProject(ctx sdk.Context, creator string, symbol string) error {
 
 	project, found := k.GetProject(ctx, symbol)
 	if !found {
