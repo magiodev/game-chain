@@ -35,21 +35,11 @@ func (k msgServer) CreateProject(goCtx context.Context, msg *types.MsgCreateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "index already set")
 	}
 
-	var validDelegate []string
-	for _, delegate := range msg.Delegate {
-		// Validating that string[] addresses are Bech32 compliant
-		bech32, err := sdk.AccAddressFromBech32(delegate)
-		if err == nil {
-			validDelegate = append(validDelegate, bech32.String())
-		}
-	}
-
 	var project = types.Project{
 		Creator:     msg.Creator,
 		Symbol:      symbol,
 		Name:        msg.Name,
 		Description: msg.Description,
-		Delegate:    validDelegate,
 		CreatedAt:   ctx.BlockHeight(),
 		UpdatedAt:   ctx.BlockHeight(),
 	}
@@ -95,15 +85,6 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
 	}
 
-	// appending new delegate values to valFound.Delegate
-	for _, delegate := range msg.Delegate {
-		// Validating that string[] addresses are Bech32 compliant
-		bech32, err := sdk.AccAddressFromBech32(delegate)
-		if err == nil {
-			valFound.Delegate = append(valFound.Delegate, bech32.String())
-		}
-	}
-
 	valFound.Name = msg.Name
 	valFound.Description = msg.Description
 	valFound.UpdatedAt = ctx.BlockHeight()
@@ -121,4 +102,123 @@ func (k msgServer) UpdateProject(goCtx context.Context, msg *types.MsgUpdateProj
 	}
 
 	return &types.MsgUpdateProjectResponse{}, nil
+}
+
+func (k msgServer) AddDelegate(goCtx context.Context, msg *types.MsgAddDelegate) (*types.MsgAddDelegateResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.ValidateProjectOwnershipByProject(ctx, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
+	valFound, isFound := k.GetProject(
+		ctx,
+		msg.Symbol,
+	)
+	if !isFound {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "project not found")
+	}
+
+	var validDelegate []string
+	for _, delegate := range msg.Delegate {
+		// Validating that string[] addresses are Bech32 compliant
+		bech32, err := sdk.AccAddressFromBech32(delegate)
+		if err == nil {
+			validDelegate = append(validDelegate, bech32.String())
+		}
+	}
+
+	valFound.Delegate = Union(valFound.Delegate, validDelegate)
+	valFound.UpdatedAt = ctx.BlockHeight()
+
+	k.SetProject(ctx, valFound)
+
+	err = ctx.EventManager().EmitTypedEvent(&types.EventAddDelegateProject{
+		Symbol:   msg.Symbol,
+		Delegate: validDelegate,
+		Creator:  msg.Creator,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgAddDelegateResponse{}, nil
+}
+
+func (k msgServer) RemoveDelegate(goCtx context.Context, msg *types.MsgRemoveDelegate) (*types.MsgRemoveDelegateResponse, error) {
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	err := k.ValidateProjectOwnershipByProject(ctx, msg.Creator, msg.Symbol)
+	if err != nil {
+		return nil, err
+	}
+
+	valFound, isFound := k.GetProject(
+		ctx,
+		msg.Symbol,
+	)
+	if !isFound {
+		return nil, sdkerrors.Wrap(sdkerrors.ErrKeyNotFound, "index not set")
+	}
+
+	var validDelegate []string
+	for _, delegate := range msg.Delegate {
+		// Validating that string[] addresses are Bech32 compliant
+		bech32, err := sdk.AccAddressFromBech32(delegate)
+		if err == nil {
+			validDelegate = append(validDelegate, bech32.String())
+		}
+	}
+
+	valFound.Delegate = Delete(valFound.Delegate, validDelegate)
+	valFound.UpdatedAt = ctx.BlockHeight()
+
+	k.SetProject(ctx, valFound)
+
+	err = ctx.EventManager().EmitTypedEvent(&types.EventRemoveDelegateProject{
+		Symbol:   msg.Symbol,
+		Delegate: validDelegate,
+		Creator:  msg.Creator,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.MsgRemoveDelegateResponse{}, nil
+}
+
+func Union(a, b []string) []string {
+	m := make(map[string]bool)
+
+	for _, item := range a {
+		m[item] = true
+	}
+
+	for _, item := range b {
+		if _, ok := m[item]; !ok {
+			a = append(a, item)
+		}
+	}
+	return a
+}
+
+func Delete(a, b []string) []string {
+	m := make(map[string]bool)
+
+	for _, item := range a {
+		m[item] = true
+	}
+
+	for _, item := range b {
+		m[item] = false
+	}
+	var c []string
+
+	for key, value := range m {
+		if value {
+			c = append(c, key)
+		}
+	}
+	return c
 }
